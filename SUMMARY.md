@@ -1,4 +1,4 @@
 # Summary
 
 * [SVG](/SVG.md)
-* [Advanced](/advanced.md)
+* [D3](/D3.md)

@@ -3,4 +3,4 @@
 ## Lessons
 
 1. [SVG](/SVG.md)
-1. [Advanced D3](/advanced.md)
+1. [D3](/D3.md)
