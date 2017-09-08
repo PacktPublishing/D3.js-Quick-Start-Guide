@@ -142,7 +142,7 @@ https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths
 <path d="M150 0 L75 200 L225 200 Z" />
 <path d="M0 70 C 0 120, 50 120, 50 70 S 100 20, 100 70" stroke="black" fill="transparent"/>
 <path d="M0 100 Q 50 50, 100 100 T 200 100 Z" stroke="black" fill="transparent"/>
-``
+```
 
 ## Text
 
