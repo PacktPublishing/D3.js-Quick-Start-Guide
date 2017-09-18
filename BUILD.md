@@ -121,12 +121,15 @@ Add three circles to your `<svg>` element (each one will represent a run):
 </svg>
 ```
 
-Create `app.css` with some styling for the circles:
+Create `app.css` with some styling for the circles and our `svg` element:
 
 ```css
 circle {
     r:5;
     fill: black;
+}
+svg {
+    border: 1px solid black;
 }
 ```
 
