@@ -231,6 +231,7 @@ console.log(formatTime(new Date()));
 Let's use this when calculating `cx` attributes for our circles:
 
 ```javascript
+var parseTime = d3.timeParse("%B%e, %Y at %-I:%M%p");
 d3.selectAll('circle')
     .attr('cx', function(datum, index){
         return xScale(parseTime(datum.date)); //use parseTime to convert the date string property on the datum object to a Date object
