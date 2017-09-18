@@ -3,6 +3,7 @@
 ## Lesson Objectives
 
 1. Add link to d3 library
+1. Add an `<svg>` tag and size it with D3
 
 ## Add link to d3 library
 
@@ -41,4 +42,40 @@ and link to it in `index.html` at the bottom of the `<body>` tag:
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script src="app.js" charset="utf-8"></script>
 </body>
+```
+
+## Add an `<svg>` tag and size it with D3
+
+At the top of the `<body>` tag in `index.html`, add an `<svg>` tag:
+
+```html
+<body>
+    <svg></svg>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="app.js" charset="utf-8"></script>
+</body>
+```
+
+In `app.js` create variables to hold the width and height of the `<svg>` tag:
+
+```javascript
+var WIDTH = 800;
+var HEIGHT = 600;
+```
+
+Next, we can use `d3.select()` to select a single element, in this case, the `<svg>` element:
+
+```javascript
+var WIDTH = 800;
+var HEIGHT = 600;
+
+d3.select('svg');
+```
+
+The return value of this is a d3 version of the element (just like jQuery), so we "chain" commands onto this.  Let's add some styling to adjust the height/width of the element:
+
+```javascript
+d3.select('svg')
+    .style('width', WIDTH)
+    .style('height', HEIGHT);
 ```
