@@ -14,6 +14,7 @@
 1. Set dynamic domains
 1. Dynamically generate svg elements
 1. Create axes
+1. Display data in a table
 
 ## Add link to d3 library
 
@@ -332,5 +333,56 @@ It's a little tough, so let's adding some margin to the body:
 ```css
 body {
     margin: 20px 40px;
+}
+```
+
+## Display data in a table
+
+Just for debugging purposes, let's create a table which will show all of our data:
+
+```html
+<svg></svg>
+<table>
+    <thead>
+        <tr>
+            <th>id</th>
+            <th>date</th>
+            <th>distance</th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+```
+
+Now populate the `<tbody>`:
+
+```javascript
+var createTable = function(){
+    for (var i = 0; i < runs.length; i++) {
+        var row = d3.select('tbody').append('tr');
+        row.append('td').html(runs[i].id);
+        row.append('td').html(runs[i].date);
+        row.append('td').html(runs[i].distance);
+    }
+}
+
+createTable();
+```
+
+And a little styling:
+
+```css
+svg {
+    overflow: visible;
+    margin-bottom: 50px;
+}
+
+table, th, td {
+   border: 1px solid black;
+}
+th, td {
+    padding:10px;
+    text-align: center;
 }
 ```
