@@ -11,6 +11,7 @@
 1. Use data attached to a visual element to affect its appearance
 1. Create a time scale
 1. Parse and format times
+1. Set dynamic domains
 
 ## Add link to d3 library
 
@@ -236,4 +237,42 @@ d3.selectAll('circle')
     .attr('cx', function(datum, index){
         return xScale(parseTime(datum.date)); //use parseTime to convert the date string property on the datum object to a Date object
     });
+```
+
+## Set dynamic domains
+
+- At the moment, we're setting up arbitrary min/max values for both distance/date
+- D3 can find the min/max of a data set, so that our graph displays just the data ranges we need:
+- we pass the min/max methods a callback which gets called for each item of data in the array
+    - d3 uses the callback to determine which values to compare for min/max
+
+```javascript
+var yMin = d3.min(runs, function(datum, index){
+    return datum.distance; //compare distance properties of each item in the data array
+})
+var yMax = d3.max(runs, function(datum, index){
+    return datum.distance; //compare distance properties of each item in the data array
+})
+yScale.domain([yMin, yMax]);
+```
+
+We can combine both of these functions into one "extent" function that returns both:
+
+```javascript
+var yDomain = d3.extent(runs, function(datum, index){
+    return datum.distance; //compare distance properties of each item in the data array
+})
+yScale.domain(yDomain);
+```
+
+Let's do the same for the xScale's domain:
+
+```javascript
+var parseTime = d3.timeParse("%B%e, %Y");
+var xScale = d3.scaleTime();
+xScale.range([0,WIDTH]);
+xDomain = d3.extent(runs, function(datum, index){
+    return parseTime(datum.date);
+});
+xScale.domain(xDomain);
 ```
