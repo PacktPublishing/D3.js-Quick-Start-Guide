@@ -13,6 +13,7 @@
 1. Parse and format times
 1. Set dynamic domains
 1. Dynamically generate svg elements
+1. Create axes
 
 ## Add link to d3 library
 
@@ -295,4 +296,41 @@ d3.select('svg').selectAll('circle') //since no circles exist, we need to select
     .data(runs) //attach the data as before
     .enter() //find the data objects that have not yet been attached to visual elements
     .append('circle'); //for each data object that hasn't been attached, append a <circle> to the <svg>
+```
+
+## Create axes
+
+D3 can automatically generate axes for you:
+
+```javascript
+var bottomAxis = d3.axisBottom(xScale); //pass the appropriate scale in as a parameter
+d3.select('svg')
+	.append('g') //put everything inside a group
+	.call(bottomAxis) //generate the axis within the group
+    .attr('transform', 'translate(0,'+HEIGHT+')'); //move it to the bottom
+```
+
+Currently, our SVG clips the axis.  Let's change some CSS so it doesn't:
+
+```css
+svg {
+    overflow: visible;    
+}
+```
+
+The left axis is pretty similar:
+
+```javascript
+var leftAxis = d3.axisLeft(yScale);
+d3.select('svg')
+	.append('g')
+	.call(leftAxis); //no need to transform, since it's placed correctly initially
+```
+
+It's a little tough, so let's adding some margin to the body:
+
+```css
+body {
+    margin: 20px 40px;
+}
 ```
