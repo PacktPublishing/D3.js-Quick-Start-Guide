@@ -464,13 +464,25 @@ var render = function(){
 render();
 ```
 
-For future use, let's move the `xScale` and `yScale` out of the render function:
+For future use, let's move the `xScale` and `yScale` out of the render function along with the code for creating the domains/ranges:
 
 ```javascript
 var xScale = d3.scaleTime();
+var parseTime = d3.timeParse("%B%e, %Y at%-I:%M%p");
+xScale.range([0,WIDTH]);
+xDomain = d3.extent(runs, function(datum, index){
+    return parseTime(datum.date);
+});
+xScale.domain(xDomain);
+
 var yScale = d3.scaleLinear();
+yScale.range([HEIGHT, 0]);
+yDomain = d3.extent(runs, function(datum, index){
+    return datum.distance;
+})
+yScale.domain(yDomain);
 var render = function(){
-    //...rest of render function without xScale and yScale declarations
+    //...rest of render function without xScale and yScale declarations and domain code
 }
 render();
 ```
