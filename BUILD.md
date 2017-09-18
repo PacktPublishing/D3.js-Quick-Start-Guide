@@ -15,6 +15,7 @@
 1. Dynamically generate svg elements
 1. Create axes
 1. Display data in a table
+1. Create click handler
 
 ## Add link to d3 library
 
@@ -271,7 +272,7 @@ yScale.domain(yDomain);
 Let's do the same for the xScale's domain:
 
 ```javascript
-var parseTime = d3.timeParse("%B%e, %Y");
+var parseTime = d3.timeParse("%B%e, %Y at %-I:%M%p");
 var xScale = d3.scaleTime();
 xScale.range([0,WIDTH]);
 xDomain = d3.extent(runs, function(datum, index){
@@ -385,4 +386,99 @@ th, td {
     padding:10px;
     text-align: center;
 }
+```
+
+## Create click handler
+
+Let's say that we want it so that when the user clicks on the `<svg>` element, it creates a new run.
+
+```javascript
+var formatTime = d3.timeFormat("%B%e, %Y at %-I:%M%p"); //will take a date object and return a formatted string
+d3.select('svg').on('click', function(){
+    var x = d3.event.offsetX; //gets the x position of the mouse relative to the svg element
+    var y = d3.event.offsetY; //gets the y position of the mouse relative to the svg element
+
+    var date = xScale.invert(x) //get a date value from a visual point
+    var distance = yScale.invert(y); //get a numeric distance value from a visual point
+
+    var newRun = { //create a new "run" object
+        id: runs[runs.length-1].id+1, //generate a new id by adding 1 to the last run's id
+        date: formatTime(date), //format the date object created above
+        distance: distance //add the distance
+    }
+    runs.push(newRun); //push the new run onto the runs array
+    createTable(); //render the table
+});
+```
+
+You might notice that `createTable()` just adds on all the run rows again.  Let's clear out the previous rows:
+
+```javascript
+var createTable = function(){
+    d3.select('tbody').html(''); //clear out all rows from the table
+    for (var i = 0; i < runs.length; i++) {
+        var row = d3.select('tbody').append('tr');
+        row.append('td').html(runs[i].id);
+        row.append('td').html(runs[i].date);
+        row.append('td').html(runs[i].distance);
+    }
+}
+```
+
+Now put the code for creating `<circles>` inside a render function:
+
+```javascript
+var render = function(){
+
+    var yScale = d3.scaleLinear();
+    yScale.range([HEIGHT, 0]);
+    yDomain = d3.extent(runs, function(datum, index){
+        return datum.distance;
+    })
+    yScale.domain(yDomain);
+
+    d3.select('svg').selectAll('circle')
+        .data(runs)
+        .enter()
+        .append('circle');
+
+    d3.selectAll('circle')
+        .attr('cy', function(datum, index){
+            return yScale(datum.distance);
+        });
+
+    var parseTime = d3.timeParse("%B%e, %Y at %-I:%M%p");
+    var xScale = d3.scaleTime();
+    xScale.range([0,WIDTH]);
+    xDomain = d3.extent(runs, function(datum, index){
+        return parseTime(datum.date);
+    });
+    xScale.domain(xDomain);
+
+    d3.selectAll('circle')
+        .attr('cx', function(datum, index){
+            return xScale(parseTime(datum.date));
+        });
+
+}
+render();
+```
+
+For future use, let's move the `xScale` and `yScale` out of the render function:
+
+```javascript
+var xScale = d3.scaleTime();
+var yScale = d3.scaleLinear();
+var render = function(){
+    //...rest of render function without xScale and yScale declarations
+}
+render();
+```
+
+Let's call `render()` inside our `<svg>` click handler:
+
+```javascript
+runs.push(newRun);
+createTable();
+render();
 ```
