@@ -12,6 +12,7 @@
 1. Create a time scale
 1. Parse and format times
 1. Set dynamic domains
+1. Dynamically generate svg elements
 
 ## Add link to d3 library
 
@@ -275,4 +276,23 @@ xDomain = d3.extent(runs, function(datum, index){
     return parseTime(datum.date);
 });
 xScale.domain(xDomain);
+```
+
+## Dynamically generate svg elements
+
+- Currently, we have just enough `<circle>` elements to fit our data.  What if we don't want to count how many elements are in the array?
+- D3 Can create elements as needed
+- First, remove all `<circle>` elements from `index.html`
+
+```html
+<svg></svg>
+```
+
+In `app.js` add the code to create the circles:
+
+```javascript
+d3.select('svg').selectAll('circle') //since no circles exist, we need to select('svg') so that d3 knows where to append the new circles
+    .data(runs) //attach the data as before
+    .enter() //find the data objects that have not yet been attached to visual elements
+    .append('circle'); //for each data object that hasn't been attached, append a <circle> to the <svg>
 ```
