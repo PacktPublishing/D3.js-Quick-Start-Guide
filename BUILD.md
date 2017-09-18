@@ -5,6 +5,7 @@
 1. Add link to d3 library
 1. Add an `<svg>` tag and size it with D3
 1. Create some fake data for our app
+1. Add SVG circles and style them
 
 ## Add link to d3 library
 
@@ -106,4 +107,35 @@ var runs = [
         distance: 8.7
     }
 ];
+```
+
+## Add SVG circles and style them
+
+Add three circles to your `<svg>` element (each one will represent a run):
+
+```html
+<svg>
+    <circle/>
+    <circle/>
+    <circle/>
+</svg>
+```
+
+Create `app.css` with some styling for the circles:
+
+```css
+circle {
+    r:5;
+    fill: black;
+}
+```
+
+and link to it in `index.html`
+
+```html
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" href="app.css">
+</head>
 ```
