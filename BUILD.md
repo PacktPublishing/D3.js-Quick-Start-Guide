@@ -16,6 +16,7 @@
 1. Create axes
 1. Display data in a table
 1. Create click handler
+1. Remove data
 
 ## Add link to d3 library
 
@@ -493,4 +494,66 @@ Let's call `render()` inside our `<svg>` click handler:
 runs.push(newRun);
 createTable();
 render();
+```
+
+## Remove data
+
+- Let's set up a click handler on a `<circle>` to remove that data element from the array
+- We'll need to do this inside the `render()` declaration so that the click handlers are attached **after** the circles are created
+
+```javascript
+//put this inside the render function, so that click handlers are attached when the circle is created
+d3.selectAll('circle').on('click', function(datum, index){
+    d3.event.stopPropagation(); //stop click event from propagating to the SVG element and creating a run
+    runs = runs.filter(function(run, index){ //create a new array that has removed the run with the correct id.  Set it to the runs var
+        return run.id != datum.id;
+    });
+    render(); //re-render dots
+    createTable(); //re-render table
+});
+```
+
+The `<circle>` elements aren't be removed though.  Let's put them in a `<g>` so that it's easy to clear out:
+
+```html
+<svg>
+    <g id="points"></g>
+</svg>
+```
+
+Now we can clear out the `<circle>` elements each time `render()` is called.
+
+```javascript
+var render = function(){
+    d3.select('#points').html(''); //clear out all circles when rendering
+    d3.select('#points').selectAll('circle') //add circles to #points group, not svg
+        .data(runs)
+        .enter()
+        .append('circle');    
+}
+```
+
+Let's put in a little code to handle when the user has deleted all runs and tries to add a new one:
+
+```javascript
+//inside svg click handler
+var newRun = {
+    id: ( runs.length > 0 ) ? runs[runs.length-1].id+1 : 1,
+    date: formatTime(date),
+    distance: distance
+}
+```
+
+Lastly, let's put in some css, so we know we're clicking on a circle:
+
+```css
+circle {
+    r: 5;
+    fill: black;
+    transition: r 0.5s linear, fill 0.5s linear; /* transition */
+}
+circle:hover { /* hover state */
+    r:10;
+    fill: blue;
+}
 ```
