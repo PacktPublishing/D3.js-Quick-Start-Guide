@@ -20,10 +20,12 @@ First thing we want to do is create basic `index.html` file:
 </html>
 ```
 
-Now add a link D3:
+Now add a link to D3 at the bottom of your `<body>` tag in `index.html`:
 
 ```html
-<script src="https://d3js.org/d3.v4.min.js"></script>
+<body>    
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+</body>
 ```
 
 Now create `app.js`, which will store all of our code:
@@ -32,8 +34,11 @@ Now create `app.js`, which will store all of our code:
 console.log('this works');
 ```
 
-and link to it in `index.html`:
+and link to it in `index.html` at the bottom of the `<body>` tag:
 
 ```html
-<script src="app.js" charset="utf-8"></script>
+<body>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="app.js" charset="utf-8"></script>
+</body>
 ```
