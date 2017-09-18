@@ -4,6 +4,7 @@
 
 1. Add link to d3 library
 1. Add an `<svg>` tag and size it with D3
+1. Create some fake data for our app
 
 ## Add link to d3 library
 
@@ -78,4 +79,31 @@ The return value of this is a d3 version of the element (just like jQuery), so w
 d3.select('svg')
     .style('width', WIDTH)
     .style('height', HEIGHT);
+```
+
+## Create some fake data for our app
+
+In `app.js` let's create an array of "run" objects (**NOTE I'm storing the date as a string on purpose**):
+
+```javascript
+var WIDTH = 800;
+var HEIGHT = 600;
+
+var runs = [
+    {
+        id: 1,
+        date: 'October 1, 2017 at 4:00PM',
+        distance: 5.2
+    },
+    {
+        id: 2,
+        date: 'October 2, 2017 at 5:00PM',
+        distance: 7.0725
+    },
+    {
+        id: 3,
+        date: 'October 3, 2017 at 6:00PM',
+        distance: 8.7
+    }
+];
 ```
