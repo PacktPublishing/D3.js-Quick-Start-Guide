@@ -6,6 +6,7 @@
 1. Add an `<svg>` tag and size it with D3
 1. Create some fake data for our app
 1. Add SVG circles and style them
+1. Create a linear scale
 
 ## Add link to d3 library
 
@@ -142,3 +143,27 @@ and link to it in `index.html`
     <link rel="stylesheet" href="app.css">
 </head>
 ```
+
+## Create a linear scale
+
+- One of the most important things that D3 does is provide the ability to map points in the "domain" of data to points in the visual "range" using what's called a `scale`.
+- There are lots of different kinds of scales, but for now we're just going to use a `linear` scale which will map numeric data values to numeric visual values.
+
+In `app.js`:
+
+```javascript
+d3.select('svg')
+    .style('width', WIDTH)
+    .style('height', HEIGHT);
+
+var yScale = d3.scaleLinear(); //create the scale
+yScale.range([HEIGHT, 0]); //set the visual range (e.g. 600 to 0)
+yScale.domain([0, 10]); //set the data domain (e.g. 0 to 10)
+
+console.log(yScale(5)); //get a visual point from a data value
+console.log(yScale.invert(450)); //get a data values from a visual point
+```
+
+- Here we're saying that a data point of 0 to map to a visual height value of 600
+- This is because the lower the distance run (data value), the more we want to move the visual point down the Y axis
+    - remember that the Y axis starts at 0 at the top and increases in value
