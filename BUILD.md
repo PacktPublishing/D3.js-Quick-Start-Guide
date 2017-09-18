@@ -7,6 +7,8 @@
 1. Create some fake data for our app
 1. Add SVG circles and style them
 1. Create a linear scale
+1. Attach data to visual elements
+1. Use data attached to a visual element to affect its appearance
 
 ## Add link to d3 library
 
@@ -167,3 +169,31 @@ console.log(yScale.invert(450)); //get a data values from a visual point
 - Here we're saying that a data point of 0 to map to a visual height value of 600
 - This is because the lower the distance run (data value), the more we want to move the visual point down the Y axis
     - remember that the Y axis starts at 0 at the top and increases in value
+
+## Attach data to visual elements
+
+We can attach each of our "run" objects to one of our circles, so that each circle can access that data:
+
+```javascript
+yScale.range([HEIGHT, 0]);
+yScale.domain([0, 10]);
+
+d3.selectAll('circle').data(runs); //selectAll is like select, but selects all elements that match the query string
+```
+
+## Use data attached to a visual element to affect its appearance
+
+When setting a value for an element's style, class, id or any other attribute, we can pass that method a callback instead of a static value.
+
+```javascript
+d3.selectAll('circle').data(runs)
+    .attr('cy', function(datum, index){
+        return yScale(datum.distance);
+    });
+```
+
+- That callback function runs for each visual element selected
+- The result of the function is then assigned to whatever aspect of the element is being set (in this case the `cy` attribute)
+- The callback function takes two params
+    - the individual `datum` attached to that particular visual element
+    - the `index` of that `datum` in the original data array (in this case `runs`)
