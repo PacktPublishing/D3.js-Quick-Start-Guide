@@ -9,6 +9,8 @@
 1. Create a linear scale
 1. Attach data to visual elements
 1. Use data attached to a visual element to affect its appearance
+1. Create a time scale
+1. Parse and format times
 
 ## Add link to d3 library
 
@@ -87,7 +89,7 @@ d3.select('svg')
 
 ## Create some fake data for our app
 
-In `app.js` let's create an array of "run" objects (**NOTE I'm storing the date as a string on purpose**):
+In `app.js` let's create an array of "run" objects (**NOTE I'm storing the date as a string on purpose.  Also, it's important that this be an array of objects, in order to work with D3**):
 
 ```javascript
 var WIDTH = 800;
@@ -148,6 +150,7 @@ and link to it in `index.html`
 
 ## Create a linear scale
 
+- Let's position the circles vertically, based on the distance run
 - One of the most important things that D3 does is provide the ability to map points in the "domain" of data to points in the visual "range" using what's called a `scale`.
 - There are lots of different kinds of scales, but for now we're just going to use a `linear` scale which will map numeric data values to numeric visual values.
 
@@ -195,5 +198,41 @@ d3.selectAll('circle').data(runs)
 - That callback function runs for each visual element selected
 - The result of the function is then assigned to whatever aspect of the element is being set (in this case the `cy` attribute)
 - The callback function takes two params
-    - the individual `datum` attached to that particular visual element
-    - the `index` of that `datum` in the original data array (in this case `runs`)
+    - the individual `datum` object (from the original `runs` array of objects) attached to that particular visual element
+    - the `index` of that `datum` in the original `runs` array
+
+## Create a time scale
+
+- Let's position the circles horizontally, based on the date that they happened
+- First create a time scale:
+
+```javascript
+var xScale = d3.scaleTime(); //scaleTime maps date values with numeric visual points
+xScale.range([0,WIDTH]);
+xScale.domain([new Date('2017-10-1'), new Date('2017-10-31')]);
+
+console.log(xScale.domain()); //you can get the domain whenever you want like this
+console.log(xScale.range()); //you can get the range whenever you want like this
+```
+
+## Parse and format times
+
+- Note that our `date` data isn't in the format expected by the xScale domain
+- D3 provides us an easy way to convert strings to dates and vice versa
+
+```javascript
+var parseTime = d3.timeParse("%B%e, %Y at %-I:%M%p");
+console.log(parseTime('October 3, 2017 at 6:00PM'));
+
+var formatTime = d3.timeFormat("%B%e, %Y at %-I:%M%p");
+console.log(formatTime(new Date()));
+```
+
+Let's use this when calculating `cx` attributes for our circles:
+
+```javascript
+d3.selectAll('circle')
+    .attr('cx', function(datum, index){
+        return xScale(parseTime(datum.date)); //use parseTime to convert the date string property on the datum object to a Date object
+    });
+```
