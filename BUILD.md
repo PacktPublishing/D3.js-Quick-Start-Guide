@@ -17,6 +17,7 @@
 1. Display data in a table
 1. Create click handler
 1. Remove data
+1. Drag an element
 
 ## Add link to d3 library
 
@@ -556,4 +557,30 @@ circle:hover { /* hover state */
     r:10;
     fill: blue;
 }
+```
+
+## Drag an element
+
+- D3 allows us to create complex interactions called "behaviors" which have multiple callbacks
+- Two steps:
+    - create the behavior
+    - attach the behavior to one or more elements
+- drag behaviors have three callbacks
+    - when the user starts to drag
+    - each time the user moves the cursor before releasing the "mouse" button
+    - when the user releases the "mouse" button
+
+```javascript
+//put this code at the end of the render function
+var drag = function(datum){
+    var x = d3.event.x; //get current x position of the cursor
+    var y = d3.event.y; //get current y position of the cursor
+    d3.select(this).attr('cx', x); //change the dragged element's cx attribute to whatever the x position of the cursor is
+    d3.select(this).attr('cy', y); //change the dragged element's cy attribute to whatever the y position of the cursor is
+}
+var dragBehavior = d3.drag() //create a drag behavior
+    // .on('start', dragStart) //dragStart is a reference to a function we haven't created yet
+    .on('drag', drag); //call the "drag" function (the 2nd param) each time the user moves the cursor before releasing the mouse button.  The "drag" function is defined above
+    // .on('end', dragEnd); //dragEnd is a reference to a function we haven't created yet
+d3.selectAll('circle').call(dragBehavior); //attach the dragBehavior behavior to all <circle> elements
 ```
