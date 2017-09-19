@@ -18,6 +18,7 @@
 1. Create click handler
 1. Remove data
 1. Drag an element
+1. Update data after a drag
 
 ## Add link to d3 library
 
@@ -583,4 +584,28 @@ var dragBehavior = d3.drag() //create a drag behavior
     .on('drag', drag); //call the "drag" function (the 2nd param) each time the user moves the cursor before releasing the mouse button.  The "drag" function is defined above
     // .on('end', dragEnd); //dragEnd is a reference to a function we haven't created yet
 d3.selectAll('circle').call(dragBehavior); //attach the dragBehavior behavior to all <circle> elements
+```
+
+## Update data after a drag
+
+- Uncomment the `.on('end', dragEnd)` code
+- Create the callback function
+
+```javascript
+var dragEnd = function(datum){
+    var x = d3.event.x; //get current x position of the cursor
+    var y = d3.event.y; //get current y position of the cursor
+
+    var date = xScale.invert(x); //get the date by using the xScale to invert the x position of the mouse
+    var distance = yScale.invert(y); //get the distance by using the yScale to invert the y position of the mouse
+
+    //since datum is an object, which is are passed by reference, we can update a property on the object, and the original variable will update
+    datum.date = formatTime(date); //use formatTime() to convert the date variable, which is a Date object, into the appropriate string
+    datum.distance = distance; //change the distance
+    createTable(); //redraw the table
+}
+var dragBehavior = d3.drag()
+    // .on('start', dragStart)
+    .on('drag', drag)
+    .on('end', dragEnd);
 ```
