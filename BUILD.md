@@ -19,6 +19,7 @@
 1. Remove data
 1. Drag an element
 1. Update data after a drag
+1. Create a zoom behavior that scales elements
 
 ## Add link to d3 library
 
@@ -616,4 +617,21 @@ Let's change the color of a circle while it's being dragged too:
 circle:active {
     fill: red;
 }
+```
+
+## Create a zoom behavior that scales elements
+
+- Another behavior we can create is the zooming ability
+    - two finger drag
+    - mouse wheel
+    - pinch/spread
+
+```javascript
+//put this at the end of app.js
+var zoomCallback = function(){ //the callback function
+	d3.select('#points').attr("transform", d3.event.transform); //transform the #points <g> element based on the zoom transform created
+}
+var zoom = d3.zoom() //create the zoom behavior
+    .on('zoom', zoomCallback); //tell it which callback function to use when zooming
+d3.select('svg').call(zoom); //attach the behavior to the svg element
 ```
