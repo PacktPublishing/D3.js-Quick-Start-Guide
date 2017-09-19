@@ -609,3 +609,11 @@ var dragBehavior = d3.drag()
     .on('drag', drag)
     .on('end', dragEnd);
 ```
+
+Let's change the color of a circle while it's being dragged too:
+
+```css
+circle:active {
+    fill: red;
+}
+```
