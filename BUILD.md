@@ -20,6 +20,7 @@
 1. Drag an element
 1. Update data after a drag
 1. Create a zoom behavior that scales elements
+1. Update axes when zooming
 
 ## Add link to d3 library
 
@@ -635,3 +636,34 @@ var zoom = d3.zoom() //create the zoom behavior
     .on('zoom', zoomCallback); //tell it which callback function to use when zooming
 d3.select('svg').call(zoom); //attach the behavior to the svg element
 ```
+
+## Update axes when zooming
+
+To update the axes, let's first add ids to the `<g>` elements that contain them
+
+```javascript
+d3.select('svg')
+	.append('g')
+    .attr('id', 'x-axis') //add an id
+	.call(bottomAxis)
+    .attr('transform', 'translate(0,'+HEIGHT+')');
+
+var leftAxis = d3.axisLeft(yScale);
+d3.select('svg')
+	.append('g')
+    .attr('id', 'y-axis') //add an id
+	.call(leftAxis);
+```
+
+Now let's use those ids when we zoom:
+
+```javascript
+var zoomCallback = function(){
+	d3.select('#points').attr("transform", d3.event.transform);
+    d3.select('#x-axis').call(bottomAxis.scale(d3.event.transform.rescaleX(xScale)));
+	d3.select('#y-axis').call(leftAxis.scale(d3.event.transform.rescaleY(yScale)));
+}
+```
+
+- `bottomAxis.scale()` tells the axis to redraw itself
+- `d3.event.transform.rescaleX(xScale)` returns a value indicating how the bottom axis should rescale
