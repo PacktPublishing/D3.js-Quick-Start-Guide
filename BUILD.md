@@ -21,6 +21,7 @@
 1. Update data after a drag
 1. Create a zoom behavior that scales elements
 1. Update axes when zooming
+1. Update click points after a transform
 
 ## Add link to d3 library
 
@@ -667,3 +668,53 @@ var zoomCallback = function(){
 
 - `bottomAxis.scale()` tells the axis to redraw itself
 - `d3.event.transform.rescaleX(xScale)` returns a value indicating how the bottom axis should rescale
+
+## Update click points after a transform
+
+- If we click on the svg to create new runs, they circles/data created are incorrect
+- When we zoom, we need to save the transformation to a variable
+
+```javascript
+var lastTransform = null; //reference to the last transform that happened
+var zoomCallback = function(){
+    lastTransform = d3.event.transform; //update the transform reference
+	d3.select('#points').attr("transform", d3.event.transform);
+    d3.select('#x-axis').call(bottomAxis.scale(d3.event.transform.rescaleX(xScale)));
+	d3.select('#y-axis').call(leftAxis.scale(d3.event.transform.rescaleY(yScale)));
+}
+```
+
+Now use that reference to the last transform when clicking on the svg:
+
+```javascript
+d3.select('svg').on('click', function(){
+    var x = lastTransform.invertX(d3.event.offsetX); //invert the transformation so we get a proper x value
+    var y = lastTransform.invertY(d3.event.offsetY);
+
+    var date = xScale.invert(x)
+    var distance = yScale.invert(y);
+
+    var newRun = {
+        id: ( runs.length > 0 ) ? runs[runs.length-1].id+1 : 1,
+        date: formatTime(date),
+        distance: distance
+    }
+    runs.push(newRun);
+    createTable();
+    render();
+});
+```
+
+But now clicking before any zoom is broken, since `lastTransform` will be null:
+
+```javascript
+//set x/y like normal
+var x = d3.event.offsetX;
+var y = d3.event.offsetY;
+
+//if lastTransform has been updated, overwrite these values
+if(lastTransform !== null){
+    x = lastTransform.invertX(d3.event.offsetX);
+    y = lastTransform.invertY(d3.event.offsetY);
+}
+```
