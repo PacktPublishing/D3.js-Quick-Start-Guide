@@ -22,6 +22,7 @@
 1. Create a zoom behavior that scales elements
 1. Update axes when zooming
 1. Update click points after a transform
+1. Avoid redrawing entire screen during render
 
 ## Add link to d3 library
 
@@ -717,4 +718,52 @@ if(lastTransform !== null){
     x = lastTransform.invertX(d3.event.offsetX);
     y = lastTransform.invertY(d3.event.offsetY);
 }
+```
+
+## Avoid redrawing entire screen during render
+
+- At the moment, we wipe all `<circle>` elements in the `<svg>` each time we call `render()`
+    - This is inefficient.  Let's just remove the ones we don't want
+- We'll use `.exit()` to find the selection of circles that haven't been matched with data
+    - then we'll use `.remove()` to remove those circles
+
+```javascript
+d3.select('#points').selectAll('circle')
+    .data(runs)
+    .enter()
+    .append('circle');
+
+d3.selectAll('circle').exit().remove(); //remove all circles not associated with data
+
+d3.selectAll('circle')
+    .attr('cy', function(datum, index){
+        return yScale(datum.distance);
+    });
+
+d3.selectAll('circle')
+    .attr('cx', function(datum, index){
+        return xScale(parseTime(datum.date));
+    });
+```
+
+- This can cause weird side effects, because some circles are being reassigned to a different set of data
+    - if we remove a piece of data in the center of the array, the `<circle>` in the the DOM that was assigned to it gets reassigned to the piece of data that used to be assigned to the next sibling `<circle>` in the DOM.  Each `<circle>` gets reassigned over one space from there on out
+    - to avoid these affects, we need to make sure that each circle stays with the data it used to be assigned to
+        - to do this, we can tell D3 to map `<circles>` to datum by id, rather than index in the array
+
+```javascript
+var circles = d3.select('#points').selectAll('circle').data(runs, function(datum){ //when redrawing circles, make sure pre-existing circles match with their old data
+    return datum.id
+});
+
+circles.enter()
+    .append('circle')
+    .attr('cy', function(datum, index){
+        return yScale(datum.distance);
+    })
+    .attr('cx', function(datum, index){
+        return xScale(parseTime(datum.date));
+    });
+
+circles.exit().remove();
 ```
