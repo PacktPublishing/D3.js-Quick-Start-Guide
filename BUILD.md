@@ -474,7 +474,7 @@ For future use, let's move the `xScale` and `yScale` out of the render function 
 
 ```javascript
 var xScale = d3.scaleTime();
-var parseTime = d3.timeParse("%B%e, %Y at%-I:%M%p");
+var parseTime = d3.timeParse("%B%e, %Y at %-I:%M%p");
 xScale.range([0,WIDTH]);
 xDomain = d3.extent(runs, function(datum, index){
     return parseTime(datum.date);
