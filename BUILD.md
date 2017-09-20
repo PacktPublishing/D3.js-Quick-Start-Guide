@@ -23,6 +23,7 @@
 1. Update axes when zooming
 1. Update click points after a transform
 1. Avoid redrawing entire screen during render
+1. Hide elements beyond axis
 
 ## Add link to d3 library
 
@@ -766,4 +767,60 @@ circles.enter()
     });
 
 circles.exit().remove();
+```
+
+## Hide elements beyond axis
+
+To remove elements once they get beyond an axis, we can just add an outer SVG:
+
+```html
+<svg id="container">
+    <svg>
+        <g id="points"></g>
+    </svg>
+</svg>
+```
+
+Now replace all `d3.select('svg')` with `d3.select('#container')`
+
+```javascript
+d3.select('#container')
+    .style('width', WIDTH)
+    .style('height', HEIGHT);
+//
+// ...
+//
+d3.select('#container')
+	.append('g')
+    .attr('id', 'x-axis')
+	.call(bottomAxis)
+    .attr('transform', 'translate(0,'+HEIGHT+')');
+
+var leftAxis = d3.axisLeft(yScale);
+d3.select('#container')
+	.append('g')
+    .attr('id', 'y-axis')
+	.call(leftAxis);
+//
+// ...
+//
+d3.select('#container').on('click', function(){
+//
+// ...
+//
+});
+//
+// ...
+//
+d3.select('#container').call(zoom);    
+```
+
+And lastly, adjust css:
+
+```css
+#container {
+     overflow: visible;
+     margin-bottom: 20px;
+     margin-left: 30px;
+ }
 ```
