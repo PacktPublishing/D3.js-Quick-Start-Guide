@@ -114,7 +114,8 @@ A series of connected lines.  Can have a fill like a polygon, but won't automati
 
 ## Path
 
-https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths
+- [Docs](https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths)
+- [Bezier curves](http://blogs.sitepointstatic.com/examples/tech/svg-curves/cubic-curve.html)
 
 - attributes
 	- `d` a set of drawing commands
