@@ -198,3 +198,98 @@ var arc = d3.arc()
     .innerRadius(100) //to make this a donut graph, adjust this value
     .outerRadius(radius);
 ```
+
+## Remove parts of the pie
+
+First let's add ids to our data to make removing easier:
+
+```javascript
+var dataset = [
+    { id: 1, label: 'Abulia', count: 10 },
+    { id: 2, label: 'Betelgeuse', count: 20 },
+    { id: 3, label: 'Cantaloupe', count: 30 },
+    { id: 4, label: 'Dijkstra', count: 40 }
+];
+```
+
+Now let's use those ids when we map data to paths:
+
+```javascript
+var path = container.selectAll('path')
+    .data(pie(dataset), function(datum){
+        return datum.data.id
+    })
+```
+
+Let's save a record of what the data is currently set to (we'll use this later):
+
+```javascript
+var path = container.selectAll('path')
+    .data(pie(dataset), function(datum){
+        return datum.data.id
+    })
+    .enter()
+    .append('path')
+    .attr('d', arc)
+    .attr('fill', function(d) {
+        return colorScale(d.data.label);
+    })
+    .each(function(d) { this._current = d; }); //add this
+```
+
+Create the click handler:
+
+```javascript
+path.on('click', function(clickedDatum, clickedIndex){
+});
+```
+
+Remove the selected data from the dataset array:
+
+```javascript
+path.on('click', function(clickedDatum, clickedIndex){
+    dataset = dataset.filter(function(currentDatum, currentIndex){ //new
+        return clickedDatum.data.id !== currentDatum.id //new
+    }); //new
+});
+```
+
+Remove the `path` elements from the `svg`:
+
+```javascript
+path.on('click', function(clickedDatum, clickedIndex){
+    dataset = dataset.filter(function(currentDatum, currentIndex){
+        return clickedDatum.data.id !== currentDatum.id
+    });
+    path //new
+        .data(pie(dataset), function(datum){ //new
+            return datum.data.id //new
+        }) //new
+        .exit().remove(); //new
+});
+```
+
+Add the transition:
+
+```javascript
+path.on('click', function(clickedDatum, clickedIndex){
+    dataset = dataset.filter(function(currentDatum, currentIndex){
+        return clickedDatum.data.id !== currentDatum.id
+    });
+    path
+        .data(pie(dataset), function(datum){
+            return datum.data.id
+        })
+        .exit().remove();
+
+    path.transition() //create the transition
+        .duration(750) //add how long the transition takes
+        .attrTween('d', function(d) { //tween the d attribute
+            var interpolate = d3.interpolate(this._current, d); //interpolate from what the d attribute was and what it is now
+            this._current = interpolate(0); //save new value of data
+            return function(t) {
+                return arc(interpolate(t));
+            };
+        });
+});
+```
