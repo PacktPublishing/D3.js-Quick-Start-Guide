@@ -18,3 +18,18 @@
     </body>
 </html>
 ```
+
+## Set Config Vars
+
+```javascript
+var WIDTH = 360;
+var HEIGHT = 360;
+var radius = Math.min(WIDTH, HEIGHT) / 2;
+
+var dataset = [
+    { label: 'Abulia', count: 10 },
+    { label: 'Betelgeuse', count: 20 },
+    { label: 'Cantaloupe', count: 30 },
+    { label: 'Dijkstra', count: 40 }
+];
+```
