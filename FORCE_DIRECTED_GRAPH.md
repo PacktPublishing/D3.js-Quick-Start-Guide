@@ -125,3 +125,50 @@ var links = d3.select("#links")
     .enter()
     .append("line");
 ```
+
+## Create simulation
+
+Now we'll generate a simulation:
+
+```javascript
+d3.forceSimulation();
+```
+
+Tell it what data to act on:
+
+```javascript
+d3.forceSimulation()
+    .nodes(nodesData)
+```
+
+Create a gravitational force at the center of the screen that pulls all data towards it:
+
+```javascript
+d3.forceSimulation()
+    .nodes(nodesData)
+    .force("center_force", d3.forceCenter(WIDTH / 2, HEIGHT / 2))
+```
+
+Create a force on each of the nodes so that they repel each other:
+
+```javascript
+d3.forceSimulation()
+    .nodes(nodesData)
+    .force("center_force", d3.forceCenter(WIDTH / 2, HEIGHT / 2))
+    .force("charge_force", d3.forceManyBody())
+```
+
+Lastly, we'll create the links between the nodes so that they don't repel each other too much:
+
+```javascript
+d3.forceSimulation()
+    .nodes(nodesData)
+    .force("center_force", d3.forceCenter(WIDTH / 2, HEIGHT / 2))
+    .force("charge_force", d3.forceManyBody())
+    .force("links", d3.forceLink(linksData).id(function(datum){
+        return datum.name
+    }).distance(160))
+```
+
+- The `d3.forceLink` function takes the array of links.  It then uses the `source` and `target` attributes of each link data object to connect the nodes via their `.name` properties (as specified in the return value)
+- You can tack on `.distance()` to specify how long the connections are visually between each node
