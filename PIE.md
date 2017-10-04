@@ -40,8 +40,8 @@ An ordinal scale maps discrete values (can't be interpolated) to discrete values
 
 ```javascript
 var mapper = d3.scaleOrdinal();
-mapper.range([45, 63, 400]);
-mapper.domain(['Bob', 'Sally', 'Zagthor']);
+mapper.range([45, 63, 400]); //list each value for ordinal scales, not min/max
+mapper.domain(['Bob', 'Sally', 'Zagthor']); //list each value for ordinal scales, not min/max
 
 console.log(mapper('Bob'));
 console.log(mapper('Sally'));
@@ -52,4 +52,32 @@ You cannot invert ordinal scales:
 
 ```javascript
 console.log(mapper.invert(45));
+```
+
+## Create the color scale to map labels to colors
+
+D3 comes with lots of pre-made color schemes:
+
+- https://github.com/d3/d3-scale/blob/master/README.md#category-scales
+- https://github.com/d3/d3-scale-chromatic#categorical
+
+They're just arrays:
+
+```javascript
+console.log(d3.schemeCategory10)
+```
+
+Consequently, we can use them when setting a range:
+
+```javascript
+var colorScale = d3.scaleOrdinal();
+colorScale.range(d3.schemeCategory10);
+```
+
+We can generate an array of labels for the domain using JavaScript's map function:
+
+```javascript
+colorScale.domain(dataset.map(function(element){
+    return element.label;
+}));
 ```
