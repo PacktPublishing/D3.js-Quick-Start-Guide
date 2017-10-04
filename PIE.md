@@ -91,3 +91,15 @@ d3.select('svg')
     .attr('width', WIDTH)
     .attr('height', HEIGHT);
 ```
+
+## Add paths for each pie segment
+
+```javascript
+var path = d3.select('g').selectAll('path')
+    .data(dataset)
+    .enter()
+    .append('path')
+    .attr('fill', function(d) {
+        return colorScale(d.label);
+    });
+```
