@@ -172,6 +172,10 @@ Can use font-family and font-size CSS styling
 
 An arc is a command that you can add to a path that will draw part of an ellipse.
 
+![two point](http://blog.arcbees.com/wp-content/uploads/svg-arc2.png)
+
+Two points intersect only two ellipses with the same width/height and rotation.
+
 ```
 A rx ry x-axis-rotation large-arc-flag sweep-flag x y
 ```
