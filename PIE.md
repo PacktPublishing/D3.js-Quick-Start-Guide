@@ -81,3 +81,13 @@ colorScale.domain(dataset.map(function(element){
     return element.label;
 }));
 ```
+
+## Set up the svg
+
+Standard:
+
+```javascript
+d3.select('svg')
+    .attr('width', WIDTH)
+    .attr('height', HEIGHT);
+```
