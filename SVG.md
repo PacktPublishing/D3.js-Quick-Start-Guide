@@ -114,7 +114,8 @@ A series of connected lines.  Can have a fill like a polygon, but won't automati
 
 ## Path
 
-https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths
+- [Docs](https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths)
+- [Bezier curves](http://blogs.sitepointstatic.com/examples/tech/svg-curves/cubic-curve.html)
 
 - attributes
 	- `d` a set of drawing commands
@@ -128,13 +129,14 @@ https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths
 		- S = smooth curveto
 			- S x2 y2, x y
 			- follows another S or C command
-			- uses x2 y2 of previous S or C command
+			- uses reflection of x2 y2 of previous S or C command for x1 y1
 		- Q = quadratic Bézier curve
 			- Q x1 y1, x y
 			- uses one control point for start and end controls (x1, y1)
 		- T = smooth quadratic Bézier curveto
 			- T x y
 			- strings together multiple quadratic lines
+			- uses reflection of previous quadratic curve's control point as its control point
 		- Z = closepath
 	- **Note:** All of the commands above can also be expressed with lower letters. Capital letters means absolutely positioned, lower cases means relatively positioned.
 
