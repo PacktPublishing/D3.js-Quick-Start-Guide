@@ -134,3 +134,21 @@ var path = d3.select('g').selectAll('path')
         return colorScale(d.label);
     });
 ```
+
+## Format the data for the arc
+
+- The reason that our `arc()` function won't work is that the data isn't formatted properly for the function
+- The arc function we generated expects the data object to have things like start angle, end angle, etc
+- D3 can reformat our data so that it will work with our generated `arc()` function
+
+```javascript
+var pie = d3.pie()
+    .value(function(d) { return d.count; }) //use the 'count' property each value in the original array to determine how big the piece of pie should be
+    .sort(null); //don't sort the values
+```
+
+`pie` is a function that takes an array of values as a param and returns an array of objects that are formatted for our `arc` function
+
+```javascript
+console.log(pie(dataset));
+```
