@@ -188,3 +188,13 @@ The pie starts at (0,0), so we can move the group containing the pie:
 var container = d3.select('g')
     .attr('transform', 'translate(' + (WIDTH / 2) + ',' + (HEIGHT / 2) + ')'); //pie center is at 0,0
 ```
+
+## Make a donut graph
+
+If you want the pie to have a hole at the center, just adjust the inner radius of the `arc()` function:
+
+```javascript
+var arc = d3.arc()
+    .innerRadius(100) //to make this a donut graph, adjust this value
+    .outerRadius(radius);
+```
