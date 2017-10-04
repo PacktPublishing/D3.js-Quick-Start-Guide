@@ -172,3 +172,29 @@ d3.forceSimulation()
 
 - The `d3.forceLink` function takes the array of links.  It then uses the `source` and `target` attributes of each link data object to connect the nodes via their `.name` properties (as specified in the return value)
 - You can tack on `.distance()` to specify how long the connections are visually between each node
+
+## Specify how the simulation affects the visual elements
+
+- The simulation runs "ticks" which run very quickly
+- Each time a new "tick" occurs, you can updated the visual elements
+- This allows our simulation to animate
+- D3 will tack on positional data to our regular data so that we can make use of it
+
+```javascript
+d3.forceSimulation()
+    .nodes(nodesData)
+    .force("charge_force", d3.forceManyBody())
+    .force("center_force", d3.forceCenter(WIDTH / 2, HEIGHT / 2)) //position centering force at center x,y coords
+    .force("links", d3.forceLink(linksData).id(function(datum){
+            return datum.name
+        }).distance(160))
+    .on("tick", function(){
+        nodes.attr("cx", function(datum) { return datum.x; })
+            .attr("cy", function(datum) { return datum.y; });
+
+        links.attr("x1", function(datum) { return datum.source.x; })
+            .attr("y1", function(datum) { return datum.source.y; })
+            .attr("x2", function(datum) { return datum.target.x; })
+            .attr("y2", function(datum) { return datum.target.y; });
+    });
+```
