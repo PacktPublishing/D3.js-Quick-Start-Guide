@@ -64,3 +64,16 @@ Don't forget to link to it!
 ```html
 <link rel="stylesheet" href="app.css">
 ```
+
+## Set up svg
+
+Standard:
+
+```javascript
+var WIDTH = 300;
+var HEIGHT = 200;
+
+d3.select("svg")
+    .attr("width", WIDTH)
+    .attr("height", HEIGHT);
+```
