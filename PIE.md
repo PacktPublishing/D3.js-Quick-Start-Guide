@@ -27,10 +27,10 @@ var HEIGHT = 360;
 var radius = Math.min(WIDTH, HEIGHT) / 2;
 
 var dataset = [
-    { label: 'Abulia', count: 10 },
-    { label: 'Betelgeuse', count: 20 },
-    { label: 'Cantaloupe', count: 30 },
-    { label: 'Dijkstra', count: 40 }
+    { label: 'Bob', count: 10 },
+    { label: 'Sally', count: 20 },
+    { label: 'Matt', count: 30 },
+    { label: 'Jane', count: 40 }
 ];
 ```
 
