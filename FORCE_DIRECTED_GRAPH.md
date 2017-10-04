@@ -42,3 +42,25 @@ Pretty standard, but we'll need two `<g>` elements:
     </body>
 </html>
 ```
+
+## Set up styling for nodes and links
+
+Create a css file for our circles (nodes/people) and lines (links/relationships)
+
+```css
+circle {
+    fill: red;
+    r: 5;
+}
+
+line {
+    stroke: grey;
+    stroke-width: 1;
+}
+```
+
+Don't forget to link to it!
+
+```html
+<link rel="stylesheet" href="app.css">
+```
