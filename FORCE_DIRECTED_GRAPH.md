@@ -77,3 +77,51 @@ d3.select("svg")
     .attr("width", WIDTH)
     .attr("height", HEIGHT);
 ```
+
+## Add data for people
+
+```javascript
+var nodesData =  [
+    {"name": "Travis", "sex": "M"},
+    {"name": "Rake", "sex": "M"},
+    {"name": "Diana", "sex": "F"},
+    {"name": "Rachel", "sex": "F"},
+    {"name": "Shawn", "sex": "M"},
+    {"name": "Emerald", "sex": "F"}
+];
+```
+
+## Add data for relationships
+
+Note that the attributes must be `source` and `target` in order for D3 to do its magic
+
+```javascript
+var linksData = [
+    {"source": "Travis", "target": "Rake"},
+    {"source": "Diana", "target": "Rake"},
+    {"source": "Diana", "target": "Rachel"},
+    {"source": "Rachel", "target": "Rake"},
+    {"source": "Rachel", "target": "Shawn"},
+    {"source": "Emerald", "target": "Rachel"}
+];
+```
+
+## Add circles to the svg
+
+```javascript
+var nodes = d3.select("#nodes")
+    .selectAll("circle")
+    .data(nodesData)
+    .enter()
+    .append("circle");
+```
+
+## Add lines to the svg
+
+```javascript
+var links = d3.select("#links")
+    .selectAll("line")
+    .data(linksData)
+    .enter()
+    .append("line");
+```
