@@ -118,7 +118,7 @@ Fortunately, D3 can generate something like this for us:
 
 ```javascript
 var arc = d3.arc()
-    .innerRadius(100)
+    .innerRadius(0) //to make this a donut graph, adjust this value
     .outerRadius(radius);
 ```
 
@@ -178,4 +178,13 @@ var path = d3.select('g').selectAll('path')
     .attr('fill', function(d) {
         return colorScale(d.data.label); //use .data property to access original data
     });
+```
+
+## Adjust the position of the pie
+
+The pie starts at (0,0), so we can move the group containing the pie:
+
+```javascript
+var container = d3.select('g')
+    .attr('transform', 'translate(' + (WIDTH / 2) + ',' + (HEIGHT / 2) + ')'); //pie center is at 0,0
 ```
