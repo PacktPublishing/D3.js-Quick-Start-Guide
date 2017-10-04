@@ -103,3 +103,34 @@ var path = d3.select('g').selectAll('path')
         return colorScale(d.label);
     });
 ```
+
+## Generate an arc creating function
+
+Next we want to do something like this:
+
+```javascript
+.attr('d', function(datum){
+    //return path string here
+})
+```
+
+Fortunately, D3 can generate something like this for us:
+
+```javascript
+var arc = d3.arc()
+    .innerRadius(100)
+    .outerRadius(radius);
+```
+
+We could plug this function into it's right place, but it won't work yet:
+
+```javascript
+var path = d3.select('g').selectAll('path')
+    .data(dataset)
+    .enter()
+    .append('path')
+    .attr('d', arc) //add this
+    .attr('fill', function(d) {
+        return colorScale(d.label);
+    });
+```
