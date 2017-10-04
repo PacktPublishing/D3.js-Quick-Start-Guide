@@ -168,6 +168,27 @@ Can use font-family and font-size CSS styling
 <g></g>
 ```
 
+## Arc
+
+An arc is a command that you can add to a path that will draw part of an ellipse.
+
+```
+A rx ry x-axis-rotation large-arc-flag sweep-flag x y
+```
+
+- A - create an arc draw command
+- rx - x radius
+- ry - y radius
+- x-axis-rotation - rotate ellipse a certain number of degrees
+- large-arc-flag - whether or not to travel along arc for more than 180 degrees
+- sweep-flag - whether to move clock-wise or not
+- x - destination x value
+- y - destination y value
+
+![flags](https://developer.mozilla.org/@api/deki/files/345/=SVGArcs_Flags.png)
+
+Play with the values here: http://codepen.io/lingtalfi/pen/yaLWJG
+
 ## Documentation
 
 https://developer.mozilla.org/en-US/docs/Web/SVG/Element
