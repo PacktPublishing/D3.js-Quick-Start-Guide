@@ -152,3 +152,30 @@ var pie = d3.pie()
 ```javascript
 console.log(pie(dataset));
 ```
+
+We can use this when attaching data to our paths:
+
+```javascript
+var path = d3.select('g').selectAll('path')
+    .data(pie(dataset)) //reformat data for arc
+    .enter()
+    .append('path')
+    .attr('d', arc)
+    .attr('fill', function(d) {
+        return colorScale(d.label);
+    });
+```
+
+- Unfortunately, now each object from the data array that's been attached to our `path` elements doesn't have a `.label` property
+- Fortunately, it does have a `.data` attribute that mirrors what the data looked like before we passed it to the `pie()` function
+
+```javascript
+var path = d3.select('g').selectAll('path')
+    .data(pie(dataset))
+    .enter()
+    .append('path')
+    .attr('d', arc)
+    .attr('fill', function(d) {
+        return colorScale(d.data.label); //use .data property to access original data
+    });
+```
