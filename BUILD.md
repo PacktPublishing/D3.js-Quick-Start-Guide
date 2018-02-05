@@ -284,7 +284,7 @@ Let's do the same for the xScale's domain:
 var parseTime = d3.timeParse("%B%e, %Y at %-I:%M%p");
 var xScale = d3.scaleTime();
 xScale.range([0,WIDTH]);
-xDomain = d3.extent(runs, function(datum, index){
+var xDomain = d3.extent(runs, function(datum, index){
     return parseTime(datum.date);
 });
 xScale.domain(xDomain);
