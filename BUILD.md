@@ -338,7 +338,7 @@ d3.select('svg')
 	.call(leftAxis); //no need to transform, since it's placed correctly initially
 ```
 
-It's a little tough, so let's adding some margin to the body:
+It's a little tough to see, so let's adding some margin to the body:
 
 ```css
 body {
