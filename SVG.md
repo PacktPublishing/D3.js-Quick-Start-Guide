@@ -167,7 +167,8 @@ Can use font-family and font-size CSS styling
 - positioning and styling apply to children
 
 ```xml
-<g></g>
+<g transform = "translate(20,30) rotate(45) scale(0.5)">
+</g>
 ```
 
 ## Arc
