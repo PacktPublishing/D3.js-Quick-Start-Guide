@@ -232,7 +232,7 @@ console.log(xScale.range()); //you can get the range whenever you want like this
 ## Parse and format times
 
 - Note that our `date` data isn't in the format expected by the xScale domain
-- D3 provides us an easy way to convert strings to dates and vice versa
+- D3 provides us an easy way to convert strings to dates and vice versa using [these values](https://github.com/d3/d3-time-format#locale_format)
 
 ```javascript
 var parseTime = d3.timeParse("%B%e, %Y at %-I:%M%p");
