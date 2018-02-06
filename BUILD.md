@@ -822,8 +822,7 @@ And lastly, adjust css:
 ```css
 #container {
      overflow: visible;
-     margin-bottom: 20px;
-     margin-left: 30px;
+     margin-bottom: 50px;
  }
 ```
 
