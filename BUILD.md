@@ -724,18 +724,25 @@ if(lastTransform !== null){
 
 ## Avoid redrawing entire screen during render
 
+Assign the `d3.select('#points').selectAll('circle').data(runs)` to a variable, so we can use it later.  This helps preserve how DOM elements are assigned to data elements in the next sections
+
+```javascript
+var circles = d3.select('#points').selectAll('circle').data(runs);
+
+circles.enter().append('circle');
+```
+
 - At the moment, we wipe all `<circle>` elements in the `<svg>` each time we call `render()`
     - This is inefficient.  Let's just remove the ones we don't want
 - We'll use `.exit()` to find the selection of circles that haven't been matched with data
     - then we'll use `.remove()` to remove those circles
 
 ```javascript
-d3.select('#points').selectAll('circle')
-    .data(runs)
-    .enter()
-    .append('circle');
+var circles = d3.select('#points').selectAll('circle').data(runs);
 
-d3.selectAll('circle').exit().remove(); //remove all circles not associated with data
+cirlces.enter().append('circle');
+
+circles.exit().remove(); //remove all circles not associated with data
 
 d3.selectAll('circle')
     .attr('cy', function(datum, index){
@@ -754,18 +761,12 @@ d3.selectAll('circle')
         - to do this, we can tell D3 to map `<circles>` to datum by id, rather than index in the array
 
 ```javascript
-var circles = d3.select('#points').selectAll('circle').data(runs, function(datum){ //when redrawing circles, make sure pre-existing circles match with their old data
-    return datum.id
+//when redrawing circles, make sure pre-existing circles match with their old data
+var circles = d3.select('#points').selectAll('circle').data(runs, function(datum){
+      return datum.id
 });
 
-circles.enter()
-    .append('circle')
-    .attr('cy', function(datum, index){
-        return yScale(datum.distance);
-    })
-    .attr('cx', function(datum, index){
-        return xScale(parseTime(datum.date));
-    });
+circles.enter().append('circle');
 
 circles.exit().remove();
 ```
