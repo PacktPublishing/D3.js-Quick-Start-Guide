@@ -23,7 +23,7 @@ As always, we'll need an `index.html` file:
     <head>
         <meta charset="utf-8">
         <title></title>
-        <script src="https://d3js.org/d3.v4.min.js"></script>
+        <script src="https://d3js.org/d3.v5.min.js"></script>
     </head>
     <body>
         <svg>
