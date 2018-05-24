@@ -107,7 +107,6 @@ D3 can only go in one direction: from domain to range.
 
 Now we want to map the `label` properties of our data set to colors, instead of random numbers like in the previous section.  We can come up with our own color scheme, or choose one of D3's set of colors:
 
-- https://github.com/d3/d3-scale/blob/master/README.md#category-scales
 - https://github.com/d3/d3-scale-chromatic#categorical
 
 If we want to, we can see that these color schemes are just arrays:
