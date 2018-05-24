@@ -46,7 +46,7 @@ Now add a link to D3 at the bottom of your `<body>` tag in `index.html`:
 
 ```html
 <body>    
-    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
 </body>
 ```
 
@@ -54,16 +54,21 @@ Now create `app.js`, which will store all of our code:
 
 ```javascript
 console.log('this works');
+console.log(d3);
 ```
 
 and link to it in `index.html` at the bottom of the `<body>` tag:
 
 ```html
 <body>
-    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
     <script src="app.js" charset="utf-8"></script>
 </body>
 ```
+
+Load `index.html` in a browser and check your dev tools.  To see if your javascript files are linked correctly:
+
+![](https://i.imgur.com/NOOdIyf.png)
 
 ## Add an `<svg>` tag and size it with D3
 
@@ -72,12 +77,16 @@ At the top of the `<body>` tag in `index.html`, add an `<svg>` tag:
 ```html
 <body>
     <svg></svg>
-    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
     <script src="app.js" charset="utf-8"></script>
 </body>
 ```
 
-In `app.js` create variables to hold the width and height of the `<svg>` tag:
+If we examine the `elements` tab of our dev tools, we'll see the element has been placed.  In chrome, it has a default width/height of 300px/150px
+
+![](https://i.imgur.com/pREbm8a.png)
+
+In `app.js`, remove your previous `console.log` statements and create variables to hold the width and height of the `<svg>` tag:
 
 ```javascript
 var WIDTH = 800;
@@ -93,13 +102,17 @@ var HEIGHT = 600;
 d3.select('svg');
 ```
 
-The return value of this is a d3 version of the element (just like jQuery), so we "chain" commands onto this.  Let's add some styling to adjust the height/width of the element:
+The return value of `d3.select('svg')` is a d3 version of the `svg` element (just like jQuery), so we "chain" commands onto this.  Let's add some styling to adjust the height/width of the element:
 
 ```javascript
 d3.select('svg')
     .style('width', WIDTH)
     .style('height', HEIGHT);
 ```
+
+Now when we check the dev tools, we'll see the `<svg>` element has been resized:
+
+![](https://i.imgur.com/qsrPJkf.png)
 
 ## Create some fake data for our app
 
@@ -126,6 +139,10 @@ var runs = [
         distance: 8.7
     }
 ];
+
+d3.select('svg')
+    .style('width', WIDTH)
+    .style('height', HEIGHT);
 ```
 
 ## Add SVG circles and style them
@@ -162,10 +179,16 @@ and link to it in `index.html`
 </head>
 ```
 
+Our page should now look like this:
+
+![](https://i.imgur.com/CIjpYWs.png)
+
+Note that all three circles are in the upper left corder of the screen.  This is because all three are positioned at (0,0) so they overlap each other.  It appears as if there is just one circle, but in reality all three are present
+
 ## Create a linear scale
 
-- Let's position the circles vertically, based on the distance run
-- One of the most important things that D3 does is provide the ability to map points in the "domain" of data to points in the visual "range" using what's called a `scale`.
+- Let's position the circles vertically, based on the distance run in our `runs` dataset
+- One of the most important things that D3 does is provide the ability to map points in the "domain" of data (values in our `runs` array) to points in the visual "range" (positions in the `<svg>` element) using what's called a `scale`.
 - There are lots of different kinds of scales, but for now we're just going to use a `linear` scale which will map numeric data values to numeric visual values.
 
 In `app.js`:
@@ -178,14 +201,39 @@ d3.select('svg')
 var yScale = d3.scaleLinear(); //create the scale
 yScale.range([HEIGHT, 0]); //set the visual range (e.g. 600 to 0)
 yScale.domain([0, 10]); //set the data domain (e.g. 0 to 10)
+```
 
+- Here we're saying that a domain data point (distance run) of 0 should map to a visual height value of `HEIGHT` (600) in the range
+
+    ![](https://i.imgur.com/VispBfN.png)
+
+    - This is because the lower the distance run (data value), the more we want to move the visual point down the Y axis
+        - remember that the Y axis starts with 0 at the top and increases in value as we move down vertically on the screen
+- We also say that a domain data point (distance run) of 10 should map to a visual height of 0 in the range
+
+    ![](https://i.imgur.com/DsqDCzD.png)
+
+    - Again, this is because as the distance run increases, we want to get back a visual value that is lower and lower so that our circles are closer to the top of the screen
+
+When declaring range/domain of a linear scale, we only need to specify starting/ending values for each.  Values in between the starting/ending will be calculated by D3.  For instance, if we want to find out what visual value in the range corresponds to the distance value of `5` in the domain of data points, we just call:
+
+```javascript
 console.log(yScale(5)); //get a visual point from a data value
+```
+
+![](https://i.imgur.com/ggSwAv2.png)
+
+It makes sense that this logs `300` because the data value of `5` is half way between the starting data (domain) value of `0` and the ending data (domain) value of `10`
+
+If we want to go the other way and find out what data point in the domain corresponds to a visual value of 450 in the range, we just call:
+
+```javascript
 console.log(yScale.invert(450)); //get a data values from a visual point
 ```
 
-- Here we're saying that a data point of 0 to map to a visual height value of 600
-- This is because the lower the distance run (data value), the more we want to move the visual point down the Y axis
-    - remember that the Y axis starts at 0 at the top and increases in value
+![](https://i.imgur.com/7BdxFkm.png)
+
+It makes sense that this logs `2.5` because the visual value of 450 is 25% of the way from the starting visual (range) value of `600` to the ending visual (range) value of `0`
 
 ## Attach data to visual elements
 
