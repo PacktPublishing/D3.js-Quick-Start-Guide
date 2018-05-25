@@ -449,17 +449,34 @@ D3 can automatically generate axes for you:
 var bottomAxis = d3.axisBottom(xScale); //pass the appropriate scale in as a parameter
 d3.select('svg')
 	.append('g') //put everything inside a group
+	.call(bottomAxis); //generate the axis within the group
+```
+
+![](https://i.imgur.com/nLwIVBI.png)
+
+We want the axis to be at the bottom of the SVG, though:
+
+```javascript
+var bottomAxis = d3.axisBottom(xScale); //pass the appropriate scale in as a parameter
+d3.select('svg')
+	.append('g') //put everything inside a group
 	.call(bottomAxis) //generate the axis within the group
     .attr('transform', 'translate(0,'+HEIGHT+')'); //move it to the bottom
 ```
 
-Currently, our SVG clips the axis.  Let's change some CSS so it doesn't:
+Currently, our SVG clips the axis:
+
+[](https://i.imgur.com/byJXkLO.png)
+
+Let's change some CSS so it doesn't:
 
 ```css
 svg {
     overflow: visible;    
 }
 ```
+
+![](https://i.imgur.com/kd0AiMt.png)
 
 The left axis is pretty similar:
 
@@ -470,6 +487,8 @@ d3.select('svg')
 	.call(leftAxis); //no need to transform, since it's placed correctly initially
 ```
 
+![](https://i.imgur.com/aP4hTVq.png)
+
 It's a little tough to see, so let's adding some margin to the body:
 
 ```css
@@ -477,6 +496,8 @@ body {
     margin: 20px 40px;
 }
 ```
+
+![](https://i.imgur.com/FFgC68e.png)
 
 ## Display data in a table
 
