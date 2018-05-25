@@ -1032,21 +1032,3 @@ And lastly, adjust css:
      margin-bottom: 50px;
  }
 ```
-
-## Use AJAX
-
-We'll have to do some cleanup before we can do AJAX
-
-1. Move all functions to the top of the page
-1. Group all variable declarations together below function declarations
-1. Move the rest of the initializing code inside an init function an call it
-1. Move runs data to external `data.json` file
-1. Set `var runs = null` at top of page
-1. Set runs and call `init()` after ajax call succeeds:
-
-```javascript
-d3.json('data.json', function(error, data){
-    runs = data;
-    init();
-});
-```
