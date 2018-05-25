@@ -552,7 +552,7 @@ th, td {
 }
 ```
 
-![]()
+![](https://i.imgur.com/luGiAys.png)
 
 ## Create click handler
 
@@ -578,7 +578,7 @@ d3.select('svg').on('click', function(){
 
 You might notice that `createTable()` just adds on all the run rows again
 
-![]()
+![](https://i.imgur.com/Vu2CwCI.png)
 
 Let's clear out the rows previous created and re-render everything:
 
@@ -594,7 +594,7 @@ var createTable = function(){
 }
 ```
 
-![]()
+![](https://i.imgur.com/YcoPxK7.png)
 
 Now put the code for creating `<circles>` inside a render function:
 
@@ -683,7 +683,7 @@ createTable();
 render(); //add this line
 ```
 
-![]()
+![](https://i.imgur.com/5KjqmNp.png)
 
 ## Remove data
 
@@ -704,7 +704,7 @@ d3.selectAll('circle').on('click', function(datum, index){
 
 The `<circle>` elements aren't be removed though:
 
-![]()
+![](https://i.imgur.com/JoZyC1j.png)
 
 In the image above, it appears as though, there are only two circles, but really, the middle one has had its `cx` set to 800 and its `cy` set to 0.  It's overlapping the other circle in the same position.
 
@@ -727,11 +727,11 @@ d3.select('#points').selectAll('circle') //add circles to #points group, not svg
     .append('circle');    
 ```
 
-![]()
+![](https://i.imgur.com/h8TFFdN.png)
 
 If you try to delete all the circles and then add a new one, you'll get an error:
 
-![]()
+![](https://i.imgur.com/FprJXNN.png)
 
 Inside the `<svg>` click handler, let's put in a little code to handle when the user has deleted all runs and tries to add a new one:
 
@@ -744,7 +744,7 @@ var newRun = {
 }
 ```
 
-![]()
+![](https://i.imgur.com/N1taq91.png)
 
 Lastly, let's put in some css, so we know we're clicking on a circle:
 
@@ -761,7 +761,7 @@ circle:hover {
 }
 ```
 
-![]()
+![](https://i.imgur.com/umPJiTD.png)
 
 ## Drag an element
 
@@ -793,7 +793,7 @@ d3.selectAll('circle').call(dragBehavior); //attach the dragBehavior behavior to
 
 You can now drag the circles around, but the data doesn't update:
 
-![]()
+![](https://i.imgur.com/4pLzqt7.png)
 
 ## Update data after a drag
 
@@ -819,7 +819,7 @@ var dragBehavior = d3.drag()
     .on('end', dragEnd);
 ```
 
-![]()
+![](https://i.imgur.com/pdgApyh.png)
 
 Let's change the color of a circle while it's being dragged too:
 
@@ -851,7 +851,7 @@ var zoom = d3.zoom() //create the zoom behavior
 d3.select('svg').call(zoom); //attach the behavior to the svg element
 ```
 
-![]()
+![](https://i.imgur.com/Qvnu7yZ.png)
 
 ## Update axes when zooming/panning
 
@@ -884,7 +884,7 @@ var zoomCallback = function(){
 - `bottomAxis.scale()` tells the axis to redraw itself
 - `d3.event.transform.rescaleX(xScale)` returns a value indicating how the bottom axis should rescale
 
-![]()
+![](https://i.imgur.com/AI3KoG9.png)
 
 ## Update click points after a transform
 
@@ -924,7 +924,7 @@ d3.select('svg').on('click', function(){
 
 But now clicking before any zoom is broken, since `lastTransform` will be null:
 
-![]()
+![](https://i.imgur.com/2ozj3Nf.png)
 
 ```javascript
 //at top of click handler, adjust the code:
@@ -944,11 +944,11 @@ var distance = yScale.invert(y);
 
 add a new run initially:
 
-![]()
+![](https://i.imgur.com/5DjmFlg.png)
 
 now pan right and add a new point:
 
-![]()
+![](https://i.imgur.com/3gZAtmZ.png)
 
 ## Avoid redrawing entire screen during render
 
