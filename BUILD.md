@@ -888,8 +888,8 @@ var zoomCallback = function(){
 
 ## Update click points after a transform
 
-- If we click on the svg to create new runs, they circles/data created are incorrect
-- When we zoom, we need to save the transformation to a variable
+- If we zoom/pan and then click on the svg to create new runs, the circles/data created are incorrect
+- When we zoom, we need to save the transformation information to a variable so that we can use it later to figure out how to properly create circles and runs
 
 ```javascript
 var lastTransform = null; //reference to the last transform that happened
@@ -924,7 +924,10 @@ d3.select('svg').on('click', function(){
 
 But now clicking before any zoom is broken, since `lastTransform` will be null:
 
+![]()
+
 ```javascript
+//at top of click handler, adjust the code:
 //set x/y like normal
 var x = d3.event.offsetX;
 var y = d3.event.offsetY;
@@ -934,7 +937,18 @@ if(lastTransform !== null){
     x = lastTransform.invertX(d3.event.offsetX);
     y = lastTransform.invertY(d3.event.offsetY);
 }
+
+var date = xScale.invert(x);
+var distance = yScale.invert(y);
 ```
+
+add a new run initially:
+
+![]()
+
+now pan right and add a new point:
+
+![]()
 
 ## Avoid redrawing entire screen during render
 
