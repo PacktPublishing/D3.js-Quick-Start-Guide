@@ -687,11 +687,11 @@ render(); //add this line
 
 ## Remove data
 
-- Let's set up a click handler on a `<circle>` to remove that data element from the array
+- Let's set up a click handler on a `<circle>` to remove that circle and its associated data element from the array
 - We'll need to do this inside the `render()` declaration so that the click handlers are attached **after** the circles are created
 
 ```javascript
-//put this inside the render function, so that click handlers are attached when the circle is created
+//put this at the bottom of the render function, so that click handlers are attached when the circle is created
 d3.selectAll('circle').on('click', function(datum, index){
     d3.event.stopPropagation(); //stop click event from propagating to the SVG element and creating a run
     runs = runs.filter(function(run, index){ //create a new array that has removed the run with the correct id.  Set it to the runs var
@@ -702,7 +702,13 @@ d3.selectAll('circle').on('click', function(datum, index){
 });
 ```
 
-The `<circle>` elements aren't be removed though.  Let's put them in a `<g>` so that it's easy to clear out:
+The `<circle>` elements aren't be removed though:
+
+![]()
+
+In the image above, it appears as though, there are only two circles, but really, the middle one has had its `cx` set to 800 and its `cy` set to 0.  It's overlapping the other circle in the same position.
+
+Let's put the circles in a `<g>` so that it's easy to clear out:
 
 ```html
 <svg>
@@ -710,28 +716,42 @@ The `<circle>` elements aren't be removed though.  Let's put them in a `<g>` so 
 </svg>
 ```
 
-Now we can clear out the `<circle>` elements each time `render()` is called.
+Now we can clear out the `<circle>` elements each time `render()` is called.  This is a little crude, but it'll work for now.  Later on, we'll do things in a more elegant fashion.
 
 ```javascript
 var render = function(){
+
     d3.select('#points').html(''); //clear out all circles when rendering
     d3.select('#points').selectAll('circle') //add circles to #points group, not svg
         .data(runs)
         .enter()
         .append('circle');    
+
+    // ==================================
+    // rest of render function code goes here...
+    // ==================================
 }
+render();
 ```
 
-Let's put in a little code to handle when the user has deleted all runs and tries to add a new one:
+![]()
+
+If you try to delete all the circles and then add a new one, you'll get an error:
+
+![]()
+
+Inside the `<svg>` click handler, let's put in a little code to handle when the user has deleted all runs and tries to add a new one:
 
 ```javascript
 //inside svg click handler
 var newRun = {
-    id: ( runs.length > 0 ) ? runs[runs.length-1].id+1 : 1,
+    id: ( runs.length > 0 ) ? runs[runs.length-1].id+1 : 1, //add this line
     date: formatTime(date),
     distance: distance
 }
 ```
+
+![]()
 
 Lastly, let's put in some css, so we know we're clicking on a circle:
 
@@ -739,13 +759,16 @@ Lastly, let's put in some css, so we know we're clicking on a circle:
 circle {
     r: 5;
     fill: black;
-    transition: r 0.5s linear, fill 0.5s linear; /* transition */
+    transition: r 0.5s linear, fill 0.5s linear; /* add this transition to original code */
 }
-circle:hover { /* hover state */
+/* add this css for the hover state */
+circle:hover {
     r:10;
     fill: blue;
 }
 ```
+
+![]()
 
 ## Drag an element
 
