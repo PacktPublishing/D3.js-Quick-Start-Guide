@@ -833,10 +833,13 @@ When you drag the circle, it should turn red
 
 ## Create a zoom behavior that scales elements
 
-- Another behavior we can create is the zooming ability
-    - two finger drag
-    - mouse wheel
-    - pinch/spread
+- Another behavior we can create is the zooming/panning ability.  To do this you can do any of the following:
+    - zoom:
+        - two finger drag on a trackpad
+        - rotate your mouse wheel
+        - pinch/spread on a trackpad
+    - pan:
+        - click/drag the svg element
 
 ```javascript
 //put this at the end of app.js
@@ -848,9 +851,11 @@ var zoom = d3.zoom() //create the zoom behavior
 d3.select('svg').call(zoom); //attach the behavior to the svg element
 ```
 
-## Update axes when zooming
+![]()
 
-To update the axes, let's first add ids to the `<g>` elements that contain them
+## Update axes when zooming/panning
+
+Now when we zoom, the points move in/out.  When we pan, they move vertically/horizontally.  Unfortunately, the axes don't update accordingly.  Let's first add ids to the `<g>` elements that contain them
 
 ```javascript
 d3.select('svg')
@@ -871,13 +876,15 @@ Now let's use those ids when we zoom:
 ```javascript
 var zoomCallback = function(){
 	d3.select('#points').attr("transform", d3.event.transform);
-    d3.select('#x-axis').call(bottomAxis.scale(d3.event.transform.rescaleX(xScale)));
-	d3.select('#y-axis').call(leftAxis.scale(d3.event.transform.rescaleY(yScale)));
+    d3.select('#x-axis').call(bottomAxis.scale(d3.event.transform.rescaleX(xScale))); //tell the bottom axis to adjust its values based on how much we zoomed
+	d3.select('#y-axis').call(leftAxis.scale(d3.event.transform.rescaleY(yScale))); //tell the left axis to adjust its values based on how much we zoomed
 }
 ```
 
 - `bottomAxis.scale()` tells the axis to redraw itself
 - `d3.event.transform.rescaleX(xScale)` returns a value indicating how the bottom axis should rescale
+
+![]()
 
 ## Update click points after a transform
 
