@@ -952,12 +952,13 @@ now pan right and add a new point:
 
 ## Avoid redrawing entire screen during render
 
-Assign the `d3.select('#points').selectAll('circle').data(runs)` to a variable, so we can use it later.  This helps preserve how DOM elements are assigned to data elements in the next sections
+At the top of the `render()` function, assign the `d3.select('#points').selectAll('circle').data(runs)` to a variable, so we can use it later.  This helps preserve how DOM elements are assigned to data elements in the next sections
 
 ```javascript
-var circles = d3.select('#points').selectAll('circle').data(runs);
-
-circles.enter().append('circle');
+//top of render function
+d3.select('#points').html('');
+var circles = d3.select('#points').selectAll('circle').data(runs); //alter this
+circles.enter().append('circle'); //alter this
 ```
 
 - At the moment, we wipe all `<circle>` elements in the `<svg>` each time we call `render()`
@@ -966,24 +967,14 @@ circles.enter().append('circle');
     - then we'll use `.remove()` to remove those circles
 
 ```javascript
+//top of render function
 var circles = d3.select('#points').selectAll('circle').data(runs);
-
-cirlces.enter().append('circle');
-
+circles.enter().append('circle');
 circles.exit().remove(); //remove all circles not associated with data
-
-d3.selectAll('circle')
-    .attr('cy', function(datum, index){
-        return yScale(datum.distance);
-    });
-
-d3.selectAll('circle')
-    .attr('cx', function(datum, index){
-        return xScale(parseTime(datum.date));
-    });
 ```
 
 - This can cause weird side effects, because some circles are being reassigned to a different set of data
+    - e.g. reload the page, click on the center circle.  You'll notice the circle disappears and the one in the upper right gains a hover state
     - if we remove a piece of data in the center of the array, the `<circle>` in the the DOM that was assigned to it gets reassigned to the piece of data that used to be assigned to the next sibling `<circle>` in the DOM.  Each `<circle>` gets reassigned over one space from there on out
     - to avoid these affects, we need to make sure that each circle stays with the data it used to be assigned to
         - to do this, we can tell D3 to map `<circles>` to datum by id, rather than index in the array
@@ -993,11 +984,11 @@ d3.selectAll('circle')
 var circles = d3.select('#points').selectAll('circle').data(runs, function(datum){
       return datum.id
 });
-
 circles.enter().append('circle');
-
 circles.exit().remove();
 ```
+
+Now clicking on the middle circle should work correctly
 
 ## Hide elements beyond axis
 
