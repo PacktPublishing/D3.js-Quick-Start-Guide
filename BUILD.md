@@ -516,9 +516,11 @@ Just for debugging purposes, let's create a table which will show all of our dat
     <tbody>
     </tbody>
 </table>
+<script src="d3.v5.min.js"></script>
+<script src="app.js" charset="utf-8"></script>
 ```
 
-Now populate the `<tbody>`:
+D3 can also be used to manipulate the DOM, just like jQuery.  Let's populate the `<tbody>` in that style:
 
 ```javascript
 var createTable = function(){
@@ -550,22 +552,23 @@ th, td {
 }
 ```
 
+![]()
+
 ## Create click handler
 
 Let's say that we want it so that when the user clicks on the `<svg>` element, it creates a new run.
 
 ```javascript
-var formatTime = d3.timeFormat("%B%e, %Y at %-I:%M%p"); //will take a date object and return a formatted string
 d3.select('svg').on('click', function(){
     var x = d3.event.offsetX; //gets the x position of the mouse relative to the svg element
     var y = d3.event.offsetY; //gets the y position of the mouse relative to the svg element
 
-    var date = xScale.invert(x) //get a date value from a visual point
-    var distance = yScale.invert(y); //get a numeric distance value from a visual point
+    var date = xScale.invert(x) //get a date value from the visual point that we clicked on
+    var distance = yScale.invert(y); //get a numeric distance value from the visual point that we clicked on
 
     var newRun = { //create a new "run" object
         id: runs[runs.length-1].id+1, //generate a new id by adding 1 to the last run's id
-        date: formatTime(date), //format the date object created above
+        date: formatTime(date), //format the date object created above to a string
         distance: distance //add the distance
     }
     runs.push(newRun); //push the new run onto the runs array
@@ -573,7 +576,11 @@ d3.select('svg').on('click', function(){
 });
 ```
 
-You might notice that `createTable()` just adds on all the run rows again.  Let's clear out the previous rows:
+You might notice that `createTable()` just adds on all the run rows again
+
+![]()
+
+Let's clear out the rows previous created and re-render everything:
 
 ```javascript
 var createTable = function(){
@@ -586,6 +593,8 @@ var createTable = function(){
     }
 }
 ```
+
+![]()
 
 Now put the code for creating `<circles>` inside a render function:
 
@@ -610,6 +619,7 @@ var render = function(){
         });
 
     var parseTime = d3.timeParse("%B%e, %Y at %-I:%M%p");
+    var formatTime = d3.timeFormat("%B%e, %Y at %-I:%M%p");
     var xScale = d3.scaleTime();
     xScale.range([0,WIDTH]);
     xDomain = d3.extent(runs, function(datum, index){
@@ -629,8 +639,9 @@ render();
 For future use, let's move the `xScale` and `yScale` out of the render function along with the code for creating the domains/ranges:
 
 ```javascript
-var xScale = d3.scaleTime();
 var parseTime = d3.timeParse("%B%e, %Y at %-I:%M%p");
+var formatTime = d3.timeFormat("%B%e, %Y at %-I:%M%p");
+var xScale = d3.scaleTime();
 xScale.range([0,WIDTH]);
 xDomain = d3.extent(runs, function(datum, index){
     return parseTime(datum.date);
@@ -644,7 +655,22 @@ yDomain = d3.extent(runs, function(datum, index){
 })
 yScale.domain(yDomain);
 var render = function(){
-    //...rest of render function without xScale and yScale declarations and domain code
+
+    d3.select('svg').selectAll('circle') //since no circles exist, we need to select('svg') so that d3 knows where to append the new circles
+        .data(runs) //attach the data as before
+        .enter() //find the data objects that have not yet been attached to visual elements
+        .append('circle'); //for each data object that hasn't been attached, append a <circle> to the <svg>
+
+    d3.selectAll('circle')
+        .attr('cy', function(datum, index){
+            return yScale(datum.distance);
+        });
+
+    d3.selectAll('circle')
+        .attr('cx', function(datum, index){
+            return xScale(parseTime(datum.date)); //use parseTime to convert the date string property on the datum object to a Date object, which xScale then converts to a visual value
+        });
+
 }
 render();
 ```
@@ -654,8 +680,10 @@ Let's call `render()` inside our `<svg>` click handler:
 ```javascript
 runs.push(newRun);
 createTable();
-render();
+render(); //add this line
 ```
+
+![]()
 
 ## Remove data
 
