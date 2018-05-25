@@ -719,19 +719,12 @@ Let's put the circles in a `<g>` so that it's easy to clear out:
 Now we can clear out the `<circle>` elements each time `render()` is called.  This is a little crude, but it'll work for now.  Later on, we'll do things in a more elegant fashion.
 
 ```javascript
-var render = function(){
-
-    d3.select('#points').html(''); //clear out all circles when rendering
-    d3.select('#points').selectAll('circle') //add circles to #points group, not svg
-        .data(runs)
-        .enter()
-        .append('circle');    
-
-    // ==================================
-    // rest of render function code goes here...
-    // ==================================
-}
-render();
+//adjust the code at the top of your render function
+d3.select('#points').html(''); //clear out all circles when rendering
+d3.select('#points').selectAll('circle') //add circles to #points group, not svg
+    .data(runs)
+    .enter()
+    .append('circle');    
 ```
 
 ![]()
@@ -772,8 +765,10 @@ circle:hover {
 
 ## Drag an element
 
+We want to be able to update the data for a run by dragging the associated circle
+
 - D3 allows us to create complex interactions called "behaviors" which have multiple callbacks
-- Two steps:
+- there are two steps:
     - create the behavior
     - attach the behavior to one or more elements
 - drag behaviors have three callbacks
@@ -792,9 +787,13 @@ var drag = function(datum){
 var dragBehavior = d3.drag() //create a drag behavior
     // .on('start', dragStart) //dragStart is a reference to a function we haven't created yet
     .on('drag', drag); //call the "drag" function (the 2nd param) each time the user moves the cursor before releasing the mouse button.  The "drag" function is defined above
-    // .on('end', dragEnd); //dragEnd is a reference to a function we haven't created yet
+    // .on('end', dragEnd) //dragEnd is a reference to a function we haven't created yet
 d3.selectAll('circle').call(dragBehavior); //attach the dragBehavior behavior to all <circle> elements
 ```
+
+You can now drag the circles around, but the data doesn't update:
+
+![]()
 
 ## Update data after a drag
 
@@ -809,7 +808,7 @@ var dragEnd = function(datum){
     var date = xScale.invert(x); //get the date by using the xScale to invert the x position of the mouse
     var distance = yScale.invert(y); //get the distance by using the yScale to invert the y position of the mouse
 
-    //since datum is an object, which is are passed by reference, we can update a property on the object, and the original variable will update
+    //since datum is an object, which is passed by reference, we can update a property on the object, and the original variable will update
     datum.date = formatTime(date); //use formatTime() to convert the date variable, which is a Date object, into the appropriate string
     datum.distance = distance; //change the distance
     createTable(); //redraw the table
@@ -820,6 +819,8 @@ var dragBehavior = d3.drag()
     .on('end', dragEnd);
 ```
 
+![]()
+
 Let's change the color of a circle while it's being dragged too:
 
 ```css
@@ -827,6 +828,8 @@ circle:active {
     fill: red;
 }
 ```
+
+When you drag the circle, it should turn red
 
 ## Create a zoom behavior that scales elements
 
