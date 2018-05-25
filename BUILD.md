@@ -992,6 +992,10 @@ Now clicking on the middle circle should work correctly
 
 ## Hide elements beyond axis
 
+Check out our graph when you pan:
+
+![](https://i.imgur.com/s2oXYxS.png)
+
 To remove elements once they get beyond an axis, we can just add an outer SVG:
 
 ```html
@@ -1039,8 +1043,11 @@ d3.select('#container').call(zoom);
 And lastly, adjust css:
 
 ```css
+/* replace the rule for svg */
 #container {
      overflow: visible;
      margin-bottom: 50px;
  }
 ```
+
+![](https://i.imgur.com/t6BKuiz.png)
