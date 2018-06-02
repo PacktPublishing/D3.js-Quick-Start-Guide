@@ -2,38 +2,127 @@
 
 ## Base tag
 
-Everything goes inside here
+All svg elements go inside an `<svg></svg>` tag.  Let's set this up:
 
-```xml
-<svg></svg>
+```html
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+    </head>
+    <body>
+        <svg></svg>
+    </body>
+</html>
 ```
+
+If we inspect this in our browser's dev tools, we'll see this:
+
+![](https://i.imgur.com/Z4vlaZA.png)
+
+## Basic elements
+
+We can draw elements in our `<svg>` element by adding a variety of predefined tags as child elements of the `<svg>`.  This is just like in HTML where we add `<div>`, `<a>`, and `<img>` tags inside the `<body>` tag.  There are many tags like `<circle>`, `<rect>`, and `<line>` that we'll explore in a bit.  Here's just one example:
+
+```html
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+    </head>
+    <body>
+        <svg>
+            <circle><circle>
+        </svg>
+    </body>
+</html>
+```
+
+Note that we can't see the circle because it doesn't have a radius:
+
+![](https://i.imgur.com/O0mcrBb.png)
+
+We'll talk about this more later, but for now, if we want to see the circle, we can add a special attribute that all `<circle>` elements take:
+
+```html
+<circle r=50><circle>
+```
+
+This tells the browser to give the circle a radius of 50px:
+
+![](https://i.imgur.com/pbsHxoE.png)
+
+At the moment though, we only see the bottom right quarter of the `<circle>`.  This is because the center of the `<circle>` is being drawn at the very upper left corner of the `<svg>`, and the rest of it is being clipped outside the `<svg>`.  We can change this by changing the position of the circle, which we'll do next.
 
 ## Positioning
 
-SVG tag is an inline element
+- The `<svg>` tag is an inline element, like an image (as opposed to a block element like a `<div>`)
+- Elements within the `<svg>` are positioned similar to photoshop, with a set of coordinates which follow the form (x,y).  This is different from HTML, where elements are laid out relative to each other
+	- e.g. for (10,15), x=10 and y=15
+	- the point (0,0) is the top left of the `<svg>` element
+	- as y values increase, the point moves vertically down the `<svg>` element
+	- don't confuse this with a typical coordinate system that has 0,0 at the **bottom** left with a point moving up as y increases in value
 
-- (0,0) - x = 0, y = 0
-- starts at top left
-- y increases vertically down
-- can use negative values
-	- -x goes left
-	- -y goes up
+		![](http://res.cloudinary.com/dno0vkynk/image/upload/v1475392871/SVGCoordinateSystem.png)
+
+	- we can use negative x/y values
+		- -x moves left
+		- -y moves up
+
+Let's adjust the position of our circle in our previous section by adjusting `cx` and `cy` values:
+
+```html
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+    </head>
+    <body>
+        <svg>
+            <circle r=50 cx=50 cy=50><circle>
+        </svg>
+    </body>
+</html>
+```
+
+Now we see the full circle:
+
+![](https://i.imgur.com/LyOO28o.png)
 
 ## Styling
 
-Can be done with attributes:
+Each tag inside an `<svg>` can be styled with various attributes:
 
-- `fill=red` or `fill=#ff0000` fill color
-- `stroke=red` or `stroke=#ff0000` stroke color
-- `stroke-width=4` width of stroke
-- `fill-opacity=0.5` transparency of fill
-- `stroke-opacity=0.5` transparency of stroke
-- `transform = "translate(2,3)"`
-- `transform = "scale(2.1)"`
-- `transform = "rotate(45)"`
+- `fill=red` or `fill=#ff0000` will alter fill color
+- `stroke=red` or `stroke=#ff0000` will alter stroke color.  Stroke is a line that surrounds each element
+- `stroke-width=4` will adjust the width of the stroke
+- `fill-opacity=0.5` will adjust the transparency of the fill color
+- `stroke-opacity=0.5` will adjust the transparency of the stroke color
+- `transform = "translate(2,3)"` will translate the element by the given x,y values
+- `transform = "scale(2.1)"` will scale the size of the element by the given proportion (e.g. 2.1 times a s big)
+- `transform = "rotate(45)"` will rotate the element by the given number of degrees
+
+Let's style the circle we positioned previously:
+
+```html
+<circle r=50 cx=50 cy=50 fill=red stroke=blue stroke-width=5><circle>
+```
+
+Now we get this:
+
+![](https://i.imgur.com/OMfnwcG.png)
+
+Note that the stroke in the image above is getting clipped.  That's because the stroke is create outside the element.  If we wanted to see the full stroke, we can resize the circle:
+
+```html
+<circle r=45 cx=50 cy=50 fill=red stroke=blue stroke-width=5><circle>
+```
+
+Now we get:
+
+![](https://i.imgur.com/Yx8WTA4.png)
 
 
-Can also be done with CSS:
+Styling can also be done with CSS:
+
+Create an external app.css file with the following contents:
 
 ```css
 circle {
@@ -43,10 +132,47 @@ circle {
 	fill-opacity:0.5;
 	stroke-opacity:0.1;
 	transform:rotate(45deg) scale(0.4) translate(155px, 1px);
+	r:50px;
 }
 ```
 
-## Circle
+Reference the file in our html:
+
+```html
+<head>
+	<link rel="stylesheet" href="app.css">
+</head>
+```
+
+and remove our previous inline styling that we had on our `<circle>` tag:
+
+```html
+<circle></circle>
+```
+
+Now we get this:
+
+![](https://i.imgur.com/E1unbtu.png)
+
+Note that I've hovered over the element in the dev tools to show that the element has been rotated 45 degrees.  That's what the blue box is.
+
+## Important SVG elements
+
+To demo each element, we'll use the following code as a starting point and then add each element inside the `<svg>` tag:
+
+```html
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+    </head>
+    <body>
+        <svg width=800 height=600>
+        </svg>
+    </body>
+</html>
+```
+
+### Circle
 
 - attributes
 	- `r` radius
@@ -57,7 +183,9 @@ circle {
 <circle r="50" cx="200" cy="300"/>
 ```
 
-## Line
+![](https://i.imgur.com/yQAjbJg.png)
+
+### Line
 
 - attributes
 	- `x1` starting x position
@@ -66,11 +194,13 @@ circle {
 	- `y2` ending y position
 
 ```xml
-<line x1="0" y1="0" x2="100" y2="100"/> <!-- no stroke, so invisible -->
+<line x1="0" y1="0" x2="100" y2="100"/> <!-- this element won't be visible because it doesn't have a stroke -->
 <line x1="0" y1="0" x2="100" y2="100" stroke="purple"/>
 ```
 
-## Rectangle
+![](https://i.imgur.com/GuxSy1n.png)
+
+### Rectangle
 
 - attributes
 	- `x` x position of top left
@@ -82,7 +212,9 @@ circle {
 <rect x="50" y="20" width="150" height="150"/>
 ```
 
-## Ellipse
+![](https://i.imgur.com/vVmIbOP.png)
+
+### Ellipse
 
 - attributes
 	- `cx` x position
@@ -94,7 +226,9 @@ circle {
 <ellipse cx="200" cy="80" rx="100" ry="50"/>
 ```
 
-## Polygon
+![](https://i.imgur.com/Y1YdlWE.png)
+
+### Polygon
 
 - attributes
 	- `points` set of coordinate pairs
@@ -104,7 +238,9 @@ circle {
 <polygon points="200,10 250,190 160,210" />
 ```
 
-## Polyline
+![](https://i.imgur.com/0KqlNvR.png)
+
+### Polyline
 
 A series of connected lines.  Can have a fill like a polygon, but won't automatically rejoin itself
 
@@ -112,90 +248,202 @@ A series of connected lines.  Can have a fill like a polygon, but won't automati
 <polyline points="20,20 40,25 60,40 80,120 120,140 200,180" stroke="blue" fill="none"/>
 ```
 
-## Path
+![](https://i.imgur.com/A1Xv1ex.png)
 
-- [Docs](https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths)
-- [Bezier curves](http://blogs.sitepointstatic.com/examples/tech/svg-curves/cubic-curve.html)
+### Text
 
-- attributes
-	- `d` a set of drawing commands
-		- M = moveto
-		- L = lineto
-		- C = curveto
-			- C x1 y1, x2 y2, x y
-			- first pair is first control point
-			- second pair is second control point
-			- last pair is final ending point of curve
-		- S = smooth curveto
-			- S x2 y2, x y
-			- follows another S or C command
-			- uses reflection of x2 y2 of previous S or C command for x1 y1
-		- Q = quadratic Bézier curve
-			- Q x1 y1, x y
-			- uses one control point for start and end controls (x1, y1)
-		- T = smooth quadratic Bézier curveto
-			- T x y
-			- strings together multiple quadratic lines
-			- uses reflection of previous quadratic curve's control point as its control point
-		- Z = closepath
-	- **Note:** All of the commands above can also be expressed with lower letters. Capital letters means absolutely positioned, lower cases means relatively positioned.
-
-```xml
-<path d="M150 0 L75 200 L225 200 Z" stroke="black" fill="transparent"/>
-<path d="M0 70 C 0 120, 50 120, 50 70 S 100 20, 100 70" stroke="black" fill="transparent"/>
-<path d="M0 100 Q 50 50, 100 100 T 200 100 Z" stroke="black" fill="transparent"/>
-```
-
-## Text
-
-Content of tag is the text
+The content of the tag is the text to be displayed
 
 - attributes
-	- `x` x position of top left
-	- `y` y position of top left
+	- `x` x position of top left corner of the element
+	- `y` y position of top left corner of the element
 
 ```xml
 <text x="0" y="15">I love SVG!</text>
 ```
 
-Can use font-family and font-size CSS styling
+You can use font-family and font-size CSS styling on this element
 
-## Group
+### Group
 
-- no special attributes, so use transform
-- can put multiple elements inside it.
-- positioning and styling apply to children
+- This element has no special attributes, so use transform on it.
+- You can put multiple elements inside it and all of its positioning and styling will apply to its children
+- Its good for moving many elements together as one
 
 ```xml
 <g transform = "translate(20,30) rotate(45) scale(0.5)">
 </g>
 ```
 
-## Arc
+### Bezier Curves
 
-An arc is a command that you can add to a path that will draw part of an ellipse.
+What if we want to draw complex organic shapes?  To do this, we'll need to use paths.  First, though, to understand paths, you have to first understand bezier curves.
+
+#### Cubic Bezier Curves
+
+- [Bezier curves](http://blogs.sitepointstatic.com/examples/tech/svg-curves/cubic-curve.html)
+
+Each curve is made up of four points:
+
+- start point
+- end point
+- starting control point
+- ending control point
+
+The start/end point are where the curve starts and ends.  The control points define the shape of the curve.  It's easiest to conceptualize if with the following diagram:
+
+![](https://i.imgur.com/QAxI2AD.png)
+
+As we manipulate the control points, we can see how the shape of the curve is affected:
+
+![](https://i.imgur.com/M9S1sW7.png)
+
+![](https://i.imgur.com/Dw1z4hl.png)
+
+You can even join multiple bezier curves together:
+
+![](https://i.imgur.com/A67aIgW.png)
+
+#### Smooth Cubic Bezier Curves
+
+Smooth Cubic Bezier curves are just a way to simplify some cubic bezier curves when they're joined together.  Take a look at the two control points in the red square below:
+
+![](https://i.imgur.com/fqBRIDg.png)
+
+The point in the lower left of the square is the end control point of the first curve.  The point in the upper right of the square is start control point of the second curve.
+
+Note that the two points are reflections of each other around the central black dot which is the end point of the first curve and the start point of the second curve.  The two points are exactly 180 degrees in opposite directions, and they have the same distance from that central point.
+
+In scenarios like this, where the start control point of one curve is a reflection of the end control point of the previous curve, we can skip stating the start control point of the second curve.  Instead, we let the browser calculate it, based on the end control point of the first curve.
+
+![](https://i.imgur.com/8RVJONC.png)
+
+We can also omit the start point since the browser knows it will be the same as the end point of the previous curve.  In summary, to define that second curve, we only need two points:
+
+- the end point
+- the end control point
+
+#### Quadratic Bezier Curve
+
+Another situation where we can simplify defining a bezier curve is where the start control point and end control point are the same
+
+![](https://i.imgur.com/xlByyu2.png)
+
+Here we can define the curve with just three points:
+
+- the start point
+- the end point
+- one single control point which acts as both control point and end control point
+
+#### Smooth Quadratic Bezier Curve
+
+The final situation where we can simplify defining a bezier curve is where we have a quadratic bezier curve (one single control point) that is a reflection of the end control point previous curve:
+
+![](https://i.imgur.com/Uw9zVrs.png)
+
+In this situation, the browser knows the start point of the curve (the end point of the previous curve), and it can calculate the single control point needed (since it is a quadratic bezier curve) based on the end control point of the previous curve.  This is a smooth quadratic bezier curve, and you only need one point to define it:
+
+- the end point
+
+### Drawing a path
+
+Now that we understand bezier curves, we can use them in our SVGs with `<path>` elements
+
+[Docs](https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths)
+
+These tags take a `d` attribute which stands for a set of drawing commands.  The value of this attribute is any combination of the below:
+
+- M = moveto: move the drawing point to the given coordinates
+	- M x y
+- L = lineto: draw a line from the previous point in the `d` command to the point given
+	- D x y
+- C = curveto: draw a curve from the previous point in the `d` command to the point given with the given control points
+	- C x1 y1, x2 y2, x y
+	- first pair is first control point
+	- second pair is second control point
+	- last pair is final ending point of curve
+- S = smooth curveto
+	- S x2 y2, x y
+	- follows another curve
+	- uses reflection of x2 y2 of previous S or C command for x1 y1
+- Q = quadratic Bézier curve
+	- Q x1 y1, x y
+	- uses one control point for start and end controls (x1, y1)
+- T = smooth quadratic Bézier curveto
+	- T x y
+	- follows another curve
+	- uses reflection of previous quadratic curve's control point as its control point
+- Z = closepath: draw a line from the previous point in the `d` command to the first point in the `d` command
+
+**Note:** All of the commands above can also be expressed with lower case letters. Capital letters means absolutely positioned, lower case letters mean the all points are expressed relative to the previous point in the `d` command.
+
+```xml
+<path d="M150 0 L75 200 L225 200 Z" stroke="black" fill="transparent"/>
+```
+
+![](https://i.imgur.com/u4zFUUh.png)
+
+```xml
+<path d="M0 70 C 0 120, 50 120, 50 70 S 100 20, 100 70" stroke="black" fill="transparent"/>
+```
+
+![](https://i.imgur.com/6Q07cJN.png)
+
+```xml
+<path d="M0 100 Q 50 50, 100 100 T 200 100 Z" stroke="black" fill="transparent"/>
+```
+
+![](https://i.imgur.com/1WAjDUD.png)
+
+#### Arcs
+
+An arc is a command that you can add to a path that will draw part of an ellipse.  To do this, we first begin with only two points:
 
 ![two point](http://blog.arcbees.com/wp-content/uploads/svg-arc2.png)
 
-Two points intersect only two ellipses with the same width/height and rotation.
+For any two points, there are only two ellipses with the same width/height and rotation that contain both points.  In the image above, try to imagine moving the ellipses around without rotating or scaling them.  As soon as you do, they loose contact with at least one of the two given points.  One point might be on the ellipse, but the other won't be.
+
+We can use this information to draw any of the four colored arcs shown in the image above.
+
+Make the following code part of the `d` attribute's value on a `<path>` element.
 
 ```
 A rx ry x-axis-rotation large-arc-flag sweep-flag x y
 ```
 
 - A - create an arc draw command
-- rx - x radius
-- ry - y radius
-- x-axis-rotation - rotate ellipse a certain number of degrees
-- large-arc-flag - whether or not to travel along arc for more than 180 degrees
-- sweep-flag - whether to move clock-wise or not
-- x - destination x value
-- y - destination y value
+- rx - x radius of both ellipses (in px)
+- ry - y radius of both ellipses (in px)
+- x-axis-rotation - rotate both ellipses a certain number of degrees
+- large-arc-flag - whether or not to travel along the arc that contains more than 180 degrees (1 to do so, 0 to not do so)
+- sweep-flag - whether or not to move along the arc that goes clock-wise (1 to do so, 0 to not do so)
+- x - destination x value (in px)
+- y - destination y value (in px)
 
-![flags](https://developer.mozilla.org/@api/deki/files/345/=SVGArcs_Flags.png)
+The `large-arc-flag` determines whether to make an arc that is greater than 180 degrees.  Here's an example without it (note, the red shows the arc drawn, while the green arcs are other possible arcs that could be drawn using a combination of `large-arc-flag` and `sweep-flag`):
+
+![](https://i.imgur.com/fiX7Hmj.png)
+
+Note, it chose one of the two smaller arcs.  Here's an example with the `large-arc-flag` set:
+
+![](https://i.imgur.com/frBj6zL.png)
+
+Note, it chose on of the two larger arcs.
+
+In the previous example, for both situations where the `large-arc-flag` was set or not set, there was one other arc that could have been taken.  To determine which of those two arcs to take, we use the `sweep-flag`, which determines whether to travel clock-wise or not from starting point to ending point.  Here's an example with the `large-arc-flag` set, but without the `sweep-flag` set:
+
+![](https://i.imgur.com/AmNPzYp.png)
+
+Note we move in a counter clock-wise motion from start to end (left to right).  If we set the `sweep-flag`, we travel in a clock-wise motion:
+
+![](https://i.imgur.com/0Z8RTVE.png)
+
+Here are all the possible combinations for `sweep-flag` and `large-arc-flag`:
+
+![](https://www.w3.org/TR/SVG/images/paths/arcs02.svg)
 
 Play with the values here: http://codepen.io/lingtalfi/pen/yaLWJG
 
-## Documentation
+### Documentation
 
 https://developer.mozilla.org/en-US/docs/Web/SVG/Element
