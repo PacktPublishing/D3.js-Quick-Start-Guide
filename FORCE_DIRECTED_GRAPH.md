@@ -31,7 +31,7 @@ Pretty standard, but we'll need two `<g>` elements:
     <head>
         <meta charset="utf-8">
         <title></title>
-        <script src="https://d3js.org/d3.v4.min.js"></script>
+        <script src="https://d3js.org/d3.v5.min.js"></script>
     </head>
     <body>
         <svg>
@@ -62,12 +62,15 @@ line {
 Don't forget to link to it!
 
 ```html
-<link rel="stylesheet" href="app.css">
+<head>
+    <link rel="stylesheet" href="app.css">
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+</head>
 ```
 
 ## Set up svg
 
-Standard:
+In `app.js`:
 
 ```javascript
 var WIDTH = 300;
@@ -78,22 +81,28 @@ d3.select("svg")
     .attr("height", HEIGHT);
 ```
 
+If we look in our dev tools, we should see this:
+
+![](https://i.imgur.com/s6worhU.png)
+
 ## Add data for people
+
+Let's create an array of people objects:
 
 ```javascript
 var nodesData =  [
-    {"name": "Travis", "sex": "M"},
-    {"name": "Rake", "sex": "M"},
-    {"name": "Diana", "sex": "F"},
-    {"name": "Rachel", "sex": "F"},
-    {"name": "Shawn", "sex": "M"},
-    {"name": "Emerald", "sex": "F"}
+    {"name": "Travis", "age": 12},
+    {"name": "Rake", "age": 32},
+    {"name": "Diana", "age": 71},
+    {"name": "Rachel", "age": 26},
+    {"name": "Shawn", "age": 48},
+    {"name": "Emerald", "age": 95}
 ];
 ```
 
 ## Add data for relationships
 
-Note that the attributes must be `source` and `target` in order for D3 to do its magic
+Now let's create the relationships.  **NOTE** that the attributes must be `source` and `target` in order for D3 to do its magic
 
 ```javascript
 var linksData = [
@@ -116,6 +125,10 @@ var nodes = d3.select("#nodes")
     .append("circle");
 ```
 
+Our dev tools should look like this:
+
+![](https://i.imgur.com/TO2ogs5.png)
+
 ## Add lines to the svg
 
 ```javascript
@@ -126,19 +139,23 @@ var links = d3.select("#links")
     .append("line");
 ```
 
+Our dev tools should look like this:
+
+![](https://i.imgur.com/MpIl6Z4.png)
+
 ## Create simulation
 
 Now we'll generate a simulation:
 
 ```javascript
-d3.forceSimulation();
+d3.forceSimulation()
 ```
 
 Tell it what data to act on:
 
 ```javascript
 d3.forceSimulation()
-    .nodes(nodesData)
+    .nodes(nodesData) // add this line
 ```
 
 Create a gravitational force at the center of the screen that pulls all data towards it:
@@ -146,7 +163,7 @@ Create a gravitational force at the center of the screen that pulls all data tow
 ```javascript
 d3.forceSimulation()
     .nodes(nodesData)
-    .force("center_force", d3.forceCenter(WIDTH / 2, HEIGHT / 2))
+    .force("center_force", d3.forceCenter(WIDTH / 2, HEIGHT / 2)) // add this line
 ```
 
 Create a force on each of the nodes so that they repel each other:
@@ -155,7 +172,7 @@ Create a force on each of the nodes so that they repel each other:
 d3.forceSimulation()
     .nodes(nodesData)
     .force("center_force", d3.forceCenter(WIDTH / 2, HEIGHT / 2))
-    .force("charge_force", d3.forceManyBody())
+    .force("charge_force", d3.forceManyBody()) //add this line
 ```
 
 Lastly, we'll create the links between the nodes so that they don't repel each other too much:
@@ -165,15 +182,17 @@ d3.forceSimulation()
     .nodes(nodesData)
     .force("center_force", d3.forceCenter(WIDTH / 2, HEIGHT / 2))
     .force("charge_force", d3.forceManyBody())
-    .force("links", d3.forceLink(linksData).id(function(datum){
-        return datum.name
-    }).distance(160))
+    .force("links", d3.forceLink(linksData).id(function(datum){ //add this
+        return datum.name //add this
+    }).distance(160)) //add this
 ```
 
 - The `d3.forceLink` function takes the array of links.  It then uses the `source` and `target` attributes of each link data object to connect the nodes via their `.name` properties (as specified in the return value)
 - You can tack on `.distance()` to specify how long the connections are visually between each node
 
 ## Specify how the simulation affects the visual elements
+
+At this point, our visualization still looks the same as before.  Let's have our various forces affect the circles/lines that we created
 
 - The simulation runs "ticks" which run very quickly
 - Each time a new "tick" occurs, you can updated the visual elements
@@ -198,3 +217,9 @@ d3.forceSimulation()
             .attr("y2", function(datum) { return datum.target.y; });
     });
 ```
+
+Now our graph looks like it should:
+
+![](https://i.imgur.com/1w8Po1b.png)
+
+You'll notice that the cx/cy values for the circles and the x1/x2/y1/y2 values for the lines change rapidly initially before finally stopping.  This is because D3 is trying is running a simulation.  The various forces are trying to reach a state of equilibrium with each other.  You'll even notice when you first load the page that the circles and lines move a bit as well.  This is due to the same reason.
