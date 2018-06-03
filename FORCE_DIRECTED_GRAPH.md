@@ -158,55 +158,22 @@ d3.forceSimulation()
     .nodes(nodesData) // add this line
 ```
 
-Create a gravitational force at the center of the screen that pulls all data towards it:
-
-```javascript
-d3.forceSimulation()
-    .nodes(nodesData)
-    .force("center_force", d3.forceCenter(WIDTH / 2, HEIGHT / 2)) // add this line
-```
-
-Create a force on each of the nodes so that they repel each other:
-
-```javascript
-d3.forceSimulation()
-    .nodes(nodesData)
-    .force("center_force", d3.forceCenter(WIDTH / 2, HEIGHT / 2))
-    .force("charge_force", d3.forceManyBody()) //add this line
-```
-
-Lastly, we'll create the links between the nodes so that they don't repel each other too much:
-
-```javascript
-d3.forceSimulation()
-    .nodes(nodesData)
-    .force("center_force", d3.forceCenter(WIDTH / 2, HEIGHT / 2))
-    .force("charge_force", d3.forceManyBody())
-    .force("links", d3.forceLink(linksData).id(function(datum){ //add this
-        return datum.name //add this
-    }).distance(160)) //add this
-```
-
-- The `d3.forceLink` function takes the array of links.  It then uses the `source` and `target` attributes of each link data object to connect the nodes via their `.name` properties (as specified in the return value)
-- You can tack on `.distance()` to specify how long the connections are visually between each node
-
 ## Specify how the simulation affects the visual elements
 
-At this point, our visualization still looks the same as before.  Let's have our various forces affect the circles/lines that we created
+At this point, our visualization still looks the same as before.
+
+![](https://i.imgur.com/MpIl6Z4.png)
+
+Let's have our simulation affect the circles/lines that we created
 
 - The simulation runs "ticks" which run very quickly
-- Each time a new "tick" occurs, you can updated the visual elements
+- Each time a new "tick" occurs, you can update the visual elements
 - This allows our simulation to animate
-- D3 will tack on positional data to our regular data so that we can make use of it
+- D3 will calculate and tack on positional data to our regular data so that we can make use of it
 
 ```javascript
 d3.forceSimulation()
     .nodes(nodesData)
-    .force("charge_force", d3.forceManyBody())
-    .force("center_force", d3.forceCenter(WIDTH / 2, HEIGHT / 2)) //position centering force at center x,y coords
-    .force("links", d3.forceLink(linksData).id(function(datum){
-            return datum.name
-        }).distance(160))
     .on("tick", function(){
         nodes.attr("cx", function(datum) { return datum.x; })
             .attr("cy", function(datum) { return datum.y; });
@@ -218,8 +185,79 @@ d3.forceSimulation()
     });
 ```
 
-Now our graph looks like it should:
+Now our circles distance themselves from each other a little bit, but this is just a side effect of not having any forces attached to them.  We'll add forces next.
+
+![](https://i.imgur.com/jwfpTp9.png)
+
+## Create forces
+
+Create a gravitational force at the center of the screen that pulls all data towards it:
+
+```javascript
+d3.forceSimulation()
+    .nodes(nodesData)
+    .force("center_force", d3.forceCenter(WIDTH / 2, HEIGHT / 2)) // add this line
+    .on("tick", function(){
+        nodes.attr("cx", function(datum) { return datum.x; })
+            .attr("cy", function(datum) { return datum.y; });
+
+        links.attr("x1", function(datum) { return datum.source.x; })
+            .attr("y1", function(datum) { return datum.source.y; })
+            .attr("x2", function(datum) { return datum.target.x; })
+            .attr("y2", function(datum) { return datum.target.y; });
+    });
+```
+
+Now our circles are pulled towards the center of the SVG element:
+
+![](https://i.imgur.com/ggGNctB.png)
+
+Create a force on each of the nodes so that they repel each other:
+
+```javascript
+d3.forceSimulation()
+    .nodes(nodesData)
+    .force("center_force", d3.forceCenter(WIDTH / 2, HEIGHT / 2))
+    .force("charge_force", d3.forceManyBody()) //add this line
+    .on("tick", function(){
+        nodes.attr("cx", function(datum) { return datum.x; })
+            .attr("cy", function(datum) { return datum.y; });
+
+        links.attr("x1", function(datum) { return datum.source.x; })
+            .attr("y1", function(datum) { return datum.source.y; })
+            .attr("x2", function(datum) { return datum.target.x; })
+            .attr("y2", function(datum) { return datum.target.y; });
+    });
+```
+
+You'll notice that the cx/cy values for the circles change rapidly initially before finally stopping.  This is because D3 is running a simulation.  The center_force is trying to reach a state of equilibrium with the charge_force.  You'll even notice when you first load the page that the circles move outward from the center.  This is due to the same reason.
+
+![](https://i.imgur.com/C37zzPO.png)
+
+Lastly, we'll create the links between the nodes so that they don't repel each other too much:
+
+```javascript
+d3.forceSimulation()
+    .nodes(nodesData)
+    .force("center_force", d3.forceCenter(WIDTH / 2, HEIGHT / 2))
+    .force("charge_force", d3.forceManyBody())
+    .force("links", d3.forceLink(linksData).id(function(datum){ //add this
+        return datum.name //add this
+    }).distance(160)) //add this
+    .on("tick", function(){
+        nodes.attr("cx", function(datum) { return datum.x; })
+            .attr("cy", function(datum) { return datum.y; });
+
+        links.attr("x1", function(datum) { return datum.source.x; })
+            .attr("y1", function(datum) { return datum.source.y; })
+            .attr("x2", function(datum) { return datum.target.x; })
+            .attr("y2", function(datum) { return datum.target.y; });
+    });    
+```
+
+- The `d3.forceLink` function takes the array of links.  It then uses the `source` and `target` attributes of each link data object to connect the nodes via their `.name` properties (as specified in the return value)
+- You can tack on `.distance()` to specify how long the links are visually between each node
+
+Finally, our graph looks like this:
 
 ![](https://i.imgur.com/1w8Po1b.png)
-
-You'll notice that the cx/cy values for the circles and the x1/x2/y1/y2 values for the lines change rapidly initially before finally stopping.  This is because D3 is trying is running a simulation.  The various forces are trying to reach a state of equilibrium with each other.  You'll even notice when you first load the page that the circles and lines move a bit as well.  This is due to the same reason.
