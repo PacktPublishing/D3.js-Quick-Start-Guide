@@ -356,7 +356,7 @@ These tags take a `d` attribute which stands for a set of drawing commands.  The
 - M = moveto: move the drawing point to the given coordinates
 	- M x y
 - L = lineto: draw a line from the previous point in the `d` command to the point given
-	- D x y
+	- L x y
 - C = curveto: draw a curve from the previous point in the `d` command to the point given with the given control points
 	- C x1 y1, x2 y2, x y
 	- first pair is first control point
