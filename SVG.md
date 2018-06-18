@@ -282,6 +282,7 @@ What if we want to draw complex organic shapes?  To do this, we'll need to use p
 #### Cubic Bezier Curves
 
 - [Bezier curves](http://blogs.sitepointstatic.com/examples/tech/svg-curves/cubic-curve.html)
+- [Cubic Bezier curves](http://math.hws.edu/eck/cs424/notes2013/canvas/bezier.html)
 
 Each curve is made up of four points:
 
