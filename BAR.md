@@ -396,3 +396,17 @@ rect {
     stroke-width:1px;
 }
 ```
+
+## Change the color of the bar based on data
+
+Right now the bars are black.  A linear scale will interpolate between colors just like a regular number:
+
+```javascript
+var colorScale = d3.scaleLinear();
+colorScale.domain(yDomain) // the yDomain has already been determined.  Let's use that
+colorScale.range(['#00cc00', 'blue'])
+d3.selectAll('rect')
+    .attr('fill', function(datum, index){
+        return colorScale(datum.count)
+    })
+```
