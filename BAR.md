@@ -410,3 +410,81 @@ d3.selectAll('rect')
         return colorScale(datum.count)
     })
 ```
+
+## Add axes
+
+The left axis is just like before:
+
+```javascript
+var leftAxis = d3.axisLeft(yScale);
+d3.select('svg')
+    .append('g').attr('id', 'left-axis')
+    .call(leftAxis);
+```
+
+To create the bottom axis, we need to be able to map strings to points on a domain.  We'll use a band scale for this, which just divides up the range into equal parts and maps it to an array of discrete values (values that can't be interpolated. e.g. strings):
+
+```javascript
+var skillScale = d3.scaleBand();
+var skillDomain = data.map(function(skill){
+    return skill.name
+});
+skillScale.range([0, WIDTH]);
+skillScale.domain(skillDomain);
+```
+
+Notice we use `data.map()`.  This is regular javascript which simply loops through an array and modifies each element based on the given function.  It then returns the resulting array.  In the above example, `skillDomain` will be an array containing the various name properties of each of the data elements.
+
+Once we have an array of each of the skills, we use this as the domain and map each skill to a point within the range.  Remember the point in the range is created by dividing up the full range equally based on the number of elements in the domain.
+
+Now that we have a scale which maps each skill text to a point in the x range, we can create the bottom axis as before:
+
+```javascript
+var bottomAxis = d3.axisBottom(skillScale);
+d3.select('svg')
+    .append('g').attr('id', 'bottom-axis')
+    .call(bottomAxis)
+    .attr('transform', 'translate(0,'+HEIGHT+')');
+```
+
+We still need to stop the `<svg>` from clipping everything:
+
+```css
+svg {
+    overflow: visible;
+}
+```
+
+Our result:
+
+![](https://i.imgur.com/0hRVCR0.png)
+
+The text is all cluttered, though.  Let's use some CSS to fix this:
+
+```css
+#bottom-axis text {
+    transform:rotate(45deg);
+}
+```
+
+It's rotated, but it's rotated around the center of the element.  Let's change this, so it rotates around the start of the text:
+
+```css
+#bottom-axis text {
+    transform:rotate(45deg);
+    text-anchor: start;
+}
+```
+
+![](https://i.imgur.com/HYebbY2.png)
+
+Let's move the graph to the right, so we can see the values for the left axis:
+
+```css
+svg {
+    overflow: visible;
+    margin-left: 20px;
+}
+```
+
+![](https://i.imgur.com/dI9qSBJ.png)
