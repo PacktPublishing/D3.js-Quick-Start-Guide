@@ -329,12 +329,15 @@ rect {
 
 ## Adjust the horizontal/vertical placement of the bars
 
-Our bars all overlap each other at the moment.  Let's space them out by adding the following:
+Our bars all overlap each other at the moment.  Let's space them out by mapping x position to index in the data array:
 
 ```javascript
+var xScale = d3.scaleLinear();
+xScale.range([0, WIDTH]);
+xScale.domain([0, data.length]);
 d3.selectAll('rect')
     .attr('x', function(datum, index){
-        return WIDTH/data.length * index
+        return xScale(index);
     });
 ```
 
@@ -351,7 +354,7 @@ d3.selectAll('rect')
     });
 ```
 
-Lastly, our last few bars don't have any height, because we've mapped the minimum `count` property of our data to a visual range value of 0 in our `yScale`.  Let's adjust this code:
+Our last few bars don't have any height, because we've mapped the minimum `count` property of our data to a visual range value of 0 in our `yScale`.  Let's adjust this code:
 
 ```javascript
 var yScale = d3.scaleLinear();
@@ -374,3 +377,22 @@ var yDomain = d3.extent(data, function(datum, index){
 Now we get this:
 
 ![](https://i.imgur.com/hhk4iu5.png)
+
+## Make width of bars dynamic
+
+Currently, our bars have a fixed width.  No matter how many elements we have, they have 15px width.  If we had more data elements, the bars could overlap.  Let's change this.  Since each `rect` will be the same width, no matter what the data is, we can just assign `width` a computed value:
+
+```javascript
+d3.selectAll('rect')
+    .attr('width', WIDTH/data.length);
+```
+
+Now let's adjust our `rect` css so our bars are more visible:
+
+```css
+rect {
+    /*  remove the width rule that was here */
+    stroke:white;
+    stroke-width:1px;
+}
+```
