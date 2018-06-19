@@ -232,7 +232,7 @@ d3.select('svg')
     .style('width', WIDTH)
     .style('height', HEIGHT);
 
-d3.json('path').then(function(data){
+d3.json('data.json').then(function(data){
     console.log(data);
 });
 ```
@@ -293,23 +293,26 @@ Our Elements tab in our dev tools should look something like this:
 
 ## Adjust the height/width of the bars
 
-Let's create a scale that maps the `count` property of each element in `data` to a visual height for the corresponding bar.  We'll use a linear scale:
+Let's create a scale that maps the `count` property of each element in `data` to a visual height for the corresponding bar.  We'll use a linear scale.  Remember to map the HEIGHT of the graph to a very low data point and the top of the graph (0 in the range) map to a very high data value:
 
 ```javascript
 var yScale = d3.scaleLinear();
-yScale.range([0, HEIGHT]);
-var yDomain = d3.extent(data, function(datum, index){
+yScale.range([HEIGHT, 0]);
+var yMin = d3.min(data, function(datum, index){
     return datum.count;
 })
-yScale.domain(yDomain);
+var yMax = d3.max(data, function(datum, index){
+    return datum.count;
+})
+yScale.domain([yMin, yMax]);
 ```
 
-Immediatley after the above code, let's tell D3 to adjust the height using the `yScale`
+We could use `d3.extent`, but we're going to need the individual min/max values later on.  Immediatley after the above code, let's tell D3 to adjust the height using the `yScale`.  Remember that the Y axis is flipped.  A low data value produces a high range value.  But a even though the range is high, the bar itself should be small.  We'll need to re-flip the values just for height so that a low data value produces a small bar and a high data value produces a large bar.  To do this, let's subtract whatever the range point is from the HEIGHT of the graph.  This way, if `yScale(datum.count)` produces, say, 500, the height of the bar will be 100.  We can use `yScale(datum.count)` normally when adjusting the position of the bars later.
 
 ```javascript
 d3.selectAll('rect')
     .attr('height', function(datum, index){
-        return yScale(datum.count);
+        return HEIGHT-yScale(datum.count);
     });
 ```
 
@@ -341,16 +344,16 @@ d3.selectAll('rect')
     });
 ```
 
-This takes the width of the entire SVG and divides it by the number of data elements we have.  Then, each element is a assigned an `x` value based on this value multiplied by whatever index it is in the `data` array.  The first element is `WIDTH/data.length * 0` the second element is `WIDTH/data.length * 1`, etc.  Don't forget, arrays start at index 0, not 1
+This maps indices in the in the array to horizontal range points
 
 ![](https://i.imgur.com/3d7ddVy.png)
 
-Now let's move the bars so they grow from the bottom, not the hang from the top:
+Now let's move the bars so they grow from the bottom, not the hang from the top.  Now a high data point produces a low range value which doesn't push a large bow down much.  A low data point produces a high range value which pushes a small bar down a lot.
 
 ```javascript
 d3.selectAll('rect')
     .attr('y', function(datum, index){
-        return HEIGHT - yScale(datum.count);
+        return yScale(datum.count);
     });
 ```
 
@@ -358,25 +361,33 @@ Our last few bars don't have any height, because we've mapped the minimum `count
 
 ```javascript
 var yScale = d3.scaleLinear();
-yScale.range([0, HEIGHT]);
-var yDomain = d3.extent(data, function(datum, index){
+yScale.range([HEIGHT, 0]);
+var yMin = d3.min(data, function(datum, index){
     return datum.count;
 })
+var yMax = d3.max(data, function(datum, index){
+    return datum.count;
+})
+yScale.domain([yMin, yMax]);
 ```
 
 to be this code:
 
 ```javascript
 var yScale = d3.scaleLinear();
-yScale.range([10, HEIGHT]); //change min value to 10
-var yDomain = d3.extent(data, function(datum, index){
+yScale.range([HEIGHT, 0]);
+var yMin = d3.min(data, function(datum, index){
     return datum.count;
 })
+var yMax = d3.max(data, function(datum, index){
+    return datum.count;
+})
+yScale.domain([yMin-1, yMax]); //adjust this line
 ```
 
-Now we get this:
+Now the domain min is 1 less than what's actually in our data set.  Domains with the original min are treated as higher values than what's expected for the min of the graph.  We get this:
 
-![](https://i.imgur.com/hhk4iu5.png)
+![](https://i.imgur.com/PnIvwux.png)
 
 ## Make width of bars dynamic
 
@@ -397,19 +408,28 @@ rect {
 }
 ```
 
+![](https://i.imgur.com/7FZyBqu.png)
+
 ## Change the color of the bar based on data
 
 Right now the bars are black.  A linear scale will interpolate between colors just like a regular number:
 
 ```javascript
+var yDomain = d3.extent(data, function(datum, index){
+    return datum.count;
+})
 var colorScale = d3.scaleLinear();
-colorScale.domain(yDomain) // the yDomain has already been determined.  Let's use that
+colorScale.domain(yDomain)
 colorScale.range(['#00cc00', 'blue'])
 d3.selectAll('rect')
     .attr('fill', function(datum, index){
         return colorScale(datum.count)
     })
 ```
+
+We'll need to recalculate the `yDomain` so that the real min of the data set is used to map `#00cc00`:
+
+![](https://i.imgur.com/zCrKZtB.png)
 
 ## Add axes
 
@@ -457,7 +477,7 @@ svg {
 
 Our result:
 
-![](https://i.imgur.com/0hRVCR0.png)
+![](https://i.imgur.com/DroVw9c.png)
 
 The text is all cluttered, though.  Let's use some CSS to fix this:
 
@@ -466,6 +486,8 @@ The text is all cluttered, though.  Let's use some CSS to fix this:
     transform:rotate(45deg);
 }
 ```
+
+![](https://i.imgur.com/y8Na794.png)
 
 It's rotated, but it's rotated around the center of the element.  Let's change this, so it rotates around the start of the text:
 
@@ -476,7 +498,7 @@ It's rotated, but it's rotated around the center of the element.  Let's change t
 }
 ```
 
-![](https://i.imgur.com/HYebbY2.png)
+![](https://i.imgur.com/d6dkyDf.png)
 
 Let's move the graph to the right, so we can see the values for the left axis:
 
@@ -487,4 +509,4 @@ svg {
 }
 ```
 
-![](https://i.imgur.com/dI9qSBJ.png)
+![](https://i.imgur.com/USIPF0A.png)
