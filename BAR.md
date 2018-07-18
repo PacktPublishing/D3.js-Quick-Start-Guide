@@ -1,5 +1,7 @@
 # Bar Graph
 
+In this section, we'll use AJAX to build a bar graph
+
 ## Lesson Objectives
 
 1. Use AJAX to make an asynchronous call to an external data file
