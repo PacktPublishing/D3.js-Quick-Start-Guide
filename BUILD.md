@@ -1,5 +1,7 @@
 # D3 Build
 
+This lesson will cover how to make an interactive scatter plot
+
 ## Lesson Objectives
 
 1. Add link to d3 library
