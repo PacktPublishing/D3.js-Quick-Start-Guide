@@ -1,5 +1,7 @@
 # SVG
 
+This lesson covers how to create various SVG elements, the foundation of D3.js
+
 ## Base tag
 
 All svg elements go inside an `<svg></svg>` tag.  Let's set this up:
