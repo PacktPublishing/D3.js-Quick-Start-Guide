@@ -1,7 +1,5 @@
 # Creating a Pie Chart
 
-## Introduction
-
 In this section we'll be using animations to make our graphs move.  This can give your visualizations a more polished and professional feel.  By the end of this section, you'll be able to:
 
 1. Create an ordinal scale
