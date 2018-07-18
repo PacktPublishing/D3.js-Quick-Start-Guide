@@ -1,5 +1,7 @@
 # Force Directed Graphs
 
+This lesson covers how to make a force directed graph which will visualize relationships between various nodes
+
 ## Describe a Force Directed Graph
 
 - A force directed graph is a graph that is affected by various forces (e.g. gravity, repulsion, etc)
