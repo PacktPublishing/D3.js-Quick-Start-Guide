@@ -1048,3 +1048,8 @@ And lastly, adjust css:
 ```
 
 ![](https://i.imgur.com/t6BKuiz.png)
+
+
+## Conclusion
+
+In this chapter we've learned the basics of D3 and created a fully interactive scatter plot.  In the next chapter we'll learn how to use AJAX to make an asynchronous request that will populate a bar graph.

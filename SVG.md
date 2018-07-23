@@ -450,3 +450,7 @@ Play with the values here: http://codepen.io/lingtalfi/pen/yaLWJG
 ### Documentation
 
 https://developer.mozilla.org/en-US/docs/Web/SVG/Element
+
+## Conclusion
+
+Now that we've covered the basics of SVG, we're ready to continue on to learn how D3 can be used to modify these elements.

@@ -512,3 +512,7 @@ svg {
 ```
 
 ![](https://i.imgur.com/USIPF0A.png)
+
+## Conclusion
+
+In this chapter we learned how to use AJAX to make an asynchronous request that will populate a bar graph.  In the next chapter we'll create a pie chart that animates when you remove sections from it.

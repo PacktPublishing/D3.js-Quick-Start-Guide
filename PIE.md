@@ -436,3 +436,7 @@ path.on('click', function(clickedDatum, clickedIndex){
 Now, when we click the orange segment, the donut closes smoothly:
 
 ![](https://i.imgur.com/gh8lnEN.png)
+
+## Conclusion
+
+In this chapter we create a pie chart that animates when you remove sections from it.  In the next chapter we will use D3 to create a graph that visualizes relationships between various nodes of data.

@@ -263,3 +263,7 @@ d3.forceSimulation()
 Finally, our graph looks like this:
 
 ![](https://i.imgur.com/1w8Po1b.png)
+
+## Conclusion
+
+In this chapter we used D3 to create a graph that visualizes relationships between various nodes of data.  In the next chapter we'll cover how to create a map from GeoJSON data.

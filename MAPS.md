@@ -209,3 +209,7 @@ d3.selectAll('path').attr('d', dAttributeFunction);
 `geoPath()` generates the function that we'll use for the `d` attribute, and `projection(worldProjection)` tells it to use the `worldProjection` var created earlier so that the `path` elements appear as an equirectangular projection
 
 ![](https://i.imgur.com/hX7hOoB.png)
+
+## Conclusion
+
+In this section we've covered how to use D3 to create a projection and render GeoJSON data as a map.  Congratulations!  You've made it to the end of this book.  No go off and create amazing visualizations.
