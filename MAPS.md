@@ -118,7 +118,7 @@ Let's set up a basic D3 page:
 </html>
 ```
 
-The only thing different from normal is this line:
+The only thing different from the setup that we've used in previous chapters is this line:
 
 ```html
 <script src="https://cdn.rawgit.com/mahuntington/mapping-demo/master/map_data3.js" charset="utf-8"></script>
@@ -152,7 +152,7 @@ Note that the `map_json` variable is just a JavaScript object that adheres to th
 
 ## Use a projection
 
-Now let's start in on our `app.js` file:
+Now let's start our `app.js` file:
 
 ```javascript
 var width = 960;
@@ -206,7 +206,7 @@ var dAttributeFunction = d3.geoPath()
 d3.selectAll('path').attr('d', dAttributeFunction);
 ```
 
-`geoPath()` generates the function that we'll use for the `d` attribute, and `projection(worldProjection)` tells it to use the `worldProjection` var created earlier so that the `path` elements appear as an equirectangular projection
+`geoPath()` generates the function that we'll use for the `d` attribute, and `projection(worldProjection)` tells it to use the `worldProjection` var created earlier so that the `path` elements appear as an equirectangular projection like this:
 
 ![](https://i.imgur.com/hX7hOoB.png)
 

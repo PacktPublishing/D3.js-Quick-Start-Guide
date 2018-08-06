@@ -1,6 +1,13 @@
 # SVG
 
-This lesson covers how to create various SVG elements, the foundation of D3.js
+This lesson covers how to create various SVG elements, the foundation of D3.js.  In it, we will discuss:
+
+1. Base tags
+1. Basic Elements
+1. Positioning
+1. Styling
+1. Important SVG elements
+
 
 ## Base tag
 
@@ -54,7 +61,7 @@ This tells the browser to give the circle a radius of 50px:
 
 At the moment though, we only see the bottom right quarter of the `<circle>`.  This is because the center of the `<circle>` is being drawn at the very upper left corner of the `<svg>`, and the rest of it is being clipped outside the `<svg>`.  We can change this by changing the position of the circle, which we'll do next.
 
-## Positioning
+## Positioning an Element
 
 - The `<svg>` tag is an inline element, like an image (as opposed to a block element like a `<div>`)
 - Elements within the `<svg>` are positioned similar to photoshop, with a set of coordinates which follow the form (x,y).  This is different from HTML, where elements are laid out relative to each other
@@ -69,7 +76,7 @@ At the moment though, we only see the bottom right quarter of the `<circle>`.  T
 		- -x moves left
 		- -y moves up
 
-Let's adjust the position of our circle in our previous section by adjusting `cx` and `cy` values:
+Let's adjust the position of our circle in our previous section by adjusting `cx` and `cy` values (the x and y values for the center of the element):
 
 ```html
 <!DOCTYPE html>
@@ -88,11 +95,11 @@ Now we see the full circle:
 
 ![](https://i.imgur.com/LyOO28o.png)
 
-## Styling
+## Styling Elements
 
 Each tag inside an `<svg>` can be styled with various attributes:
 
-- `fill=red` or `fill=#ff0000` will alter fill color
+- `fill=red` or `fill=#ff0000` will alter the color that fills the shape
 - `stroke=red` or `stroke=#ff0000` will alter stroke color.  Stroke is a line that surrounds each element
 - `stroke-width=4` will adjust the width of the stroke
 - `fill-opacity=0.5` will adjust the transparency of the fill color
@@ -176,10 +183,11 @@ To demo each element, we'll use the following code as a starting point and then 
 
 ### Circle
 
-- attributes
-	- `r` radius
-	- `cx` x position
-	- `cy` y position
+Circles have the following attributes:
+
+- `r` radius
+- `cx` x position
+- `cy` y position
 
 ```xml
 <circle r="50" cx="200" cy="300"/>
@@ -283,6 +291,8 @@ What if we want to draw complex organic shapes?  To do this, we'll need to use p
 
 #### Cubic Bezier Curves
 
+There are two types of Bezier curves:
+
 - [Bezier curves](http://blogs.sitepointstatic.com/examples/tech/svg-curves/cubic-curve.html)
 - [Quadratic Bezier curves](http://math.hws.edu/eck/cs424/notes2013/canvas/bezier.html)
 
@@ -299,7 +309,9 @@ The start/end point are where the curve starts and ends.  The control points def
 
 As we manipulate the control points, we can see how the shape of the curve is affected:
 
-![](https://i.imgur.com/M9S1sW7.png)
+![](https://i.imgur.com/M9S1sW7.png
+
+Here's another example:
 
 ![](https://i.imgur.com/Dw1z4hl.png)
 
