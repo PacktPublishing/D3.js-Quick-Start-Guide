@@ -730,7 +730,17 @@ If you try to delete all the circles and then add a new one, you'll get an error
 
 ![](https://i.imgur.com/FprJXNN.png)
 
-Inside the `<svg>` click handler, let's put in a little code to handle when the user has deleted all runs and tries to add a new one:
+This is because, our code for creating a `newRun` in the click handler needs some work:
+
+```javascript
+var newRun = { //create a new "run" object
+    id: runs[runs.length-1].id+1, //generate a new id by adding 1 to the last run's id
+    date: formatTime(date), //format the date object created above to a string
+    distance: distance //add the distance
+}
+```
+
+`runs[runs.length-1]` tries to access an element at index -1 in the array.  Inside the `<svg>` click handler, let's put in a little code to handle when the user has deleted all runs and tries to add a new one:
 
 ```javascript
 //inside svg click handler
