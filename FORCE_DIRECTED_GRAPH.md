@@ -1,11 +1,14 @@
 # Force Directed Graphs
 
-This lesson covers how to make a force directed graph which will visualize relationships between various nodes
+This lesson covers how to make a force directed graph which will visualize relationships between various nodes.  In it we will learn about the following:
+
+- Creating a physics based force that will center nodes
+- Creating a physics based force that make the nodes repel each other
+- Creating a physics based force that will link the nodes to show their relationship
 
 ## Describe a Force Directed Graph
 
-- A force directed graph is a graph that is affected by various forces (e.g. gravity, repulsion, etc)
-- It can be extremely useful when setting up graphs of relationships
+A force directed graph is a graph that is affected by various forces (e.g. gravity, repulsion, etc).  It can be extremely useful when setting up graphs of relationships
 
 ## Describe how a to set up a graph of relationships
 
@@ -193,7 +196,7 @@ Now our circles distance themselves from each other a little bit, but this is ju
 
 ## Create forces
 
-Create a gravitational force at the center of the screen that pulls all data towards it:
+Create a centering force at the center of the screen that pulls all data towards it:
 
 ```javascript
 d3.forceSimulation()
@@ -266,4 +269,4 @@ Finally, our graph looks like this:
 
 ## Conclusion
 
-In this chapter we used D3 to create a graph that visualizes relationships between various nodes of data.  In the next chapter we'll cover how to create a map from GeoJSON data.
+In this chapter we used D3 to create a graph that visualizes relationships between various nodes of data. This can be very useful in situations like graphing a friend network, showing parent/child company relationships, or displaying a company's staff hierarchy.  In the next chapter we'll cover how to create a map from GeoJSON data.

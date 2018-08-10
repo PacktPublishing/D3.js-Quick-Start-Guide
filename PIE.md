@@ -151,7 +151,7 @@ colorScale.domain(dataset.map(function(element){
 }));
 ```
 
-## Set up the svg
+## Set up the SVG
 
 This is pretty standard:
 
@@ -439,4 +439,4 @@ Now, when we click the orange segment, the donut closes smoothly:
 
 ## Conclusion
 
-In this chapter we create a pie chart that animates when you remove sections from it.  In the next chapter we will use D3 to create a graph that visualizes relationships between various nodes of data.
+In this chapter we created a pie chart that animates when you remove sections from it. We've learned how to generate paths from data so that we get different parts of the pie without having to specify the drawing commands directly in the path elements.  In the next chapter we will use D3 to create a graph that visualizes relationships between various nodes of data.
