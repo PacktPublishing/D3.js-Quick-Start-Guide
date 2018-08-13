@@ -1,12 +1,13 @@
 # Creating a map
 
-In this section we'll generate `<path>` elements from GeoJSON data that will draw a map of the world
+The topics that we will cover in this chapter include:
 
-## Lesson Objectives
-
+1. Creating a map
 1. Define GeoJSON
 1. Use a projection
 1. Generate a `<path>` using a projection and the GeoJSON data
+
+In this section we'll generate `<path>` elements from GeoJSON data that will draw a map of the world
 
 ## Define GeoJSON
 
@@ -38,7 +39,7 @@ In this example, we have one `Feature` who's geometry is a `Point` with the coor
 }
 ```
 
-We can also have a `Feature Collection` which is many `Features` grouped together:
+We can also have a `Feature Collection` which is many `Features` grouped together in a `features` array:
 
 ```javascript
 {
@@ -124,7 +125,7 @@ The only thing different from the setup that we've used in previous chapters is 
 <script src="https://cdn.rawgit.com/mahuntington/mapping-demo/master/map_data3.js" charset="utf-8"></script>
 ```
 
-This just loads an external javascript file which sets our GeoJSON data to a variable.
+This just loads an external javascript file which sets our GeoJSON data to a variable.  Here's what the beginning of it looks like:
 
 ```javascript
 var map_json = {
@@ -150,6 +151,8 @@ var map_json = {
 
 Note that the `map_json` variable is just a JavaScript object that adheres to the GeoJSON structure (it adds an `id` property which is optional).  This is very important.  If the object didn't adhere to the GeoJSON structure, D3 would not work as it should.
 
+In production, you would probably make an AJAX call to get this data, or at the very least, create your own geoJSON file similar to the one being hosted on rawgit.com.  The setup above was created to make learning easier by decreasing the complexity associated with AJAX.
+
 ## Use a projection
 
 Now let's start our `app.js` file:
@@ -169,13 +172,13 @@ At the bottom of `app.js` let's add:
 var worldProjection = d3.geoEquirectangular();
 ```
 
-This generates a projection, which governs how we're going to display a round world on a flat page.  There's lots of different types of projections we can use: https://github.com/d3/d3-geo/blob/master/README.md#azimuthal-projections
+This generates a projection, which governs how we're going to display a round world on a flat screen.  There's lots of different types of projections we can use: https://github.com/d3/d3-geo/blob/master/README.md#azimuthal-projections
 
 The line above tells D3 to create an equirectangular projection (https://github.com/d3/d3-geo/blob/master/README.md#geoEquirectangular)
 
 ## Generate a `<path>` using a projection and the GeoJSON data
 
-Now that we have our projection, we're going to generate `<path>` elements for each element in the array set to the `features` property of `map_json`
+Now that we have our projection, we're going to generate `<path>` elements for each data element in the `map_json.features` array.  Then we set the fill of each element to `#099`.  Add this at the end of app.js:
 
 ```javascript
 d3.select('svg').selectAll('path')
@@ -184,6 +187,8 @@ d3.select('svg').selectAll('path')
     .append('path')
     .attr('fill', '#099');
 ```
+
+Here's what it should look like at the moment if we open index.html in Chrome and view the elements tab in the developer tools:
 
 ![](https://i.imgur.com/ljSlk4s.png)
 
@@ -197,7 +202,7 @@ d3.selectAll('path').attr('d', function(datum, index){
 });
 ```
 
-Writing the kind of code described in the comment above would be very difficult.  Luckily, D3 can generate that entire function for us.  All we need to do is specify the kind of projection we want to use.  At the bottom of `app.js` add the following:
+Writing the kind of code described in the comment above would be very difficult.  Luckily, D3 can generate that entire function for us.  All we need to do is specify the projection that we created earlier.  At the bottom of `app.js` add the following:
 
 ```javascript
 var dAttributeFunction = d3.geoPath()
