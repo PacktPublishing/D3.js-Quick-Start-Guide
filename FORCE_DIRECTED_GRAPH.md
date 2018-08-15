@@ -10,7 +10,7 @@ This lesson covers how to make a force directed graph which will visualize relat
 
 A force directed graph is a graph that is affected by various forces (e.g. gravity, repulsion, etc).  It can be extremely useful when setting up graphs of relationships
 
-## Describe how a to set up a graph of relationships
+## Describe how to set up a graph of relationships
 
 ### Display
 
@@ -20,12 +20,12 @@ A force directed graph is a graph that is affected by various forces (e.g. gravi
 ### Physics
 
 - We're going to have a gravitational force at the center of the `svg` that draws all nodes towards it
-- We're going to have forces on each node so that they repel each other
+- We're going to have repulsive forces on each node so that they don't get too close each other
 - We're going to have link forces that connect each of the nodes so that they don't repel each other too much
 
 ## Set up the HTML
 
-Pretty standard, but we'll need two `<g>` elements:
+Pretty standard index.html file, but we'll need two `<g>` elements:
 
 - One to contain the nodes (people - circles)
 - One to contain the links (relationships - lines)
@@ -50,7 +50,7 @@ Pretty standard, but we'll need two `<g>` elements:
 
 ## Set up styling for nodes and links
 
-Create a css file for our circles (nodes/people) and lines (links/relationships)
+Create an `app.css` file for our circles (nodes/people) and lines (links/relationships)
 
 ```css
 circle {
@@ -64,7 +64,7 @@ line {
 }
 ```
 
-Don't forget to link to it!
+Don't forget to link to it in your index.html file!
 
 ```html
 <head>
@@ -75,7 +75,7 @@ Don't forget to link to it!
 
 ## Set up svg
 
-In `app.js`:
+At the top of our `app.js` file, add the following:
 
 ```javascript
 var WIDTH = 300;
@@ -86,41 +86,43 @@ d3.select("svg")
     .attr("height", HEIGHT);
 ```
 
-If we look in our dev tools, we should see this:
+If we open up `index.html` in Chrome and look at Elements in the dev tools, we should see this:
 
 ![](https://i.imgur.com/s6worhU.png)
 
 ## Add data for people
 
-Let's create an array of people objects:
+Let's create an array of people objects at the bottom of `app.js`:
 
 ```javascript
 var nodesData =  [
-    {"name": "Travis", "age": 12},
-    {"name": "Rake", "age": 32},
-    {"name": "Diana", "age": 71},
-    {"name": "Rachel", "age": 26},
-    {"name": "Shawn", "age": 48},
-    {"name": "Emerald", "age": 95}
+    {"name": "Charlie"},
+    {"name": "Mac"},
+    {"name": "Dennis"},
+    {"name": "Dee"},
+    {"name": "Frank"},
+    {"name": "Cricket"}
 ];
 ```
 
 ## Add data for relationships
 
-Now let's create the relationships.  **NOTE** that the attributes must be `source` and `target` in order for D3 to do its magic
+Now let's create the relationships by adding the following array to the bottom of `app.js`.  **NOTE** that the attributes must be `source` and `target` in order for D3 to do its magic
 
 ```javascript
 var linksData = [
-    {"source": "Travis", "target": "Rake"},
-    {"source": "Diana", "target": "Rake"},
-    {"source": "Diana", "target": "Rachel"},
-    {"source": "Rachel", "target": "Rake"},
-    {"source": "Rachel", "target": "Shawn"},
-    {"source": "Emerald", "target": "Rachel"}
+    {"source": "Charlie", "target": "Mac"},
+    {"source": "Dennis", "target": "Mac"},
+    {"source": "Dennis", "target": "Dee"},
+    {"source": "Dee", "target": "Mac"},
+    {"source": "Dee", "target": "Frank"},
+    {"source": "Cricket", "target": "Dee"}
 ];
 ```
 
 ## Add circles to the svg
+
+Add the following to the bottom of `app.js`:
 
 ```javascript
 var nodes = d3.select("#nodes")
@@ -130,11 +132,13 @@ var nodes = d3.select("#nodes")
     .append("circle");
 ```
 
-Our dev tools should look like this:
+This will create circles for each element in our `nodesData` array.  Our dev tools should look like this:
 
 ![](https://i.imgur.com/TO2ogs5.png)
 
 ## Add lines to the svg
+
+Add the following to the bottom of `app.js`:
 
 ```javascript
 var links = d3.select("#links")
@@ -144,19 +148,19 @@ var links = d3.select("#links")
     .append("line");
 ```
 
-Our dev tools should look like this:
+This will create lines for each element in our `linksData` array.  Our dev tools should look like this:
 
 ![](https://i.imgur.com/MpIl6Z4.png)
 
 ## Create simulation
 
-Now we'll generate a simulation:
+Now we'll generate a simulation by adding the following to the bottom of `app.js`:
 
 ```javascript
 d3.forceSimulation()
 ```
 
-Tell it what data to act on:
+Note that this simply creates a simulation, but doesn't specify how the simulation should run.  Let's tell it what data to act on by modifying the previous line of code:
 
 ```javascript
 d3.forceSimulation()
@@ -172,9 +176,10 @@ At this point, our visualization still looks the same as before.
 Let's have our simulation affect the circles/lines that we created
 
 - The simulation runs "ticks" which run very quickly
-- Each time a new "tick" occurs, you can update the visual elements
-- This allows our simulation to animate
+- Each time a new "tick" occurs, you can update the visual elements.  This allows our simulation to animate
 - D3 will calculate and tack on positional data to our regular data so that we can make use of it
+
+Add the following to the bottom of `app.js`:
 
 ```javascript
 d3.forceSimulation()
@@ -196,7 +201,7 @@ Now our circles distance themselves from each other a little bit, but this is ju
 
 ## Create forces
 
-Create a centering force at the center of the screen that pulls all data towards it:
+Let's create a centering force at the center of the screen that pulls all elements towards it.  Adjust the code we added in the previous step so it looks like below.  **NOTE**, we only add `.force("center_force", d3.forceCenter(WIDTH / 2, HEIGHT / 2))` to the previous code:
 
 ```javascript
 d3.forceSimulation()
@@ -217,7 +222,7 @@ Now our circles are pulled towards the center of the SVG element:
 
 ![](https://i.imgur.com/ggGNctB.png)
 
-Create a force on each of the nodes so that they repel each other:
+Create a force on each of the nodes so that they repel each other.  Just like in the last step, we only add `.force("charge_force", d3.forceManyBody())` to the previous code:
 
 ```javascript
 d3.forceSimulation()
@@ -239,7 +244,15 @@ You'll notice that the cx/cy values for the circles change rapidly initially bef
 
 ![](https://i.imgur.com/C37zzPO.png)
 
-Lastly, we'll create the links between the nodes so that they don't repel each other too much:
+Lastly, we'll create the links between the nodes so that they don't repel each other too much.  Just like in the last step, we only add the following code to what we previously had:
+
+```javascript
+.force("links", d3.forceLink(linksData).id(function(datum){
+    return datum.name
+}).distance(160))
+```
+
+Our last chunk of code should now look like this:
 
 ```javascript
 d3.forceSimulation()
@@ -260,7 +273,7 @@ d3.forceSimulation()
     });    
 ```
 
-- The `d3.forceLink` function takes the array of links.  It then uses the `source` and `target` attributes of each link data object to connect the nodes via their `.name` properties (as specified in the return value)
+- The `d3.forceLink` function takes the array of links.  It then uses the `source` and `target` attributes of each link data object to connect the nodes via their `.name` properties (as specified in the return value of the function we just wrote)
 - You can tack on `.distance()` to specify how long the links are visually between each node
 
 Finally, our graph looks like this:

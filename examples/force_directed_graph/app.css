@@ -1,0 +1,9 @@
+circle {
+    fill: red;
+    r: 5;
+}
+
+line {
+    stroke: grey;
+    stroke-width: 1;
+}
