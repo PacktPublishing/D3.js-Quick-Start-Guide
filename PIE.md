@@ -181,7 +181,7 @@ If we examine our elements in the developer tools, we'll see the paths were adde
 
 ## Generate an arc creating function
 
-The paths have fill colors, but no shape.  If you'll recall, `<path>` elements take a `d=` attribute which determines how they're drawn.  We want to set something up like this which will somehow map datum to a `d=` string:
+The paths have fill colors, but no shape.  If you'll recall, `<path>` elements take a `d=` attribute which determines how they're drawn.  We want to set something up like this which will somehow map datum to a `d=` string (you don't have to add the next code snippet, it's only there for reference):
 
 ```javascript
 .attr('d', function(datum){
@@ -189,7 +189,7 @@ The paths have fill colors, but no shape.  If you'll recall, `<path>` elements t
 })
 ```
 
-Fortunately, D3 can generate something like this for us:
+Fortunately, D3 can generate the anonymous function that we need for the second parameter of `.attr()` in the previous code snippet.  Add the following to `app.js` just above our previous code for `var path = d3.select('g').selectAll('path')...`:
 
 ```javascript
 var arc = d3.arc()
@@ -197,7 +197,7 @@ var arc = d3.arc()
     .outerRadius(radius);
 ```
 
-We could plug this function into it's right place, but it won't work yet:
+Let's plug this function into its correct place in our previous `var path = d3.select('g').selectAll('path')...` code (it won't work yet, though):
 
 ```javascript
 var path = d3.select('g').selectAll('path')
@@ -212,9 +212,7 @@ var path = d3.select('g').selectAll('path')
 
 ## Format the data for the arc
 
-- The reason that our `arc()` function won't work is that the data isn't formatted properly for the function
-- The arc function we generated expects the data object to have things like start angle, end angle, etc
-- D3 can reformat our data so that it will work with our generated `arc()` function
+The reason that our `arc()` function won't work is that the data isn't formatted properly for the function.  The arc function we generated expects the data object to have things like start angle, end angle, etc.  Fortunately, D3 can reformat our data so that it will work with our generated `arc()` function.  To do this, we'll generate a `pie` function which will take a data set and add the necessary attributes to it for start angle, end angle, etc.  Add the following just above our code for `var path = d3.select('g').selectAll('path')...` :
 
 ```javascript
 var pie = d3.pie()
@@ -222,7 +220,7 @@ var pie = d3.pie()
     .sort(null); //don't sort the values
 ```
 
-our `pie` variable is a function that takes an array of values as a param and returns an array of objects that are formatted for our `arc` function
+our `pie` variable is a function that takes an array of values as a parameter and returns an array of objects that are formatted for our `arc` function.  Temporarily add the following code to the bottom of `app.js` and take a look at the console in Chrome's dev tools:
 
 ```javascript
 console.log(pie(dataset));
@@ -230,11 +228,11 @@ console.log(pie(dataset));
 
 ![](https://i.imgur.com/eLkzxCA.png)
 
-We can use this when attaching data to our paths:
+You can remove the `console.log(pie(dataset))` call now.  We can use this `pie()` function when attaching data to our paths.  Adjust our previous `var path = d3.select('g').selectAll('path')` code:
 
 ```javascript
 var path = d3.select('g').selectAll('path')
-    .data(pie(dataset)) //reformat data for arc
+    .data(pie(dataset)) //adjust this line to reformat data for arc
     .enter()
     .append('path')
     .attr('d', arc)
@@ -243,8 +241,7 @@ var path = d3.select('g').selectAll('path')
     });
 ```
 
-- Unfortunately, now each object from the data array that's been attached to our `path` elements doesn't have a `.label` property
-- Fortunately, it does have a `.data` attribute that mirrors what the data looked like before we passed it to the `pie()` function
+Unfortunately, now each object from the data array that's been attached to our path elements doesn't have a `.label` property, so our code for `.attr('fill', function(d) {})` is broken.  Fortunately, our data does have a `.data` attribute that mirrors what the data looked like before we passed it to the `pie()` function.  Let's adjust our `var path = d3.select('g').selectAll('path')` code to use that instead:
 
 ```javascript
 var path = d3.select('g').selectAll('path')
@@ -306,14 +303,14 @@ Produces this:
 
 ## Adjust the position of the pie
 
-Currently, we only see the lower right quarter of the pie graph.  This is because the pie starts at (0,0), but we can move the group containing the pie like so:
+Currently, we only see the lower right quarter of the pie graph.  This is because the pie starts at (0,0), but we can move the `group` element containing the pie by adjusting our `d3.select('svg')` code:
 
 ```javascript
 d3.select('svg')
     .attr('width', WIDTH)
     .attr('height', HEIGHT);
 var container = d3.select('g') //add this line and the next:
-    .attr('transform', 'translate(' + (WIDTH / 2) + ',' + (HEIGHT / 2) + ')'); //pie center is at 0,0
+    .attr('transform', 'translate(' + (WIDTH / 2) + ',' + (HEIGHT / 2) + ')'); //add this line
 ```
 
 Now it looks like this:
@@ -336,18 +333,18 @@ Now we get this:
 
 ## Remove parts of the pie
 
-We want to make it possible to click on a section of the pie, and it will be removed.  First let's add ids to our data to make removing easier:
+We want to make it possible to click on a section of the pie, and it will be removed.  First let's add ids to our data to make removing easie.  Adjust the `var dataset` code at the top of `app.js`:
 
 ```javascript
 var dataset = [
-    { id: 1, label: 'Bob', count: 10 },
-    { id: 2, label: 'Sally', count: 20 },
-    { id: 3, label: 'Matt', count: 30 },
-    { id: 4, label: 'Jane', count: 40 }
+    { id: 1, label: 'Bob', count: 10 }, //add id property
+    { id: 2, label: 'Sally', count: 20 }, //add id property
+    { id: 3, label: 'Matt', count: 30 }, //add id property
+    { id: 4, label: 'Jane', count: 40 } //add id property
 ];
 ```
 
-Now let's use those ids when we map data to paths:
+Now let's use those ids when we map data to paths.  Adjust the `.data()` portion of our `var path = d3.select('g').selectAll('path')` code at the bottom of `app.js`:
 
 ```javascript
 var path = d3.select('g').selectAll('path')
@@ -356,7 +353,7 @@ var path = d3.select('g').selectAll('path')
     })
 ```
 
-Let's save a record of what the data is currently set to (we'll use this later):
+Let's save a record of what the current data is for each element by adding a `_current`  property to each element (we'll use this later).  Add `.each(function(d) { this._current = d; });` to the end of our `var path = d3.select('g')` code at the bottom of `app.js`
 
 ```javascript
 var path = d3.select('g').selectAll('path')
@@ -372,14 +369,15 @@ var path = d3.select('g').selectAll('path')
     .each(function(d) { this._current = d; }); //add this
 ```
 
-Create the click handler:
+Create the click handler by adding the following code to the bottom of `app.js`:
 
 ```javascript
 path.on('click', function(clickedDatum, clickedIndex){
 });
 ```
 
-Remove the selected data from the dataset array, using JavaScript's native filter function:
+Remove the selected data from the dataset array, using JavaScript's native filter function.  Adjust the code we just added:
+
 
 ```javascript
 path.on('click', function(clickedDatum, clickedIndex){
@@ -389,7 +387,7 @@ path.on('click', function(clickedDatum, clickedIndex){
 });
 ```
 
-Remove the `path` elements from the `svg`:
+Remove the `path` elements from the svg by adding the following to our click handler function:
 
 ```javascript
 path.on('click', function(clickedDatum, clickedIndex){
@@ -408,7 +406,7 @@ Now, if we click on the orange segment, we should get this:
 
 ![](https://i.imgur.com/iuLEraU.png)
 
-Let's close the donut and add a transition:
+Let's close the donut and add a transition.  Add the following at the bottom of our click handler.  Check out the comments in the code below to see what each line does:
 
 ```javascript
 path.on('click', function(clickedDatum, clickedIndex){
