@@ -1,0 +1,12 @@
+svg {
+    overflow: visible;
+    margin-left: 20px; /* add this line */
+}
+rect {
+    stroke: white;
+    stroke-width:1px;
+}
+#bottom-axis text {
+    transform:rotate(45deg);
+    text-anchor: start;
+}

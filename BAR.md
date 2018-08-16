@@ -1,8 +1,6 @@
 # Bar Graph
 
-In this section, we'll use AJAX to build a bar graph
-
-## Lesson Objectives
+In this section, we'll use AJAX to build a bar graph.  By the end, you should be able to:
 
 1. Use AJAX to make an asynchronous call to an external data file
 1. Create a Bar graph
@@ -50,7 +48,7 @@ This is what we should have:
 
 ## Create an external file to hold our data
 
-Let's create an external `data.json` file, which will hold fake data regarding how often job posts require certain skills
+Let's create a `data.json` file, which will hold fake data regarding how often job posts require certain skills.  This should be the contents of the file:
 
 ```json
 [
@@ -201,7 +199,7 @@ Let's create an external `data.json` file, which will hold fake data regarding h
 
 ### Write the basic code:
 
-D3 has lots of different methods for making AJAX requests to file of different data types:
+D3 has lots of different methods for making AJAX requests to files of different data types:
 
 ```javascript
 d3.json('path').then(function(data){
@@ -227,13 +225,6 @@ d3.text('path').then(function(data){
 Since our data is in JSON format, we'll use the first kind of call:
 
 ```javascript
-var WIDTH = 800;
-var HEIGHT = 600;
-
-d3.select('svg')
-    .style('width', WIDTH)
-    .style('height', HEIGHT);
-
 d3.json('data.json').then(function(data){
     console.log(data);
 });
@@ -241,11 +232,11 @@ d3.json('data.json').then(function(data){
 
 ### Handle file access
 
-If you opened the `index.html` file in the browser directly, instead of serving it on a web server, you'll notice we've encountered an error.  Check your developer console:
+If you opened the `index.html` file in Chrome directly, instead of serving it on a web server, you'll notice we've encountered an error.  Check your developer console:
 
 ![](https://i.imgur.com/OyNP4o0.png)
 
-The issue here is that web browsers are not supposed to make AJAX requests to files on your computer.  If it could, this would be a huge security flaw.  Let's create a basic file server.  To do this, you'll need to install [Node.js](https://nodejs.org/en/).  Once that's done, open up your computer's terminal
+The issue here is that web browsers are not supposed to make AJAX requests to files on your computer.  If it could, this would be a huge security flaw because any website could access files on your computer.  Let's create a basic file server.  To do this, you'll need to install Node.js (https://nodejs.org/en/).  Once that's done, open up your computer's terminal
 
 - Mac: `command + space` then type `terminal` and hit enter
 - Windows: click Start, type `cmd` and hit enter
@@ -278,7 +269,7 @@ Now go to http://localhost:8080/ in your browser.  You should now see that your 
 
 ## Use AJAX data to create SVG elements
 
-Now that our AJAX calls are succeeding, let's start building our app.  From here on out, it's all basic JavaScript and D3.  Note that everything we'll write for the rest of this lesson is done within the success callback of our AJAX request.  In production we might want to move this code elsewhere, but for now this is easier for learning.  Let's create some rectangles for our bar graph:
+Now that our AJAX calls are succeeding, let's start building our app.  From here on out, it's all basic JavaScript and D3.  Note that everything we'll write for the rest of this lesson is done within the success callback of our AJAX request.  In production we might want to move this code elsewhere, but for now this is easier for learning.  Let's create some rectangles for our bar graph.  The bottom of `app.js` (the callback to the AJAX request) should now look like this:
 
 ```javascript
 d3.json('data.json').then(function(data){
@@ -295,7 +286,7 @@ Our Elements tab in our dev tools should look something like this:
 
 ## Adjust the height/width of the bars
 
-Let's create a scale that maps the `count` property of each element in `data` to a visual height for the corresponding bar.  We'll use a linear scale.  Remember to map the HEIGHT of the graph to a very low data point and the top of the graph (0 in the range) map to a very high data value:
+Let's create a scale that maps the `count` property of each element in `data` to a visual height for the corresponding bar.  We'll use a linear scale.  Remember to map the `HEIGHT` of the graph to a very low data point and the top of the graph (0 in the range) map to a very high data value.  Add this code at the bottom of the AJAX callback:
 
 ```javascript
 var yScale = d3.scaleLinear();
@@ -309,7 +300,7 @@ var yMax = d3.max(data, function(datum, index){
 yScale.domain([yMin, yMax]);
 ```
 
-We could use `d3.extent`, but we're going to need the individual min/max values later on.  Immediatley after the above code, let's tell D3 to adjust the height using the `yScale`.  Remember that the Y axis is flipped.  A low data value produces a high range value.  But a even though the range is high, the bar itself should be small.  We'll need to re-flip the values just for height so that a low data value produces a small bar and a high data value produces a large bar.  To do this, let's subtract whatever the range point is from the HEIGHT of the graph.  This way, if `yScale(datum.count)` produces, say, 500, the height of the bar will be 100.  We can use `yScale(datum.count)` normally when adjusting the position of the bars later.
+We could use `d3.extent`, but we're going to need the individual min/max values later on.  Immediately after the above code, let's tell D3 to adjust the height of the rectangles using the `yScale`.  Remember that the Y axis is flipped.  A low data value produces a high range value.  But a even though the range is high, the bar itself should be small.  We'll need to re-flip the values just for height so that a low data value produces a small bar and a high data value produces a large bar.  To do this, let's subtract whatever the range point is from the `HEIGHT` of the graph.  This way, if `yScale(datum.count)` produces, say, 500, the height of the bar will be 100.  We can use `yScale(datum.count)` normally when adjusting the position of the bars later.  Add this code at the bottom of the AJAX callback:
 
 ```javascript
 d3.selectAll('rect')
@@ -322,7 +313,7 @@ Now our rectangles have height, but no width:
 
 ![](https://i.imgur.com/HKSnXzl.png)
 
-In our `app.css` let's give all our bars the same width:
+At the bottom of `app.css` let's give all our bars the same width:
 
 ```css
 rect {
@@ -330,11 +321,13 @@ rect {
 }
 ```
 
+Here's what we should see in Chrome now:
+
 ![](https://i.imgur.com/W2yoUyC.png)
 
 ## Adjust the horizontal/vertical placement of the bars
 
-Our bars all overlap each other at the moment.  Let's space them out by mapping x position to index in the data array:
+Our bars all overlap each other at the moment.  Let's space them out by mapping x position to index in the data array.  Add the following to the bottom of the AJAX callback:
 
 ```javascript
 var xScale = d3.scaleLinear();
@@ -346,11 +339,11 @@ d3.selectAll('rect')
     });
 ```
 
-This maps indices in the in the array to horizontal range points
+This maps indices in the in the array to horizontal range points.  Chrome should look like this:
 
 ![](https://i.imgur.com/3d7ddVy.png)
 
-Now let's move the bars so they grow from the bottom, not the hang from the top.  Now a high data point produces a low range value which doesn't push a large bow down much.  A low data point produces a high range value which pushes a small bar down a lot.
+Now let's move the bars so they grow from the bottom, not the hang from the top.  Add the following to the end of the AJAX callback:
 
 ```javascript
 d3.selectAll('rect')
@@ -359,7 +352,9 @@ d3.selectAll('rect')
     });
 ```
 
-Our last few bars don't have any height, because we've mapped the minimum `count` property of our data to a visual range value of 0 in our `yScale`.  Let's adjust this code:
+Using our `yScale` function, a high data value produces a low range value which doesn't push a large bar down much. A low data point produces a high range value which pushes a small bar down a lot.
+
+Our last few bars don't have any height, because we've mapped the minimum `count` property of our data to a visual range value of 0 in our `yScale`.  Let's adjust the last line of this code:
 
 ```javascript
 var yScale = d3.scaleLinear();
@@ -393,7 +388,7 @@ Now the domain min is 1 less than what's actually in our data set.  Domains with
 
 ## Make width of bars dynamic
 
-Currently, our bars have a fixed width.  No matter how many elements we have, they have 15px width.  If we had more data elements, the bars could overlap.  Let's change this.  Since each `rect` will be the same width, no matter what the data is, we can just assign `width` a computed value:
+Currently, our bars have a fixed width.  No matter how many elements we have, they have 15px width.  If we had more data elements, the bars could overlap.  Let's change this.  Since each `rect` will be the same width, no matter what the data is, we can just assign `width` a computed value.  Add the following to the end of the AJAX callback:
 
 ```javascript
 d3.selectAll('rect')
@@ -414,7 +409,7 @@ rect {
 
 ## Change the color of the bar based on data
 
-Right now the bars are black.  A linear scale will interpolate between colors just like a regular number:
+Right now the bars are black.  A linear scale will interpolate between colors just like a regular number.  Add the following to the end of the AJAX callback:
 
 ```javascript
 var yDomain = d3.extent(data, function(datum, index){
@@ -429,13 +424,13 @@ d3.selectAll('rect')
     })
 ```
 
-We'll need to recalculate the `yDomain` so that the real min of the data set is used to map `#00cc00`:
+Notice that we calculate the yDomain using `d3.extent` so that the real min of the data set is used to map #00cc00:
 
 ![](https://i.imgur.com/zCrKZtB.png)
 
 ## Add axes
 
-The left axis is just like before:
+The left axis is just like in the scatter plot chapter.  Add this code to the bottom of the AJAX callback:
 
 ```javascript
 var leftAxis = d3.axisLeft(yScale);
@@ -455,11 +450,11 @@ skillScale.range([0, WIDTH]);
 skillScale.domain(skillDomain);
 ```
 
-Notice we use `data.map()`.  This is regular javascript which simply loops through an array and modifies each element based on the given function.  It then returns the resulting array.  In the above example, `skillDomain` will be an array containing the various name properties of each of the data elements.
+Notice we use `data.map()`.  This is regular javascript which simply loops through an array and modifies each element based on the given function.  It then returns the resulting array, leaving the original array in tact.  In the above example, `skillDomain` will be an array containing the various name properties of each of the data elements.
 
 Once we have an array of each of the skills, we use this as the domain and map each skill to a point within the range.  Remember the point in the range is created by dividing up the full range equally based on the number of elements in the domain.
 
-Now that we have a scale which maps each skill text to a point in the x range, we can create the bottom axis as before:
+Now that we have a scale which maps each skill text to a point in the x range, we can create the bottom axis as before.  Add this code to the bottom of the AJAX callback:
 
 ```javascript
 var bottomAxis = d3.axisBottom(skillScale);
@@ -469,7 +464,7 @@ d3.select('svg')
     .attr('transform', 'translate(0,'+HEIGHT+')');
 ```
 
-We still need to stop the `<svg>` from clipping everything:
+We still need to stop the `<svg>` element from clipping the axes.  Change the css for `svg` in `app.css`:
 
 ```css
 svg {
@@ -481,7 +476,7 @@ Our result:
 
 ![](https://i.imgur.com/DroVw9c.png)
 
-The text is all cluttered, though.  Let's use some CSS to fix this:
+The bottom axis text is all cluttered, though. Let's add some CSS to bottom of `app.css` to fix this:
 
 ```css
 #bottom-axis text {
@@ -491,18 +486,18 @@ The text is all cluttered, though.  Let's use some CSS to fix this:
 
 ![](https://i.imgur.com/y8Na794.png)
 
-It's rotated, but it's rotated around the center of the element.  Let's change this, so it rotates around the start of the text:
+It's rotated, but it's rotated around the center of the element. Let's change add a line to what we just wrote, so it rotates around the start of the text:
 
 ```css
 #bottom-axis text {
     transform:rotate(45deg);
-    text-anchor: start;
+    text-anchor: start; /* add this line */
 }
 ```
 
 ![](https://i.imgur.com/d6dkyDf.png)
 
-Let's move the graph to the right, so we can see the values for the left axis:
+Let's move the graph to the right, so we can see the values for the left axis.  Adjust our `svg` css code so it looks like this:
 
 ```css
 svg {
