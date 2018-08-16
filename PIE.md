@@ -73,12 +73,12 @@ var dataset = [
 
 An ordinal scale maps a discrete value to some other value.  A discrete value is something can't be divided.  In the past, we've used values like numbers that can be divided up and interpolated.  Interpolated just means that for any two numbers, we can find other numbers in between them.  For instance, given 10 and 5, we can find values between them (e.g. 6, 8.2, 7, 9.9, etc).  Now we want to map values that can't be interpolated, the `label` properties in our dataset (`Bob`, `Sally`, `Matt`, `Jane`).  What values lie between `Bob` and `Sally`?  How about between `Bob` and `Matt`?  There are none.  These are just strings, not numerical values that can be divided up and interpolated.
 
-What we want to do, is map these discrete values to other values.  Here's an example of how to do this with an ordinal scale:
+What we want to do, is map these discrete values to other values.  Here's an example of how to do this with an ordinal scale.  Add the following at the bottom of `app.js`:
 
 ```javascript
 var mapper = d3.scaleOrdinal();
-mapper.range([45, 63, 400]); //list each value for ordinal scales, not min/max
-mapper.domain(['Bob', 'Sally', 'Zagthor']); //list each value for ordinal scales, not min/max
+mapper.range([45, 63, 400]); //list each value for ordinal scales, not just min/max
+mapper.domain(['Bob', 'Sally', 'Zagthor']); //list each value for ordinal scales, not just min/max
 
 console.log(mapper('Bob'));
 console.log(mapper('Sally'));
@@ -91,7 +91,7 @@ The previous code should produce the following:
 
 **NOTE** When working with ordinal scales, you'll need to list all values for both domain and range.  Even if one set is numerical (in the previous case, the range), you'll still need to list each value.  If we had just listed the min/max for the range, omitting `63`, D3 would have no idea what value to map `Sally` to.  After all, how close is `Sally` to `Bob` as a value?  How close is `Sally` to `Zagthor` as a value?  There's no way to calculate that distance, since they're all strings of text, not numbers.
 
-One thing that's surprising, is that you can't invert ordinal scales:
+One thing that's surprising, is that you can't invert ordinal scales.  Remove the previous three  `console.log()` statements and temporarily add the following to the bottom of app.js:
 
 ```javascript
 console.log(mapper.invert(45));
@@ -99,11 +99,11 @@ console.log(mapper.invert(45));
 
 ![](https://i.imgur.com/Bvugomc.png)
 
-D3 can only go in one direction: from domain to range.
+D3 can only go in one direction: from domain to range.  You can now remove that `console.log()` statement.
 
 ## Create the color scale to map labels to colors
 
-Now we want to map the `label` properties of our data set to colors, instead of random numbers like in the previous section.  We can come up with our own color scheme, or choose one of D3's set of colors:
+Now we want to map the `label` properties of our data set to colors, instead of random numbers like in the previous section.  We can come up with our own color scheme, or choose one of D3's sets of colors:
 
 - https://github.com/d3/d3-scale-chromatic#categorical
 
@@ -115,14 +115,14 @@ console.log(d3.schemeCategory10)
 
 ![](https://i.imgur.com/SstV7Wl.png)
 
-Consequently, we can use them when setting a range:
+Consequently, we can use them when setting a range.  Replace the previous `console.log()` statement with the following:
 
 ```javascript
 var colorScale = d3.scaleOrdinal();
 colorScale.range(d3.schemeCategory10);
 ```
 
-We can generate an array of labels for the domain using JavaScript's native map function:
+We can generate an array of labels for the domain using JavaScript's native map function.  Add the following to the bottom of `app.js`:
 
 ```javascript
 colorScale.domain(dataset.map(function(element){
@@ -153,7 +153,7 @@ colorScale.domain(dataset.map(function(element){
 
 ## Set up the SVG
 
-This is pretty standard:
+This is pretty standard.  Add it to the bottom of `app.js`:
 
 ```javascript
 d3.select('svg')
@@ -163,7 +163,7 @@ d3.select('svg')
 
 ## Add paths for each pie segment
 
-Let's add `path` elements for each element in our dataset:
+Let's add `path` elements for each element in our dataset.  Add the following to the bottom of `app.js`:
 
 ```javascript
 var path = d3.select('g').selectAll('path')
