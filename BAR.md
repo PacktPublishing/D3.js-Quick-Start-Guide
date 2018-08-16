@@ -502,7 +502,7 @@ Let's move the graph to the right, so we can see the values for the left axis.  
 ```css
 svg {
     overflow: visible;
-    margin-left: 20px;
+    margin-left: 20px; /* add this line */
 }
 ```
 
