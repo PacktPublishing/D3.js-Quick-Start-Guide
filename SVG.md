@@ -459,6 +459,16 @@ Here are all the possible combinations for `sweep-flag` and `large-arc-flag`:
 
 ![](https://www.w3.org/TR/SVG/images/paths/arcs02.svg)
 
+Here's example code for a `path` that uses an arc in its `d` attribute:
+
+```html
+<path d="M10 10 A 50 50 0 0 0 50 10" stroke="black" fill="transparent"/>
+```
+
+Here's what it looks like:
+
+![](https://i.imgur.com/tpEXk2Z.png)
+
 Play with the values here: http://codepen.io/lingtalfi/pen/yaLWJG
 
 ### Documentation
