@@ -44,7 +44,7 @@ We can draw elements in our `<svg>` element by adding a variety of predefined ta
 </html>
 ```
 
-Note that we can't see the circle because it doesn't have a radius:
+Note that we can't see the circle because it doesn't have a radius, as shown in the below screenshot:
 
 ![](https://i.imgur.com/yUXwBPK.png)
 
@@ -179,7 +179,7 @@ To demo each element, we'll use the following code as a starting point and then 
 </html>
 ```
 
-Let us now move on to each element.
+Let us now move on to each element.  Note that you can write each tag in the form `<element></element>` as we did with `<circle></circle>` previously, or the self-closing form `<element/>`, which you will see next with `<circle/>`.
 
 ### Circle
 
@@ -197,11 +197,12 @@ Circles have the following attributes:
 
 ### Line
 
-- attributes
-	- `x1` starting x position
-	- `y1` starting y position
-	- `x2` ending x position
-	- `y2` ending y position
+Lines have the following attributes:
+
+- `x1` starting x position
+- `y1` starting y position
+- `x2` ending x position
+- `y2` ending y position
 
 ```xml
 <line x1="0" y1="0" x2="100" y2="100"/> <!-- this element won't be visible because it doesn't have a stroke -->
@@ -212,11 +213,12 @@ Circles have the following attributes:
 
 ### Rectangle
 
-- attributes
-	- `x` x position of top left
-	- `y` y position of top left
-	- `width` width
-	- `height` height
+Rectangles have the following attributes:
+
+- `x` x position of top left
+- `y` y position of top left
+- `width` width
+- `height` height
 
 ```xml
 <rect x="50" y="20" width="150" height="150"/>
@@ -226,11 +228,12 @@ Circles have the following attributes:
 
 ### Ellipse
 
-- attributes
-	- `cx` x position
-	- `cy` y position
-	- `rx` x radius
-	- `ry` y radius
+An ellipse has the following attributes:
+
+- `cx` x position
+- `cy` y position
+- `rx` x radius
+- `ry` y radius
 
 ```xml
 <ellipse cx="200" cy="80" rx="100" ry="50"/>
@@ -240,9 +243,10 @@ Circles have the following attributes:
 
 ### Polygon
 
-- attributes
+Polygons have the following attributes:
+
 	- `points` set of coordinate pairs
-		- each pair is of the form x,y
+		- each pair is of the form `x,y`
 
 ```xml
 <polygon points="200,10 250,190 160,210" />
@@ -252,7 +256,7 @@ Circles have the following attributes:
 
 ### Polyline
 
-A series of connected lines.  Can have a fill like a polygon, but won't automatically rejoin itself
+Polyline is a series of connected lines.  It can have a fill like a polygon, but won't automatically rejoin itself
 
 ```xml
 <polyline points="20,20 40,25 60,40 80,120 120,140 200,180" stroke="blue" fill="none"/>
@@ -262,11 +266,10 @@ A series of connected lines.  Can have a fill like a polygon, but won't automati
 
 ### Text
 
-The content of the tag is the text to be displayed
+The content of the tag is the text to be displayed.  It has the following attributes:
 
-- attributes
-	- `x` x position of top left corner of the element
-	- `y` y position of top left corner of the element
+- `x` x position of top left corner of the element
+- `y` y position of top left corner of the element
 
 ```xml
 <text x="0" y="15">I love SVG!</text>
@@ -278,11 +281,10 @@ You can use font-family and font-size CSS styling on this element
 
 - This element has no special attributes, so use transform on it.
 - You can put multiple elements inside it and all of its positioning and styling will apply to its children
-- Its good for moving many elements together as one
+- It's good for moving many elements together as one
 
 ```xml
-<g transform = "translate(20,30) rotate(45) scale(0.5)">
-</g>
+<g transform = "translate(20,30) rotate(45) scale(0.5)"></g>
 ```
 
 ### Bezier Curves
@@ -348,11 +350,11 @@ Here we can define the curve with just three points:
 
 - the start point
 - the end point
-- one single control point which acts as both control point and end control point
+- one single control point which acts as both start control point and end control point
 
 #### Smooth Quadratic Bezier Curve
 
-The final situation where we can simplify defining a bezier curve is where we have a quadratic bezier curve (one single control point) that is a reflection of the end control point previous curve:
+The final situation where we can simplify defining a bezier curve is where we have a quadratic bezier curve (one single control point) that is a reflection of the end control point of a previous curve:
 
 ![](https://i.imgur.com/Uw9zVrs.png)
 
@@ -364,7 +366,7 @@ In this situation, the browser knows the start point of the curve (the end point
 
 Now that we understand bezier curves, we can use them in our SVGs with `<path>` elements
 
-[Docs](https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths)
+[Documentation](https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths)
 
 These tags take a `d` attribute which stands for a set of drawing commands.  The value of this attribute is any combination of the below:
 
@@ -426,14 +428,14 @@ Make the following code part of the `d` attribute's value on a `<path>` element.
 A rx ry x-axis-rotation large-arc-flag sweep-flag x y
 ```
 
-- A - create an arc draw command
-- rx - x radius of both ellipses (in px)
-- ry - y radius of both ellipses (in px)
-- x-axis-rotation - rotate both ellipses a certain number of degrees
-- large-arc-flag - whether or not to travel along the arc that contains more than 180 degrees (1 to do so, 0 to not do so)
-- sweep-flag - whether or not to move along the arc that goes clock-wise (1 to do so, 0 to not do so)
-- x - destination x value (in px)
-- y - destination y value (in px)
+- `A` - create an arc draw command
+- `rx` - x radius of both ellipses (in px)
+- `ry` - y radius of both ellipses (in px)
+- `x-axis-rotation` - rotate both ellipses a certain number of degrees
+- `large-arc-flag` - whether or not to travel along the arc that contains more than 180 degrees (1 to do so, 0 to not do so)
+- `sweep-flag` - whether or not to move along the arc that goes clock-wise (1 to do so, 0 to not do so)
+- `x` - destination x value (in px)
+- `y` - destination y value (in px)
 
 The `large-arc-flag` determines whether to make an arc that is greater than 180 degrees.  Here's an example without it (note, the red shows the arc drawn, while the green arcs are other possible arcs that could be drawn using a combination of `large-arc-flag` and `sweep-flag`):
 
