@@ -1,0 +1,7 @@
+circle {
+    r:5;
+    fill: black;
+}
+svg {
+    border: 1px solid black;
+}
