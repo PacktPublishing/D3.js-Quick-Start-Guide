@@ -31,7 +31,12 @@ var yDomain = d3.extent(runs, function(datum, index){
 })
 yScale.domain(yDomain);
 
-d3.selectAll('circle').data(runs)
+d3.select('svg').selectAll('circle') //since no circles exist, we need to select('svg') so that d3 knows where to append the new circles
+    .data(runs) //attach the data as before
+    .enter() //find the data objects that have not yet been attached to visual elements
+    .append('circle'); //for each data object that hasn't been attached, append a <circle> to the <svg>
+
+d3.selectAll('circle')
     .attr('cy', function(datum, index){
         return yScale(datum.distance);
     });

@@ -454,11 +454,9 @@ Notice we moved `parseTime` and `formatTime` up so they could be used within the
 
 ![](https://i.imgur.com/gSA05gP.png)
 
-## Dynamically generate svg elements
+## Dynamically generate SVG elements
 
-- Currently, we have just enough `<circle>` elements to fit our data.  What if we don't want to count how many elements are in the array?
-- D3 Can create elements as needed
-- First, remove all `<circle>` elements from `index.html`
+Currently, we have just enough `<circle>` elements to fit our data.  What if we don't want to count how many elements are in the array?  D3 can create elements as needed.  First, remove all `<circle>` elements from `index.html`.  Your `<body>` tag should look like this now:
 
 ```html
 <svg></svg>
@@ -487,9 +485,17 @@ d3.selectAll('circle')
     });
 ```
 
-It should look exactly the same as before, but now circles are being created for each object in the "runs" array
+It should look exactly the same as before, but now circles are being created for each object in the `runs` array:
 
 ![](https://i.imgur.com/r59oUuJ.png)
+
+Here's a more in depth explanation of what we just wrote.  Take a look at the first line of new code from above:
+
+```javascript
+d3.select('svg').selectAll('circle')
+```
+
+This might seem unnecessary.  Why not just do `d3.selectAll('circle')`?  Well, at the moment, there are no `circle` elements.  We're going to be appending `circle` elements dynamically, so `d3.select('svg')` tells D3 where to append them.  We still need `.selectAll('circle')` though, so that when we call `.data(runs)` on the next line, D3 knows what elements to bind the various objects in the `runs` array to.  But there aren't any `circle` elements to bind data to.  That's okay: `.enter()` finds the "run" objects that haven't been bound to any `circle` elements yet (in this case all of them).  We then use `.append('circle')` to append a circle for each unbound "run" object that `.enter()` found.
 
 ## Create axes
 
