@@ -189,29 +189,51 @@ Note that all three circles are in the upper left corder of the screen.  This is
 
 ## Create a linear scale
 
-We currently have three circles and three objects in our `runs` dataset.  One of the best things D3 does is provide the ability to link SVG elements with data so that as the data changes, so do the SVG elements.  In this chapter, we're going to link each circle to an object in the `runs` dataset.  If the `distance` property of an object is relatively high, its associated circle will be higher up on the graph.  If the `date` property of an object is relatively high (a later date), its associated circle be farther right.
+We currently have three circles in our SVG and three objects in our `runs` array.  One of the best things D3 does is provide the ability to link SVG elements with data so that as the data changes, so do the SVG elements.  In this chapter, we're going to link each circle to an object in the `runs` array.  If the `distance` property of an object is relatively high, its associated circle will be higher up on the graph.  If the `date` property of an object is relatively high (a later date), its associated circle be farther right.
 
-First, let's position the circles vertically, based on the `distance` property of the objects in our `runs` dataset.  One of the most important things that D3 does is provide the ability to convert (or "map") data points to visual points and vice versa.  It does so, using what's called a `scale`.  There are lots of different kinds of scales that handle lots of different data types, but for now we're just going to use a `linear` scale which will map numeric data values to numeric visual values.
+First, let's position the circles vertically, based on the `distance` property of the objects in our `runs` array.  One of the most important things that D3 does is provide the ability to convert (or "map") data values to visual points and vice versa.  It does so using a `scale`.  There are lots of different kinds of scales that handle lots of different data types, but for now we're just going to use a `linear scale` which will map numeric data values to numeric visual points and vice versa.
 
 At the bottom of `app.js`, add the following:
 
 ```javascript
 var yScale = d3.scaleLinear(); //create the scale
-yScale.range([HEIGHT, 0]); //set the visual range (e.g. 600 to 0)
-yScale.domain([0, 10]); //set the data domain (e.g. 0 to 10)
 ```
 
-Whenever we create a scale, we need to specify the starting and ending values for both the data points and the visual points.  D3 will go in and figure out how to map anything in between those start and end values.  The start/end for the data points is called the `domain` and the start/end for the visual points is called the `range`.  In the previous snippet, the starting point for the visual values is `HEIGHT` (600) and the ending point is 0.  The starting point for the data values is 0 and the ending point is 10.  By doing this, we're saying that a data point (distance run) of 0 should map to a visual height value of `HEIGHT` (600)
+Whenever we create a scale, we need to tell it what are the minimum and maximum possible values that can exist in our data (this is called the "domain").  To do so for our `yScale`, add the following to the bottom of `app.js`:
+
+```javascript
+yScale.domain([0, 10]); //minimum data value is 0, max is 10
+```
+
+We also need to tell the scale what visual values correspond to those min/max values in the data (this is called the "range"). To do so, add the following to the bottom of `app.js`:
+
+```javascript
+//HEIGHT corresponds to min data value
+//0 corresponds to max data value
+yScale.range([HEIGHT, 0]);
+```
+
+Your last three lines of code in app.js should look like this now:
+
+```javascript
+var yScale = d3.scaleLinear(); //create the scale
+yScale.domain([0, 10]); //minimum data value is 0, max is 10
+//HEIGHT corresponds to min data value
+//0 corresponds to max data value
+yScale.range([HEIGHT, 0]);
+```
+
+In the previous snippet, the first (starting) value for the range is `HEIGHT` (600) and the second (ending) value is 0.  The minimum for the data values is 0 and the max is 10.  By doing this, we're saying that a data point (distance run) of 0 should map to a visual height value of `HEIGHT` (600):
 
 ![](https://i.imgur.com/VispBfN.png)
 
 This is because the lower the distance run (data value), the more we want to move the visual point down the Y axis.  Remember that the Y axis starts with 0 at the top and increases in value as we move down vertically on the screen.
 
-We also say that a data point (distance run) of 10 should map to a visual height of 0
+We also say that a data point (distance run) of 10 should map to a visual height of 0:
 
 ![](https://i.imgur.com/DsqDCzD.png)
 
-Again, this is because as the distance run increases, we want to get back a visual value that is lower and lower so that our circles are closer to the top of the screen
+Again, this is because as the distance run increases, we want to get back a visual value that is lower and lower so that our circles are closer to the top of the screen.
 
 If you ever need to remind yourself what the domain/range are, you can do so by logging `yScale.domain()` or `yScale.range()`.  Temporarily add the following at the bottom `app.js`:
 
@@ -220,9 +242,11 @@ console.log(yScale.domain()); //you can get the domain whenever you want like th
 console.log(yScale.range()); //you can get the range whenever you want like this
 ```
 
+Our Chrome console should look like this:
+
 ![](https://i.imgur.com/H6l8HkQ.png)
 
-When declaring range/domain of a linear scale, we only need to specify start/end values for each.  Values in between the start/end will be calculated by D3.  For instance, to find out what visual value corresponds to the distance value of 5, remove the previous two `console.log()` statements and add the following to the bottom of `app.js`:
+When declaring range/domain of a linear scale, we only need to specify start/end values for each.  Values in between the start/end will be calculated by D3.  For instance, to find out what visual value corresponds to the distance value of 5, use `yScale()`.  Remove the previous two `console.log()` statements and add the following to the bottom of `app.js`:
 
 ```javascript
 console.log(yScale(5)); //get a visual point from a data value
@@ -232,7 +256,7 @@ Here's what our dev console should look like in Chrome:
 
 ![](https://i.imgur.com/ggSwAv2.png)
 
-It makes sense that this logs `300` because the data value of `5` is half way between the starting data value of `0` and the ending data value of `10`.  The range starts at `HEIGHT` (600) and goes to `0`, so half way between that is 300.
+It makes sense that this logs `300` because the data value of `5` is half way between the minimum data value of `0` and the maximum data value of `10`.  The range starts at `HEIGHT` (600) and goes to `0`, so half way between those values is 300.
 
 So whenever you want to convert a data point to a visual point, call `yScale()`.  We can go the other way and convert a visual point to a data value by calling `yScale.invert()`.  To find out what data point corresponds to a visual value of 450, remove the previous `console.log()` statement and add the following to the bottom of `app.js`:
 
@@ -244,16 +268,13 @@ Here's what Chrome's console looks like:
 
 ![](https://i.imgur.com/7BdxFkm.png)
 
-It makes sense that this logs 2.5 because the visual value of 450 is 25% of the way from the starting visual value of 600 (`HEIGHT`) to the ending visual value of 0
+It makes sense that this logs 2.5 because the visual value of 450 is 25% of the way from the starting visual value of 600 (`HEIGHT`) to the ending visual value of 0.  You can now delete that last `console.log()` line.
 
 ## Attach data to visual elements
 
-We can attach each of the javascript objects in our "runs" array to one of our circles, so that each circle can access that data:
+Now let's attach each of the javascript objects in our "runs" array to a circle in our SVG.  Once we do this, each circle can access the data of its associated "run" object in order to determine its position.  Add the following to the bottom of `app.js`:
 
 ```javascript
-yScale.range([HEIGHT, 0]);
-yScale.domain([0, 10]);
-
 d3.selectAll('circle').data(runs); //selectAll is like select, but selects all elements that match the query string
 ```
 
@@ -261,7 +282,7 @@ If there were more objects in our "runs" array than there are circles, the extra
 
 ## Use data attached to a visual element to affect its appearance
 
-Normally, we can change attributes for a selection of DOM elements like so:
+We can change attributes for a selection of DOM elements by passing static values, and all selected elements will have that attribute set to that one specific value.  Add the following temporarily to the end of `app.js`:
 
 ```javascript
 d3.selectAll('circle').attr('cy', 300);
@@ -269,7 +290,7 @@ d3.selectAll('circle').attr('cy', 300);
 
 ![](https://i.imgur.com/Nn6CrEX.png)
 
-But now that each circle has one of our "runs" javascript data objects attached to it, we can set attributes on each circle using that data.  We do that by passing the `.attr()` method a callback function instead of a static value for its second parameter.
+But now that each circle has one of our "runs" javascript data objects attached to it, we can set attributes on each circle using that data.  We do that by passing the `.attr()` method a callback function instead of a static value for its second parameter.  Remove `d3.selectAll('circle').attr('cy', 300);` and adjust the last line of `app.js` from `d3.selectAll('circle').data(runs);` to the following:
 
 ```javascript
 d3.selectAll('circle').data(runs)
@@ -278,18 +299,22 @@ d3.selectAll('circle').data(runs)
     });
 ```
 
-- That callback function runs for each visual element selected
-- The result of the function is then assigned to whatever aspect of the element is being set (in this case the `cy` attribute)
-- The callback function takes two params
-    - the individual `datum` object (from the original `runs` array of objects) attached to that particular visual element
-    - the `index` of that `datum` in the original `runs` array
+If we refresh the browser, this is what we should see:
 
 ![](https://i.imgur.com/qAcjQyt.png)
 
+Let's examine what we just wrote.  The callback function passed as the second parameter to `.attr()` runs on each of the visual elements selected (each of the `circle` elements in this case).  During each execution of the callback, the return value of that callback function is then assigned to whatever aspect of the current element is being set (in this case the `cy` attribute).  
+
+The callback function takes two params:
+
+- the individual `datum` object from the `runs` array that was attached to that particular visual element when we called `.data(runs)`
+- the `index` of that `datum` in the `runs` array
+
+In summary what this does is loop through each `circle` in the SVG.  For each `circle`, it looks at the "run" object attached to that `circle` and finds its `distance` property.  It then feeds that data value into `yScale()` which then converts it into its corresponding visual point.  That visual point is then assigned to that circle's `cy` attribute.  Since each data object has a different `distance` value, each `circle` is placed differently, vertically.
+
 ## Create a time scale
 
-- Let's position the circles horizontally, based on the date that they happened
-- First create a time scale.  This is like a linear scale, but instead of mapping numeric values to visual points, it maps times to visual points:
+Let's position the circles horizontally, based on the date that their associated run happened.  First, create a time scale.  This is like a linear scale, but instead of mapping numeric values to visual points, it maps Dates to visual points. Add the following to the bottom of `app.js`:
 
 ```javascript
 var xScale = d3.scaleTime(); //scaleTime maps date values with numeric visual points
@@ -300,12 +325,15 @@ console.log(xScale(new Date('2017-10-28')));
 console.log(xScale.invert(400));
 ```
 
+Here's what our console should look like:
+
 ![](https://i.imgur.com/zL7WQ3P.png)
+
+You can now remove the two `console.log()` statements.
 
 ## Parse and format times
 
-- Note that our `date` data isn't in the format expected by the xScale domain (a Date object)
-- D3 provides us an easy way to convert strings to dates and vice versa using [these values](https://github.com/d3/d3-time-format#locale_format)
+Note that the `date` properties of the objects in our `runs` array are strings and not Date objects.  This is a problem because `xScale`, as with all time scales, expects its data values to be Date objects.  Fortunately, D3 provides us an easy way to convert strings to dates and vice versa. We'll use a specially formatted string, based on the documentation (https://github.com/d3/d3-time-format#locale_format), to tell D3 how to parse the `date` String properties of the objects in our `runs` array into actual JavaScript Date objects.  Add the following at the end of `app.js`:
 
 ```javascript
 var parseTime = d3.timeParse("%B%e, %Y at %-I:%M%p"); //this format matches our data in the runs array
@@ -317,16 +345,16 @@ console.log(formatTime(new Date()));
 
 ![](https://i.imgur.com/vGH75ve.png)
 
-Let's use this when calculating `cx` attributes for our circles:
+Let's use this when calculating `cx` attributes for our circles.  Remove the last two `console.log()` statements and add the following at the bottom of `app.js`:
 
 ```javascript
-var parseTime = d3.timeParse("%B%e, %Y at %-I:%M%p"); //this format matches our data in the runs array
-var formatTime = d3.timeFormat("%B%e, %Y at %-I:%M%p"); //this format matches our data in the runs array
 d3.selectAll('circle')
     .attr('cx', function(datum, index){
         return xScale(parseTime(datum.date)); //use parseTime to convert the date string property on the datum object to a Date object, which xScale then converts to a visual value
     });
 ```
+
+Here's what Chrome should look like:
 
 ![](https://i.imgur.com/nD9CW7V.png)
 
