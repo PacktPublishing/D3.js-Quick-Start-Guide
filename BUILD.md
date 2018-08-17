@@ -358,14 +358,11 @@ Here's what Chrome should look like:
 
 ![](https://i.imgur.com/nD9CW7V.png)
 
-In summary, this selects all of the `circle` elements.  It then sets the `cx` attribute of each `circle` to the result of a callback function.  That callback function runs for each `circle` and takes the "run" data object associated with that `circle` and finds its `date` property (remember it's a string, e.g. `'October 3, 2017 at 6:00PM'`).  It passes that string value to `parseTime()` which then turns the string into an actual JavaScript Date object.  That Date object is then passed to `xScale()` which converts the date into a visual value.  That visual value is then used for the `cx` attribute of the current `circle`.  Since each `date` property of the objects in the `runs` array is different, the `circles` have different horizontal locations.
+In summary, this selects all of the `circle` elements.  It then sets the `cx` attribute of each `circle` to the result of a callback function.  That callback function runs for each `circle` and takes the "run" data object associated with that `circle` and finds its `date` property (remember it's a string, e.g. `'October 3, 2017 at 6:00PM'`).  It passes that string value to `parseTime()` which then turns the string into an actual JavaScript Date object.  That Date object is then passed to `xScale()` which converts the date into a visual value.  That visual value is then used for the `cx` attribute of whichever `circle` the callback function has just run on.  Since each `date` property of the objects in the `runs` array is different, the `circles` have different horizontal locations.
 
 ## Set dynamic domains
 
-- At the moment, we're setting arbitrary min/max values for the domains of both distance and date
-- D3 can find the min/max of a data set, so that our graph displays just the data ranges we need:
-- we pass the min/max methods a callback which gets called for each item of data in the array
-    - d3 uses the callback to determine which properties of the datum object to compare for min/max
+At the moment, we're setting arbitrary min/max values for the domains of both distance and date.  D3 can find the min/max of a data set, so that our graph displays just the data ranges we need.  All we need to do is pass the min/max methods a callback which gets called for each item of data in the `runs` array.  D3 uses the callback to determine which properties of the datum object to compare for min/max
 
 Go to this part of the code:
 
@@ -390,9 +387,35 @@ yScale.domain([yMin, yMax]); //now that we have the min/max of the data set for 
 console.log(yScale.domain());
 ```
 
+Chrome should look like this:
+
 ![](https://i.imgur.com/7JDfzD9.png)
 
-We can combine both the min/max functions into one "extent" function that returns an array that has the exact same structure as `[yMin, yMax]`:
+Let's examine what we just wrote.  The following code finds the minimum distance:
+
+```javascript
+var yMin = d3.min(runs, function(datum, index){
+    return datum.distance; //compare distance properties of each item in the data array
+})
+```
+
+D3 loops through the `runs` array (the first parameter) and calls the callback function (the second parameter) on each element of the array.  The return value of that function is compared the return values of the callback function as it runs on the other elements.  The lowest value is assigned to `yMin`.  The same thing happens for `d3.max()` but with the highest value.
+
+We can combine both the min/max functions into one `extent` function that returns an array that has the exact same structure as `[yMin, yMax]`.  Change the code we just wrote:
+
+```javascript
+var yScale = d3.scaleLinear(); //create the scale
+yScale.range([HEIGHT, 0]); //set the visual range (e.g. 600 to 0)
+var yMin = d3.min(runs, function(datum, index){
+    return datum.distance; //compare distance properties of each item in the data array
+})
+var yMax = d3.max(runs, function(datum, index){
+    return datum.distance; //compare distance properties of each item in the data array
+})
+yScale.domain([yMin, yMax]); //now that we have the min/max of the data set for distance, we can use those values for the yScale domain
+```
+
+to this:
 
 ```javascript
 var yScale = d3.scaleLinear(); //create the scale
@@ -403,7 +426,7 @@ var yDomain = d3.extent(runs, function(datum, index){
 yScale.domain(yDomain);
 ```
 
-Let's do the same for the xScale's domain.  Go to this part of the code:
+Much shorter, right?  Let's do the same for the xScale's domain.  Go to this part of the code:
 
 ```javascript
 var xScale = d3.scaleTime(); //scaleTime maps date values with numeric visual points
@@ -427,7 +450,7 @@ var xDomain = d3.extent(runs, function(datum, index){
 xScale.domain(xDomain);
 ```
 
-Notice we moved `parseTime` and `formatTime` up so they could be used within the `.extent()`
+Notice we moved `parseTime` and `formatTime` up so they could be used within the `.extent()`.  Here's what Chrome should look like:
 
 ![](https://i.imgur.com/gSA05gP.png)
 
