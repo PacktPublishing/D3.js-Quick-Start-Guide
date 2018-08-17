@@ -54,3 +54,14 @@ d3.selectAll('circle')
     .attr('cx', function(datum, index){
         return xScale(parseTime(datum.date)); //use parseTime to convert the date string property on the datum object to a Date object, which xScale then converts to a visual value
     });
+
+var bottomAxis = d3.axisBottom(xScale); //pass the appropriate scale in as a parameter
+d3.select('svg')
+	.append('g') //put everything inside a group
+	.call(bottomAxis) //generate the axis within the group
+    .attr('transform', 'translate(0,'+HEIGHT+')');
+
+var leftAxis = d3.axisLeft(yScale);
+d3.select('svg')
+	.append('g')
+	.call(leftAxis); //no need to transform, since it's placed correctly initially

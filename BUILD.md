@@ -499,18 +499,25 @@ This might seem unnecessary.  Why not just do `d3.selectAll('circle')`?  Well, a
 
 ## Create axes
 
-D3 can automatically generate axes for you:
+D3 can automatically generate axes for you.  Add the following to the bottom of `app.js`:
 
 ```javascript
 var bottomAxis = d3.axisBottom(xScale); //pass the appropriate scale in as a parameter
+```
+
+This creates a bottom axis generator that can be used to insert an axis into any element you choose.  Add the following code at the bottom of `app.js` to append a `<g>` element inside our SVG element and then insert a bottom axis inside of it:
+
+```javascript
 d3.select('svg')
 	.append('g') //put everything inside a group
 	.call(bottomAxis); //generate the axis within the group
 ```
 
+Here's what Chrome should look like:
+
 ![](https://i.imgur.com/nLwIVBI.png)
 
-We want the axis to be at the bottom of the SVG, though:
+We want the axis to be at the bottom of the SVG, though.  Modify the code we just wrote so it looks like this (**NOTE:** we removed a `;` after `.call(bottomAxis)` and added `.attr('transform', 'translate(0,'+HEIGHT+')');`):
 
 ```javascript
 var bottomAxis = d3.axisBottom(xScale); //pass the appropriate scale in as a parameter
@@ -524,7 +531,7 @@ Currently, our SVG clips the axis:
 
 [](https://i.imgur.com/byJXkLO.png)
 
-Let's change some CSS so it doesn't:
+Let's alter our `svg` CSS so it doesn't clip any elements that extend beyond its bounds:
 
 ```css
 svg {
@@ -532,9 +539,11 @@ svg {
 }
 ```
 
+Now it looks good:
+
 ![](https://i.imgur.com/kd0AiMt.png)
 
-The left axis is pretty similar:
+The left axis is pretty similar.  Add the following to the bottom of `app.js`:
 
 ```javascript
 var leftAxis = d3.axisLeft(yScale);
@@ -543,15 +552,19 @@ d3.select('svg')
 	.call(leftAxis); //no need to transform, since it's placed correctly initially
 ```
 
+Note we don't need to set a `transform` attribute since it starts out in the correct place initially:
+
 ![](https://i.imgur.com/aP4hTVq.png)
 
-It's a little tough to see, so let's adding some margin to the body:
+It's a little tough to see, so let's add the following at the bottom of `app.css`:
 
 ```css
 body {
     margin: 20px 40px;
 }
 ```
+
+Now our axes are complete:
 
 ![](https://i.imgur.com/FFgC68e.png)
 
