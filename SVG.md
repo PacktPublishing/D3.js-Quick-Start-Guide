@@ -1,6 +1,6 @@
 # SVG
 
-This lesson covers how to create various SVG elements, the foundation of D3.js.  In it, we will discuss:
+This lesson covers how to create various SVG elements, the foundation of D3.js.  In it we will cover the following topics
 
 1. Base tags
 1. Basic Elements
@@ -8,10 +8,9 @@ This lesson covers how to create various SVG elements, the foundation of D3.js. 
 1. Styling
 1. Important SVG elements
 
-
 ## Base tag
 
-All svg elements go inside an `<svg></svg>` tag.  Let's set this up:
+When viewing SVG graphics in a browser, it's important to embed and `<svg>` tag inside a basic HTML page.  Let's create an `index.html` file and add the following to it:
 
 ```html
 <!DOCTYPE html>
@@ -24,7 +23,7 @@ All svg elements go inside an `<svg></svg>` tag.  Let's set this up:
 </html>
 ```
 
-If we inspect this in our browser's dev tools, we'll see this:
+Now start a web browser and open that file (usually File->Open File).  For this book, it is recommended the reader use Google Chrome, but in development and production any browser will do.  If we inspect our HTML in the Elements tab of Chrome's dev tools (View->Developer->Developer Tools), we'll see the following:
 
 ![](https://i.imgur.com/Z4vlaZA.png)
 
@@ -39,7 +38,7 @@ We can draw elements in our `<svg>` element by adding a variety of predefined ta
     </head>
     <body>
         <svg>
-            <circle><circle>
+            <circle></circle>
         </svg>
     </body>
 </html>
@@ -47,28 +46,27 @@ We can draw elements in our `<svg>` element by adding a variety of predefined ta
 
 Note that we can't see the circle because it doesn't have a radius:
 
-![](https://i.imgur.com/O0mcrBb.png)
+![](https://i.imgur.com/yUXwBPK.png)
 
 We'll talk about this more later, but for now, if we want to see the circle, we can add a special attribute that all `<circle>` elements take:
 
 ```html
-<circle r=50><circle>
+<circle r=50></circle>
 ```
 
 This tells the browser to give the circle a radius of 50px:
 
-![](https://i.imgur.com/pbsHxoE.png)
+![](https://i.imgur.com/vG8iQID.png)
 
 At the moment though, we only see the bottom right quarter of the `<circle>`.  This is because the center of the `<circle>` is being drawn at the very upper left corner of the `<svg>`, and the rest of it is being clipped outside the `<svg>`.  We can change this by changing the position of the circle, which we'll do next.
 
 ## Positioning an Element
 
-- The `<svg>` tag is an inline element, like an image (as opposed to a block element like a `<div>`)
-- Elements within the `<svg>` are positioned similar to photoshop, with a set of coordinates which follow the form (x,y).  This is different from HTML, where elements are laid out relative to each other
-	- e.g. for (10,15), x=10 and y=15
-	- the point (0,0) is the top left of the `<svg>` element
+The `<svg>` tag is an inline element, like an image (as opposed to a block element like a `<div>`).  Elements within the `<svg>` are positioned similar to photoshop, with a set of coordinates which follow the form `(x,y)`.  An example of this could be `(10,15)` which translates to `x=10` and `y=15`.  This is different from HTML, where elements are laid out relative to each other.  Some important things to keep in mind:
+
+	- the point `(0,0)` is the top left of the `<svg>` element
 	- as y values increase, the point moves vertically down the `<svg>` element
-	- don't confuse this with a typical coordinate system that has 0,0 at the **bottom** left with a point moving up as y increases in value
+	- don't confuse this with a typical coordinate system that has `(0,0)` at the **bottom** left with a point moving up as y increases in value
 
 		![](http://res.cloudinary.com/dno0vkynk/image/upload/v1475392871/SVGCoordinateSystem.png)
 
@@ -85,7 +83,7 @@ Let's adjust the position of our circle in our previous section by adjusting `cx
     </head>
     <body>
         <svg>
-            <circle r=50 cx=50 cy=50><circle>
+            <circle r=50 cx=50 cy=50></circle>
         </svg>
     </body>
 </html>
@@ -93,13 +91,13 @@ Let's adjust the position of our circle in our previous section by adjusting `cx
 
 Now we see the full circle:
 
-![](https://i.imgur.com/LyOO28o.png)
+![](https://i.imgur.com/JWOr8xH.png)
 
 ## Styling Elements
 
-Each tag inside an `<svg>` can be styled with various attributes:
+The appearance of any tag inside an `<svg>` can be styled with the following attributes (below are the attributes with example values):
 
-- `fill=red` or `fill=#ff0000` will alter the color that fills the shape
+- `fill=red` or `fill=#ff0000` will alter the color of the shape
 - `stroke=red` or `stroke=#ff0000` will alter stroke color.  Stroke is a line that surrounds each element
 - `stroke-width=4` will adjust the width of the stroke
 - `fill-opacity=0.5` will adjust the transparency of the fill color
@@ -111,53 +109,53 @@ Each tag inside an `<svg>` can be styled with various attributes:
 Let's style the circle we positioned previously:
 
 ```html
-<circle r=50 cx=50 cy=50 fill=red stroke=blue stroke-width=5><circle>
+<circle r=50 cx=50 cy=50 fill=red stroke=blue stroke-width=5></circle>
 ```
 
 Now we get this:
 
-![](https://i.imgur.com/OMfnwcG.png)
+![](https://i.imgur.com/FPpHp1v.png)
 
 Note that the stroke in the image above is getting clipped.  That's because the stroke is create outside the element.  If we wanted to see the full stroke, we can resize the circle:
 
 ```html
-<circle r=45 cx=50 cy=50 fill=red stroke=blue stroke-width=5><circle>
+<circle r=45 cx=50 cy=50 fill=red stroke=blue stroke-width=5></circle>
 ```
 
 Now we get:
 
-![](https://i.imgur.com/Yx8WTA4.png)
+![](https://i.imgur.com/GO7E8v9.png)
 
 
-Styling can also be done with CSS:
+Styling can also be done with CSS.  The following steps will tell you how to style your `<svg>` element with CSS:
 
-Create an external app.css file with the following contents:
+1. Create an external `app.css` file in the same folder as your `index.html` file with the following contents:
 
-```css
-circle {
-	fill:red;
-	stroke:blue;
-	stroke-width:3;
-	fill-opacity:0.5;
-	stroke-opacity:0.1;
-	transform:rotate(45deg) scale(0.4) translate(155px, 1px);
-	r:50px;
-}
-```
+    ```css
+    circle {
+    	fill:red;
+    	stroke:blue;
+    	stroke-width:3;
+    	fill-opacity:0.5;
+    	stroke-opacity:0.1;
+    	transform:rotate(45deg) scale(0.4) translate(155px, 1px);
+    	r:50px;
+    }
+    ```
 
-Reference the file in our html:
+1. Link the file in the `<head>` tag of `index.html`:
 
-```html
-<head>
-	<link rel="stylesheet" href="app.css">
-</head>
-```
+    ```html
+    <head>
+    	<link rel="stylesheet" href="app.css">
+    </head>
+    ```
 
-and remove our previous inline styling that we had on our `<circle>` tag:
+1. Lastly, remove our previous inline styling that we had on our `<circle>` tag:
 
-```html
-<circle></circle>
-```
+    ```html
+    <circle></circle>
+    ```
 
 Now we get this:
 
@@ -180,6 +178,8 @@ To demo each element, we'll use the following code as a starting point and then 
     </body>
 </html>
 ```
+
+Let us now move on to each element.
 
 ### Circle
 
