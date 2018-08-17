@@ -469,7 +469,7 @@ Here's what it looks like:
 
 ![](https://i.imgur.com/tpEXk2Z.png)
 
-Play with the values here: http://codepen.io/lingtalfi/pen/yaLWJG
+Play with the different kinds of arc values here: http://codepen.io/lingtalfi/pen/yaLWJG
 
 ### Documentation
 
