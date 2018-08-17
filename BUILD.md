@@ -358,6 +358,8 @@ Here's what Chrome should look like:
 
 ![](https://i.imgur.com/nD9CW7V.png)
 
+In summary, this selects all of the `circle` elements.  It then sets the `cx` attribute of each `circle` to the result of a callback function.  That callback function runs for each `circle` and takes the "run" data object associated with that `circle` and finds its `date` property (remember it's a string, e.g. `'October 3, 2017 at 6:00PM'`).  It passes that string value to `parseTime()` which then turns the string into an actual JavaScript Date object.  That Date object is then passed to `xScale()` which converts the date into a visual value.  That visual value is then used for the `cx` attribute of the current `circle`.  Since each `date` property of the objects in the `runs` array is different, the `circles` have different horizontal locations.
+
 ## Set dynamic domains
 
 - At the moment, we're setting arbitrary min/max values for the domains of both distance and date
