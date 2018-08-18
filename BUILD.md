@@ -633,7 +633,7 @@ Now the browser should look like this:
 
 ## Create click handler
 
-Let's say that we want it so that when the user clicks on the `<svg>` element, it creates a new run.
+Let's say that we want it so that when the user clicks on the `<svg>` element, it creates a new run.  Add the following to the bottom of `app.js`:
 
 ```javascript
 d3.select('svg').on('click', function(){
@@ -653,11 +653,13 @@ d3.select('svg').on('click', function(){
 });
 ```
 
-You might notice that `createTable()` just adds on all the run rows again
+Let's examine what we just wrote.  `d3.select('svg').on('click', function(){` Sets up a click handler on the `svg` element.  The anonymous function that gets passed in as the second parameter to `.on()` gets called each time the user clicks on the SVG.  Once inside that callback function, we use `d3.event.offsetX` to get the x position of the mouse inside the SVG and `d3.event.offsetY` to get the y position.  We then use `xScale.invert()` and `yScale.invert()` to turn the x/y visual points into data values (date and distance, respectively).  We then use those data values to create a new run object.  We create an id for the new run by getting the id of the last element in the `runs` array and adding 1 to it.  Lastly, we push the new run onto the `runs` array and call `createTable()`.
+
+Click on the SVG to create a new run.  You might notice that `createTable()` just adds on all the run rows again
 
 ![](https://i.imgur.com/Vu2CwCI.png)
 
-Let's clear out the rows previous created and re-render everything:
+Let's alter the `createTable()` function so that when it runs, it clears out any rows previously created and re-renders everything.  Add `d3.select('tbody').html('')` to the top of the `createTable` function in `app.js`:
 
 ```javascript
 var createTable = function(){
@@ -671,9 +673,11 @@ var createTable = function(){
 }
 ```
 
+Now refresh the page, and click on the SVG to create a new run.  The table should look like this now:
+
 ![](https://i.imgur.com/YcoPxK7.png)
 
-Now put the code for creating `<circles>` inside a render function:
+The only issue now is that circles aren't being created when you click on the SVG.  To fix this, let's wrap the code for creating `<circle>` elements in a render function, and call `render()` immediately after it's defined:
 
 ```javascript
 var render = function(){
@@ -713,7 +717,7 @@ var render = function(){
 render();
 ```
 
-For future use, let's move the `xScale` and `yScale` out of the render function along with the code for creating the domains/ranges:
+If you refresh the browser, you'll see an error in the console.  This is because the `bottomAxis` and `leftAxis` use `xScale` and `yScale` which are now scoped to exist only inside the `render()` function.  For future use, let's move the `xScale` and `yScale` out of the render function along with the code for creating the domains/ranges:
 
 ```javascript
 var parseTime = d3.timeParse("%B%e, %Y at %-I:%M%p");
@@ -752,13 +756,20 @@ var render = function(){
 render();
 ```
 
-Let's call `render()` inside our `<svg>` click handler:
+Now go to the bottom of `app.js` and add a line to call `render()` inside our `<svg>` click handler:
 
 ```javascript
+var newRun = { //create a new "run" object
+    id: runs[runs.length-1].id+1, //generate a new id by adding 1 to the last run's id
+    date: formatTime(date), //format the date object created above to a string
+    distance: distance //add the distance
+}
 runs.push(newRun);
 createTable();
 render(); //add this line
 ```
+
+Now when you click the SVG, a circle will appear:
 
 ![](https://i.imgur.com/5KjqmNp.png)
 

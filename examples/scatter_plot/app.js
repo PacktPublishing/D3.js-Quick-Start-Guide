@@ -24,23 +24,6 @@ d3.select('svg')
     .style('width', WIDTH)
     .style('height', HEIGHT);
 
-var yScale = d3.scaleLinear(); //create the scale
-yScale.range([HEIGHT, 0]); //set the visual range (e.g. 600 to 0)
-var yDomain = d3.extent(runs, function(datum, index){
-    return datum.distance; //compare distance properties of each item in the data array
-})
-yScale.domain(yDomain);
-
-d3.select('svg').selectAll('circle') //since no circles exist, we need to select('svg') so that d3 knows where to append the new circles
-    .data(runs) //attach the data as before
-    .enter() //find the data objects that have not yet been attached to visual elements
-    .append('circle'); //for each data object that hasn't been attached, append a <circle> to the <svg>
-
-d3.selectAll('circle')
-    .attr('cy', function(datum, index){
-        return yScale(datum.distance);
-    });
-
 var parseTime = d3.timeParse("%B%e, %Y at %-I:%M%p");
 var formatTime = d3.timeFormat("%B%e, %Y at %-I:%M%p");
 var xScale = d3.scaleTime();
@@ -50,10 +33,30 @@ var xDomain = d3.extent(runs, function(datum, index){
 });
 xScale.domain(xDomain);
 
-d3.selectAll('circle')
-    .attr('cx', function(datum, index){
-        return xScale(parseTime(datum.date)); //use parseTime to convert the date string property on the datum object to a Date object, which xScale then converts to a visual value
-    });
+var yScale = d3.scaleLinear(); //create the scale
+yScale.range([HEIGHT, 0]); //set the visual range (e.g. 600 to 0)
+var yDomain = d3.extent(runs, function(datum, index){
+    return datum.distance; //compare distance properties of each item in the data array
+})
+yScale.domain(yDomain);
+var render = function(){
+
+    d3.select('svg').selectAll('circle') //since no circles exist, we need to select('svg') so that d3 knows where to append the new circles
+        .data(runs) //attach the data as before
+        .enter() //find the data objects that have not yet been attached to visual elements
+        .append('circle'); //for each data object that hasn't been attached, append a <circle> to the <svg>
+
+    d3.selectAll('circle')
+        .attr('cy', function(datum, index){
+            return yScale(datum.distance);
+        });
+
+    d3.selectAll('circle')
+        .attr('cx', function(datum, index){
+            return xScale(parseTime(datum.date)); //use parseTime to convert the date string property on the datum object to a Date object, which xScale then converts to a visual value
+        });
+}
+render();
 
 var bottomAxis = d3.axisBottom(xScale); //pass the appropriate scale in as a parameter
 d3.select('svg')
@@ -67,6 +70,7 @@ d3.select('svg')
 	.call(leftAxis); //no need to transform, since it's placed correctly initially
 
 var createTable = function(){
+    d3.select('tbody').html(''); //clear out all rows from the table
     for (var i = 0; i < runs.length; i++) {
         var row = d3.select('tbody').append('tr');
         row.append('td').html(runs[i].id);
@@ -76,3 +80,20 @@ var createTable = function(){
 }
 
 createTable();
+
+d3.select('svg').on('click', function(){
+    var x = d3.event.offsetX; //gets the x position of the mouse relative to the svg element
+    var y = d3.event.offsetY; //gets the y position of the mouse relative to the svg element
+
+    var date = xScale.invert(x) //get a date value from the visual point that we clicked on
+    var distance = yScale.invert(y); //get a numeric distance value from the visual point that we clicked on
+
+    var newRun = { //create a new "run" object
+        id: runs[runs.length-1].id+1, //generate a new id by adding 1 to the last run's id
+        date: formatTime(date), //format the date object created above to a string
+        distance: distance //add the distance
+    }
+    runs.push(newRun); //push the new run onto the runs array
+    createTable(); //render the table
+    render(); //add this line
+});
