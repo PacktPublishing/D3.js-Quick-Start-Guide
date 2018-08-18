@@ -4,7 +4,15 @@ circle {
 }
 svg {
     overflow: visible;
+    margin-bottom: 50px;
 }
 body {
     margin: 20px 40px;
+}
+table, th, td {
+   border: 1px solid black;
+}
+th, td {
+    padding:10px;
+    text-align: center;
 }

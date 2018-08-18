@@ -570,26 +570,28 @@ Now our axes are complete:
 
 ## Display data in a table
 
-Just for debugging purposes, let's create a table which will show all of our data:
+Just for debugging purposes, let's create a table which will show all of our data.  Make your `<body>` tag in `index.html` look like this:
 
 ```html
-<svg></svg>
-<table>
-    <thead>
-        <tr>
-            <th>id</th>
-            <th>date</th>
-            <th>distance</th>
-        </tr>
-    </thead>
-    <tbody>
-    </tbody>
-</table>
-<script src="d3.v5.min.js"></script>
-<script src="app.js" charset="utf-8"></script>
+<body>
+    <svg></svg>
+    <table>
+        <thead>
+            <tr>
+                <th>id</th>
+                <th>date</th>
+                <th>distance</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="app.js" charset="utf-8"></script>
+</body>
 ```
 
-D3 can also be used to manipulate the DOM, just like jQuery.  Let's populate the `<tbody>` in that style:
+D3 can also be used to manipulate the DOM, just like jQuery.  Let's populate the `<tbody>` in that style.  Add the following to the bottom of `app.js`:
 
 ```javascript
 var createTable = function(){
@@ -604,14 +606,9 @@ var createTable = function(){
 createTable();
 ```
 
-And a little styling:
+Add some styling for the table at the bottom of `app.css`:
 
 ```css
-svg {
-    overflow: visible;
-    margin-bottom: 50px;
-}
-
 table, th, td {
    border: 1px solid black;
 }
@@ -620,6 +617,17 @@ th, td {
     text-align: center;
 }
 ```
+
+Adjust the CSS for `svg` to add a bottom margin.  This will create some space between the graph and the table:
+
+```css
+svg {
+    overflow: visible;
+    margin-bottom: 50px;
+}
+```
+
+Now the browser should look like this:
 
 ![](https://i.imgur.com/luGiAys.png)
 
