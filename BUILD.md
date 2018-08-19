@@ -1180,43 +1180,59 @@ now pan right and add a new point:
 
 ## Avoid redrawing entire screen during render
 
-At the top of the `render()` function, assign the `d3.select('#points').selectAll('circle').data(runs)` to a variable, so we can use it later.  This helps preserve how DOM elements are assigned to data elements in the next sections
+At the moment, every time we call `render()`, we wipe all `<circle>` elements in the `<svg>`.  This is inefficient.  Let's just remove the ones we don't want
+
+At the top of the `render()` function, assign the `d3.select('#points').selectAll('circle').data(runs)` to a variable, so we can use it later.  This helps preserve how DOM elements are assigned to data elements in the next sections.  Find this at the top of the `render()` function declaration:
 
 ```javascript
-//top of render function
 d3.select('#points').html('');
-var circles = d3.select('#points').selectAll('circle').data(runs); //alter this
-circles.enter().append('circle'); //alter this
+d3.select('#points').selectAll('circle')
+    .data(runs)
+    .enter()
+    .append('circle');
 ```
 
-- At the moment, we wipe all `<circle>` elements in the `<svg>` each time we call `render()`
-    - This is inefficient.  Let's just remove the ones we don't want
-- We'll use `.exit()` to find the selection of circles that haven't been matched with data
-    - then we'll use `.remove()` to remove those circles
+change it to this:
 
 ```javascript
-//top of render function
-var circles = d3.select('#points').selectAll('circle').data(runs);
+d3.select('#points').html('');
+var circles = d3.select('#points')
+    .selectAll('circle')
+    .data(runs);
 circles.enter().append('circle');
-circles.exit().remove(); //remove all circles not associated with data
 ```
 
-- This can cause weird side effects, because some circles are being reassigned to a different set of data
-    - e.g. reload the page, click on the center circle.  You'll notice the circle disappears and the one in the upper right gains a hover state
-    - if we remove a piece of data in the center of the array, the `<circle>` in the the DOM that was assigned to it gets reassigned to the piece of data that used to be assigned to the next sibling `<circle>` in the DOM.  Each `<circle>` gets reassigned over one space from there on out
-    - to avoid these affects, we need to make sure that each circle stays with the data it used to be assigned to
-        - to do this, we can tell D3 to map `<circles>` to datum by id, rather than index in the array
+Next remove the `d3.select('#points').html('');` line.  We'll use `.exit()` to find the selection of circles that haven't been matched with data, then we'll use `.remove()` to remove those circles.  Add the following after the last line we just wrote (`circles.enter().append('circle');`):
 
 ```javascript
-//when redrawing circles, make sure pre-existing circles match with their old data
-var circles = d3.select('#points').selectAll('circle').data(runs, function(datum){
-      return datum.id
-});
-circles.enter().append('circle');
 circles.exit().remove();
 ```
 
-Now clicking on the middle circle should work correctly
+Reload the page, click on the center (2nd) circle.  You'll notice it looks like the circle disappears and the circle in the upper right briefly gains a hover state and then shrinks back down.  That's not really what's happening.
+
+If we click on the middle circle (2nd), it deletes the 2nd "run" object in the `runs` array, and the third "run" object moves down to replace it in 2nd place.  We now only have an array of two "run" objects: the first and what used to be the third (but is now second).  When `render()` gets called again, what was the middle (2nd) circle gets assigned to what used to be the third "run" object in the `runs` array (but is now the second).  This "run" object used to be assigned to the third circle, which was in the upper right.  But now since there are only two runs, that third (upper right) circle gets deleted when we call `circles.exit().remove();`.  The second circle's data has changed now, and it jumps to the upper right corner to match that data.  It used to have a hover state, but all of a sudden it's moved out from under the cursor, so it shrinks back down to normal size and becomes black.
+
+To avoid these affects, we need to make sure that each circle stays with the data it used to be assigned to when we call `render()`.  To do this, we can tell D3 to map `<circles>` to datum by id, rather than index in the array.  At the top of the `render()` function, find this code:
+
+```javascript
+var circles = d3.select('#points')
+    .selectAll('circle')
+    .data(runs);
+```
+
+Change it to this:
+
+```javascript
+var circles = d3.select('#points')
+    .selectAll('circle')
+    .data(runs, function(datum){
+      return datum.id
+    });
+```
+
+This tells D3 to use the `id` property of each "run" object when determining which `<circle>` element to assign the data object to.  It basically assigns that `id` property of the "run" object to the `<circle>` element initially.  That way, when the 2nd "run" object is deleted, `circles.exit().remove();` will find the circle that had the corresponding id (the middle circle) and remove it.
+
+Now clicking on the middle circle should work correctly.
 
 ## Hide elements beyond axis
 

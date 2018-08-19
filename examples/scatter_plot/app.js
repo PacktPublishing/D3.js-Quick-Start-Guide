@@ -41,12 +41,13 @@ var yDomain = d3.extent(runs, function(datum, index){
 yScale.domain(yDomain);
 var render = function(){
 
-    //adjust the code at the top of your render function
-    d3.select('#points').html(''); //clear out all circles when rendering
-    d3.select('#points').selectAll('circle') //add circles to #points group, not svg
-        .data(runs)
-        .enter()
-        .append('circle');
+    var circles = d3.select('#points')
+        .selectAll('circle')
+        .data(runs, function(datum){
+          return datum.id
+        });
+    circles.enter().append('circle');
+    circles.exit().remove();
 
     d3.selectAll('circle')
         .attr('cy', function(datum, index){
