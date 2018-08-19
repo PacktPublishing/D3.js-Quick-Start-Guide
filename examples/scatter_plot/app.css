@@ -21,3 +21,6 @@ circle:hover {
     r:10;
     fill: blue;
 }
+circle:active {
+    fill: red;
+}

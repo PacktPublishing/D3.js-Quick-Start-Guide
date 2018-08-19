@@ -899,18 +899,15 @@ There are two steps whenever we create a behavior:
 Put the following code at the bottom of the `render()` function declaration:
 
 ```javascript
-//put this code at the end of the render function
 var drag = function(datum){
-    var x = d3.event.x; //get current x position of the cursor
-    var y = d3.event.y; //get current y position of the cursor
-    d3.select(this).attr('cx', x); //change the dragged element's cx attribute to whatever the x position of the cursor is
-    d3.select(this).attr('cy', y); //change the dragged element's cy attribute to whatever the y position of the cursor is
+    var x = d3.event.x;
+    var y = d3.event.y;
+    d3.select(this).attr('cx', x);
+    d3.select(this).attr('cy', y);
 }
-var dragBehavior = d3.drag() //create a drag behavior
-    // .on('start', dragStart) //dragStart is a reference to a function we haven't created yet
-    .on('drag', drag); //call the "drag" function (the 2nd param) each time the user moves the cursor before releasing the mouse button.  The "drag" function is defined above
-    // .on('end', dragEnd) //dragEnd is a reference to a function we haven't created yet
-d3.selectAll('circle').call(dragBehavior); //attach the dragBehavior behavior to all <circle> elements
+var dragBehavior = d3.drag()
+    .on('drag', drag);
+d3.selectAll('circle').call(dragBehavior);
 ```
 
 You can now drag the circles around, but the data doesn't update:
@@ -921,10 +918,10 @@ Let's examine how this code works:
 
 ```javascript
 var drag = function(datum){
-    var x = d3.event.x; //get current x position of the cursor
-    var y = d3.event.y; //get current y position of the cursor
-    d3.select(this).attr('cx', x); //change the dragged element's cx attribute to whatever the x position of the cursor is
-    d3.select(this).attr('cy', y); //change the dragged element's cy attribute to whatever the y position of the cursor is
+    var x = d3.event.x;
+    var y = d3.event.y;
+    d3.select(this).attr('cx', x);
+    d3.select(this).attr('cy', y);
 }
 ```
 
@@ -945,31 +942,44 @@ d3.selectAll('circle').call(dragBehavior);
 
 ## Update data after a drag
 
-- Uncomment the `.on('end', dragEnd)` code
-- Create the callback function
+Now we're going to add functionality so that when the user releases the "mouse" button, the data for the "run" object associated with the circle being dragged gets updated.
+
+First lets create the callback function that will get called when the user releases the "mouse" button.  Towards the bottom of the `render()` function declaration, add the following code just above `var drag = function(datum){`:
 
 ```javascript
 var dragEnd = function(datum){
-    var x = d3.event.x; //get current x position of the cursor
-    var y = d3.event.y; //get current y position of the cursor
+    var x = d3.event.x;
+    var y = d3.event.y;
 
-    var date = xScale.invert(x); //get the date by using the xScale to invert the x position of the mouse
-    var distance = yScale.invert(y); //get the distance by using the yScale to invert the y position of the mouse
+    var date = xScale.invert(x);
+    var distance = yScale.invert(y);
 
-    //since datum is an object, which is passed by reference, we can update a property on the object, and the original variable will update
-    datum.date = formatTime(date); //use formatTime() to convert the date variable, which is a Date object, into the appropriate string
-    datum.distance = distance; //change the distance
-    createTable(); //redraw the table
+    datum.date = formatTime(date);
+    datum.distance = distance;
+    createTable();
 }
+```
+
+Now attach that function to the `dragBehavior` so that it is called when the user stops dragging a circle.  Change the following code:
+
+```javascript
 var dragBehavior = d3.drag()
-    // .on('start', dragStart)
+    .on('drag', drag);
+```
+
+to this:
+
+```javascript
+var dragBehavior = d3.drag()
     .on('drag', drag)
     .on('end', dragEnd);
 ```
 
-![](https://i.imgur.com/pdgApyh.png)
+Now, once you stop dragging a circle around, you should see the data in the table change.
 
-Let's change the color of a circle while it's being dragged too:
+![](https://i.imgur.com/sIQrOMC.png)
+
+Let's change the color of a circle while it's being dragged too.  Add this at the bottom of `app.css`:
 
 ```css
 circle:active {
@@ -977,7 +987,7 @@ circle:active {
 }
 ```
 
-When you drag the circle, it should turn red
+When you drag a circle, it should turn red
 
 ## Create a zoom behavior that scales elements
 
