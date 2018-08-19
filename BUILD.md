@@ -991,23 +991,31 @@ When you drag a circle, it should turn red
 
 ## Create a zoom behavior that scales elements
 
-- Another behavior we can create is the zooming/panning ability.  To do this you can do any of the following:
-    - zoom:
-        - two finger drag on a trackpad
-        - rotate your mouse wheel
-        - pinch/spread on a trackpad
-    - pan:
-        - click/drag the svg element
+Another behavior we can create is the zooming/panning ability.  Once this functionality is complete you will be able to zoom in and out on different parts of the graph by doing one of the following:
+
+- two finger drag on a trackpad
+- rotate your mouse wheel
+- pinch/spread on a trackpad
+
+You will also be able to pan left/right/up/down on the graph by clicking and dragging on the SVG element
+
+Put the following code at the bottom of `app.js`:
 
 ```javascript
-//put this at the end of app.js
-var zoomCallback = function(){ //the callback function
-	d3.select('#points').attr("transform", d3.event.transform); //transform the #points <g> element based on the zoom transform created
+var zoomCallback = function(){
+	d3.select('#points').attr("transform", d3.event.transform);
 }
-var zoom = d3.zoom() //create the zoom behavior
-    .on('zoom', zoomCallback); //tell it which callback function to use when zooming
-d3.select('svg').call(zoom); //attach the behavior to the svg element
 ```
+
+This is the callback function that will be called when user attempts to zoom/pan.  All it does is take the zoom/pan action and turn it into a `transform` attribute that gets applied to the `<g id="points"></g>` element that contains the circles.  Now add the following code at the bottom of `app.js` to create the `zoom` behavior and attach it to the `svg` element:
+
+```javascript
+var zoom = d3.zoom()
+    .on('zoom', zoomCallback);
+d3.select('svg').call(zoom);
+```
+
+Now if we zoom out, the graph should look something like this:
 
 ![](https://i.imgur.com/Qvnu7yZ.png)
 

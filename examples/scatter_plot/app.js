@@ -130,3 +130,10 @@ d3.select('svg').on('click', function(){
     createTable(); //render the table
     render(); //add this line
 });
+
+var zoomCallback = function(){
+	d3.select('#points').attr("transform", d3.event.transform);
+}
+var zoom = d3.zoom()
+    .on('zoom', zoomCallback);
+d3.select('svg').call(zoom);
