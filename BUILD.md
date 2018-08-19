@@ -1060,7 +1060,7 @@ var zoomCallback = function(){
 }
 ```
 
-Add the following at the end of it:
+Add the following at the end of the function declaration:
 
 ```javascript
 d3.select('#x-axis')
@@ -1092,25 +1092,44 @@ Now when you zoom out, the axes should redraw themselves:
 
 ## Update click points after a transform
 
-- If we zoom/pan and then click on the svg to create new runs, the circles/data created are incorrect
-- When we zoom, we need to save the transformation information to a variable so that we can use it later to figure out how to properly create circles and runs
+Try zoom/panning and the clicking on the SVG to create a new run.  You'll notice it's in the wrong place.  That's because the SVG click handler has no idea that a zoom/pan has happened.  Currently, if you click on the visual point, no matter how much you may have zoomed/panned, the click handler still converts it as if you had never zoomed/panned.
+
+When we zoom, we need to save the transformation information to a variable so that we can use it later to figure out how to properly create circles and runs.  Find the `zoomCallback` declaration and add `var lastTransform = null` right before it.  Then add `lastTransform = d3.event.transform;` at the beginning of the function declaration.  It should look like this:
 
 ```javascript
-var lastTransform = null; //reference to the last transform that happened
+var lastTransform = null; //add this
 var zoomCallback = function(){
-    lastTransform = d3.event.transform; //update the transform reference
+    lastTransform = d3.event.transform; //add this
 	d3.select('#points').attr("transform", d3.event.transform);
-    d3.select('#x-axis').call(bottomAxis.scale(d3.event.transform.rescaleX(xScale)));
-	d3.select('#y-axis').call(leftAxis.scale(d3.event.transform.rescaleY(yScale)));
+    d3.select('#x-axis')
+        .call(bottomAxis.scale(d3.event.transform.rescaleX(xScale)));
+	d3.select('#y-axis')
+        .call(leftAxis.scale(d3.event.transform.rescaleY(yScale)));
 }
 ```
 
-Now use that reference to the last transform when clicking on the svg:
+Now, whenever the user zooms/pans the transform that was used to adjust the SVG and axes is saved in the `lastTransform` variable.  Use that variable when clicking on the SVG.
+
+Find these two lines at the beginning of the SVG click handler:
+
+```javascript
+var x = d3.event.offsetX;
+var y = d3.event.offsetY;
+```
+
+change them to:
+
+```javascript
+var x = lastTransform.invertX(d3.event.offsetX);
+var y = lastTransform.invertY(d3.event.offsetY);
+```
+
+Your click handler should look like this now:
 
 ```javascript
 d3.select('svg').on('click', function(){
-    var x = lastTransform.invertX(d3.event.offsetX); //invert the transformation so we get a proper x value
-    var y = lastTransform.invertY(d3.event.offsetY);
+    var x = lastTransform.invertX(d3.event.offsetX); //adjust this
+    var y = lastTransform.invertY(d3.event.offsetY); //adjust this
 
     var date = xScale.invert(x)
     var distance = yScale.invert(y);
@@ -1130,23 +1149,28 @@ But now clicking before any zoom is broken, since `lastTransform` will be null:
 
 ![](https://i.imgur.com/2ozj3Nf.png)
 
+Find the code that we just wrote for the SVG click handler:
+
 ```javascript
-//at top of click handler, adjust the code:
-//set x/y like normal
+var x = lastTransform.invertX(d3.event.offsetX);
+var y = lastTransform.invertY(d3.event.offsetY);
+```
+
+And adjust it so it looks like this:
+
+```javascript
 var x = d3.event.offsetX;
 var y = d3.event.offsetY;
 
-//if lastTransform has been updated, overwrite these values
 if(lastTransform !== null){
     x = lastTransform.invertX(d3.event.offsetX);
     y = lastTransform.invertY(d3.event.offsetY);
 }
-
-var date = xScale.invert(x);
-var distance = yScale.invert(y);
 ```
 
-add a new run initially:
+Now initially, `x` and `y` are set to `d3.event.offsetX` and `d3.event.offsetY`, respectively.  If a zoom/pan occurs, `lastTransform` will not be null, so we overwrite `x` and `y` with the transformed values.
+
+Add a new run initially:
 
 ![](https://i.imgur.com/5DjmFlg.png)
 

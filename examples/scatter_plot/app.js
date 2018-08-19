@@ -117,8 +117,8 @@ var createTable = function(){
 createTable();
 
 d3.select('svg').on('click', function(){
-    var x = d3.event.offsetX; //gets the x position of the mouse relative to the svg element
-    var y = d3.event.offsetY; //gets the y position of the mouse relative to the svg element
+    var x = lastTransform.invertX(d3.event.offsetX);
+    var y = lastTransform.invertY(d3.event.offsetY);
 
     var date = xScale.invert(x) //get a date value from the visual point that we clicked on
     var distance = yScale.invert(y); //get a numeric distance value from the visual point that we clicked on
@@ -133,7 +133,9 @@ d3.select('svg').on('click', function(){
     render(); //add this line
 });
 
+var lastTransform = null;
 var zoomCallback = function(){
+    lastTransform = d3.event.transform; //add this
 	d3.select('#points').attr("transform", d3.event.transform);
     d3.select('#x-axis')
         .call(bottomAxis.scale(d3.event.transform.rescaleX(xScale)));
