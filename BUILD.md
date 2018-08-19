@@ -885,16 +885,18 @@ Here's what a circle should look like when you hover over it:
 
 ## Drag an element
 
-We want to be able to update the data for a run by dragging the associated circle
+We want to be able to update the data for a run by dragging the associated circle.  To do this, we'll use a "behavior," which you can think of as a combination of multiple event handlers.  For a drag behavior, there are three callbacks:
 
-- D3 allows us to create complex interactions called "behaviors" which have multiple callbacks
-- there are two steps:
-    - create the behavior
-    - attach the behavior to one or more elements
-- drag behaviors have three callbacks
-    - when the user starts to drag
-    - each time the user moves the cursor before releasing the "mouse" button
-    - when the user releases the "mouse" button
+- when the user starts to drag
+- each time the user moves the cursor before releasing the "mouse" button
+- when the user releases the "mouse" button
+
+There are two steps whenever we create a behavior:
+
+- create the behavior
+- attach the behavior to one or more elements
+
+Put the following code at the bottom of the `render()` function declaration:
 
 ```javascript
 //put this code at the end of the render function
@@ -914,6 +916,32 @@ d3.selectAll('circle').call(dragBehavior); //attach the dragBehavior behavior to
 You can now drag the circles around, but the data doesn't update:
 
 ![](https://i.imgur.com/4pLzqt7.png)
+
+Let's examine how this code works:
+
+```javascript
+var drag = function(datum){
+    var x = d3.event.x; //get current x position of the cursor
+    var y = d3.event.y; //get current y position of the cursor
+    d3.select(this).attr('cx', x); //change the dragged element's cx attribute to whatever the x position of the cursor is
+    d3.select(this).attr('cy', y); //change the dragged element's cy attribute to whatever the y position of the cursor is
+}
+```
+
+This `drag` function will be used as a callback anytime the user moves the cursor before releasing the "mouse" button.  It gets the x and y coordinates of the mouse and sets the `cx` and `cy` values of the element being dragged (`d3.select(this)`) to those coordinates.
+
+Next we generate a drag behavior that will, at the appropriate time, call the `drag` function that was just explained:
+
+```javascript
+var dragBehavior = d3.drag()
+    .on('drag', drag);
+```
+
+Lastly, we attach that behavior to all `<circle>` elements:
+
+```javascript
+d3.selectAll('circle').call(dragBehavior);
+```
 
 ## Update data after a drag
 
