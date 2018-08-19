@@ -1021,7 +1021,22 @@ Now if we zoom out, the graph should look something like this:
 
 ## Update axes when zooming/panning
 
-Now when we zoom, the points move in/out.  When we pan, they move vertically/horizontally.  Unfortunately, the axes don't update accordingly.  Let's first add ids to the `<g>` elements that contain them
+Now when we zoom, the points move in/out.  When we pan, they move vertically/horizontally.  Unfortunately, the axes don't update accordingly.  Let's first add ids to the `<g>` elements that contain them.  Find the following code:
+
+```javascript
+var bottomAxis = d3.axisBottom(xScale);
+d3.select('svg')
+	.append('g')
+	.call(bottomAxis)
+    .attr('transform', 'translate(0,'+HEIGHT+')');
+
+var leftAxis = d3.axisLeft(yScale);
+d3.select('svg')
+	.append('g')
+	.call(leftAxis);
+```
+
+Add `.attr('id', 'x-axis')` after the first `.append('g')` and `.attr('id', 'y-axis')` after the second `.append('g')`:
 
 ```javascript
 d3.select('svg')
@@ -1037,18 +1052,41 @@ d3.select('svg')
 	.call(leftAxis);
 ```
 
-Now let's use those ids when we zoom:
+Now let's use those ids to adjust the axes when we zoom.  Find this code:
 
 ```javascript
 var zoomCallback = function(){
 	d3.select('#points').attr("transform", d3.event.transform);
-    d3.select('#x-axis').call(bottomAxis.scale(d3.event.transform.rescaleX(xScale))); //tell the bottom axis to adjust its values based on how much we zoomed
-	d3.select('#y-axis').call(leftAxis.scale(d3.event.transform.rescaleY(yScale))); //tell the left axis to adjust its values based on how much we zoomed
 }
 ```
 
+Add the following at the end of it:
+
+```javascript
+d3.select('#x-axis')
+    .call(bottomAxis.scale(d3.event.transform.rescaleX(xScale)));
+d3.select('#y-axis')
+    .call(leftAxis.scale(d3.event.transform.rescaleY(yScale)));
+```
+
+Your zoomCallback should now look like this:
+
+```javascript
+var zoomCallback = function(){
+	d3.select('#points').attr("transform", d3.event.transform);
+    d3.select('#x-axis')
+        .call(bottomAxis.scale(d3.event.transform.rescaleX(xScale)));
+    d3.select('#y-axis')
+        .call(leftAxis.scale(d3.event.transform.rescaleY(yScale)));
+}
+```
+
+Two things to note about the code above:
+
 - `bottomAxis.scale()` tells the axis to redraw itself
 - `d3.event.transform.rescaleX(xScale)` returns a value indicating how the bottom axis should rescale
+
+Now when you zoom out, the axes should redraw themselves:
 
 ![](https://i.imgur.com/AI3KoG9.png)
 

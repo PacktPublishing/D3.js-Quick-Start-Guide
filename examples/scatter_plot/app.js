@@ -91,16 +91,18 @@ var render = function(){
 }
 render();
 
-var bottomAxis = d3.axisBottom(xScale); //pass the appropriate scale in as a parameter
+var bottomAxis = d3.axisBottom(xScale);
 d3.select('svg')
-	.append('g') //put everything inside a group
-	.call(bottomAxis) //generate the axis within the group
+	.append('g')
+    .attr('id', 'x-axis') //add an id
+	.call(bottomAxis)
     .attr('transform', 'translate(0,'+HEIGHT+')');
 
 var leftAxis = d3.axisLeft(yScale);
 d3.select('svg')
 	.append('g')
-	.call(leftAxis); //no need to transform, since it's placed correctly initially
+    .attr('id', 'y-axis') //add an id
+	.call(leftAxis);
 
 var createTable = function(){
     d3.select('tbody').html(''); //clear out all rows from the table
@@ -133,7 +135,12 @@ d3.select('svg').on('click', function(){
 
 var zoomCallback = function(){
 	d3.select('#points').attr("transform", d3.event.transform);
+    d3.select('#x-axis')
+        .call(bottomAxis.scale(d3.event.transform.rescaleX(xScale)));
+    d3.select('#y-axis')
+        .call(leftAxis.scale(d3.event.transform.rescaleY(yScale)));
 }
+
 var zoom = d3.zoom()
     .on('zoom', zoomCallback);
 d3.select('svg').call(zoom);
