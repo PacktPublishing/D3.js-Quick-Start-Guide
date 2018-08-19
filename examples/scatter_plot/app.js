@@ -41,10 +41,12 @@ var yDomain = d3.extent(runs, function(datum, index){
 yScale.domain(yDomain);
 var render = function(){
 
-    d3.select('svg').selectAll('circle') //since no circles exist, we need to select('svg') so that d3 knows where to append the new circles
-        .data(runs) //attach the data as before
-        .enter() //find the data objects that have not yet been attached to visual elements
-        .append('circle'); //for each data object that hasn't been attached, append a <circle> to the <svg>
+    //adjust the code at the top of your render function
+    d3.select('#points').html(''); //clear out all circles when rendering
+    d3.select('#points').selectAll('circle') //add circles to #points group, not svg
+        .data(runs)
+        .enter()
+        .append('circle');
 
     d3.selectAll('circle')
         .attr('cy', function(datum, index){
@@ -55,6 +57,16 @@ var render = function(){
         .attr('cx', function(datum, index){
             return xScale(parseTime(datum.date)); //use parseTime to convert the date string property on the datum object to a Date object, which xScale then converts to a visual value
         });
+
+    //put this at the bottom of the render function, so that click handlers are attached when the circle is created
+    d3.selectAll('circle').on('click', function(datum, index){
+        d3.event.stopPropagation(); //stop click event from propagating to the SVG element and creating a run
+        runs = runs.filter(function(run, index){ //create a new array that has removed the run with the correct id.  Set it to the runs var
+            return run.id != datum.id;
+        });
+        render(); //re-render dots
+        createTable(); //re-render table
+    });
 }
 render();
 
@@ -89,7 +101,7 @@ d3.select('svg').on('click', function(){
     var distance = yScale.invert(y); //get a numeric distance value from the visual point that we clicked on
 
     var newRun = { //create a new "run" object
-        id: runs[runs.length-1].id+1, //generate a new id by adding 1 to the last run's id
+        id: ( runs.length > 0 ) ? runs[runs.length-1].id+1 : 1, //generate a new id by adding 1 to the last run's id
         date: formatTime(date), //format the date object created above to a string
         distance: distance //add the distance
     }

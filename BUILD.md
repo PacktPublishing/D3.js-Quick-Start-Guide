@@ -775,8 +775,7 @@ Now when you click the SVG, a circle will appear:
 
 ## Remove data
 
-- Let's set up a click handler on a `<circle>` to remove that circle and its associated data element from the array
-- We'll need to do this inside the `render()` declaration so that the click handlers are attached **after** the circles are created
+Let's set up a click handler on all `<circle>` elements so that when the user clicks on a `<circle>` D3 will remove that circle and its associated data element from the array.  Add the following code at the bottom of the `render` function declaration we wrote in the last section.  We do this so that the click handlers are attached **AFTER** the circles are created:
 
 ```javascript
 //put this at the bottom of the render function, so that click handlers are attached when the circle is created
@@ -790,13 +789,25 @@ d3.selectAll('circle').on('click', function(datum, index){
 });
 ```
 
-The `<circle>` elements aren't be removed though:
+Let's examine the above code.  The first line selects all `<circle>` elements and creates a click handler on each of them.  `d3.event.stopPropagation();` prevents the our click from bubbling up the DOM to the SVG.  If we don't add it, the click handler on the SVG will fire in addition, when we click on a circle.  This would create an additional run every time we try to remove a run.  Next we call:
+
+```javascript
+runs = runs.filter(function(run, index){
+    return run.id != datum.id;
+});
+```
+
+This loops through the `runs` array and filters out any objects that have an `id` property that matches that of the `id` property of the `datum` that is associated with the `<circle>` that was clicked.  Notice that the callback function in `.on('click', function(datum, index){` takes two parameters: `datum`, the "run" object associated with that `<circle>` and the `index` of the that "run" object in the `runs` array.
+
+Once we've filtered out the correct "run" object from the `runs` array, we call `render()` and `createdTable()` to re-render the the graph and the table.
+
+But, if we click on the middle circle and examine the Elements tab of the dev tools, we'll see the `<circle>` element hasn't been removed:
 
 ![](https://i.imgur.com/JoZyC1j.png)
 
-In the image above, it appears as though, there are only two circles, but really, the middle one has had its `cx` set to 800 and its `cy` set to 0.  It's overlapping the other circle in the same position.
+In the image above, it appears as though there are only two circles, but really the middle one has had its `cx` set to 800 and its `cy` set to 0.  It's overlapping the other circle in the same position.  This is because we've removed the 2nd element in the `runs` array.  When we re-render the graph, the `runs` array only has two objects.  The 2nd "run" object used to be the third "run" object before we removed the the middle run.  Now that it's the 2nd "run" object, the second `<circle>` is assigned its data.  The third circle still has its old data assigned to it, so both the second and the third circle have the same data and are therefore placed in the same location.
 
-Let's put the circles in a `<g>` so that it's easy to clear out:
+Let's put the circles in a `<g>` so that it's easy to clear out all the circles and re-render them when we remove a run.  This way we won't have any extra `<circle>` elements laying around when we try to remove them.  This approach is similar to what we do when re-rendering the table.  Adjust your `<svg>` element in `index.html` so it looks like this:
 
 ```html
 <svg>
@@ -804,7 +815,7 @@ Let's put the circles in a `<g>` so that it's easy to clear out:
 </svg>
 ```
 
-Now we can clear out the `<circle>` elements each time `render()` is called.  This is a little crude, but it'll work for now.  Later on, we'll do things in a more elegant fashion.
+Now we can clear out the `<circle>` elements each time `render()` is called.  This is a little crude, but it'll work for now.  Later on, we'll do things in a more elegant fashion.  At the top of the `render()` function declaration, add `d3.select('#points').html('');` and adjust the next line from `d3.select('svg').selectAll('circle')` to `d3.select('#points').selectAll('circle')`:
 
 ```javascript
 //adjust the code at the top of your render function
@@ -815,13 +826,15 @@ d3.select('#points').selectAll('circle') //add circles to #points group, not svg
     .append('circle');    
 ```
 
+Now if we click on the middle circle, the element is removed from the DOM:
+
 ![](https://i.imgur.com/h8TFFdN.png)
 
 If you try to delete all the circles and then add a new one, you'll get an error:
 
 ![](https://i.imgur.com/FprJXNN.png)
 
-This is because, our code for creating a `newRun` in the click handler needs some work:
+This is because, our code for creating a `newRun` in the SVG click handler needs some work:
 
 ```javascript
 var newRun = { //create a new "run" object
@@ -831,7 +844,7 @@ var newRun = { //create a new "run" object
 }
 ```
 
-`runs[runs.length-1]` tries to access an element at index -1 in the array.  Inside the `<svg>` click handler, let's put in a little code to handle when the user has deleted all runs and tries to add a new one:
+This is because when there are no run elements in the `runs` array,`runs[runs.length-1]` tries to access an element at index -1 in the array.  Inside the `<svg>` click handler, let's put in a little code to handle when the user has deleted all runs and tries to add a new one:
 
 ```javascript
 //inside svg click handler
@@ -842,9 +855,11 @@ var newRun = {
 }
 ```
 
+Here's what Chrome should look like now if you delete all the runs and then try to add a new one:
+
 ![](https://i.imgur.com/N1taq91.png)
 
-Lastly, let's put in some css, so we know we're clicking on a circle:
+Lastly, let's put in some css, so we know we're clicking on a circle.  First, add `transition: r 0.5s linear, fill 0.5s linear;` to the CSS code you've already written for `circle`:
 
 ```css
 circle {
@@ -852,12 +867,19 @@ circle {
     fill: black;
     transition: r 0.5s linear, fill 0.5s linear; /* add this transition to original code */
 }
+```
+
+then add this to the bottom of `app.css`:
+
+```css
 /* add this css for the hover state */
 circle:hover {
     r:10;
     fill: blue;
 }
 ```
+
+Here's what a circle should look like when you hover over it:
 
 ![](https://i.imgur.com/umPJiTD.png)
 

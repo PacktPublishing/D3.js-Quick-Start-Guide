@@ -1,6 +1,7 @@
 circle {
     r:5;
     fill: black;
+    transition: r 0.5s linear, fill 0.5s linear;
 }
 svg {
     overflow: visible;
@@ -15,4 +16,8 @@ table, th, td {
 th, td {
     padding:10px;
     text-align: center;
+}
+circle:hover {
+    r:10;
+    fill: blue;
 }
