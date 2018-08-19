@@ -20,7 +20,7 @@ var runs = [
 ];
 
 
-d3.select('svg')
+d3.select('#container')
     .style('width', WIDTH)
     .style('height', HEIGHT);
 
@@ -93,14 +93,14 @@ var render = function(){
 render();
 
 var bottomAxis = d3.axisBottom(xScale);
-d3.select('svg')
+d3.select('#container')
 	.append('g')
     .attr('id', 'x-axis') //add an id
 	.call(bottomAxis)
     .attr('transform', 'translate(0,'+HEIGHT+')');
 
 var leftAxis = d3.axisLeft(yScale);
-d3.select('svg')
+d3.select('#container')
 	.append('g')
     .attr('id', 'y-axis') //add an id
 	.call(leftAxis);
@@ -117,7 +117,7 @@ var createTable = function(){
 
 createTable();
 
-d3.select('svg').on('click', function(){
+d3.select('#container').on('click', function(){
     var x = lastTransform.invertX(d3.event.offsetX);
     var y = lastTransform.invertY(d3.event.offsetY);
 
@@ -146,4 +146,4 @@ var zoomCallback = function(){
 
 var zoom = d3.zoom()
     .on('zoom', zoomCallback);
-d3.select('svg').call(zoom);
+d3.select('#container').call(zoom);

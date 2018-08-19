@@ -3,7 +3,7 @@ circle {
     fill: black;
     transition: r 0.5s linear, fill 0.5s linear;
 }
-svg {
+#container {
     overflow: visible;
     margin-bottom: 50px;
 }

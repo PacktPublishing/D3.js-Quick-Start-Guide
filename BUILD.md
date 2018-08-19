@@ -1236,11 +1236,11 @@ Now clicking on the middle circle should work correctly.
 
 ## Hide elements beyond axis
 
-Check out our graph when you pan:
+If you pan or zoom extensively, you'll notice that the circles are visible beyond the bounds of the axes:
 
 ![](https://i.imgur.com/s2oXYxS.png)
 
-To remove elements once they get beyond an axis, we can just add an outer SVG:
+To hide elements once they get beyond an axis, we can just add an outer SVG with `id="container"` around our current `<svg>` element in `index.html`:
 
 ```html
 <svg id="container">
@@ -1250,15 +1250,16 @@ To remove elements once they get beyond an axis, we can just add an outer SVG:
 </svg>
 ```
 
-Now replace all `d3.select('svg')` with `d3.select('#container')`
+Now replace all `d3.select('svg')` code with `d3.select('#container')`.  You can do a find replace.  There should be five instances to change:
 
 ```javascript
 d3.select('#container')
     .style('width', WIDTH)
     .style('height', HEIGHT);
 //
-// ...
+// lots of code omitted here, including render() declaration...
 //
+var bottomAxis = d3.axisBottom(xScale);
 d3.select('#container')
 	.append('g')
     .attr('id', 'x-axis')
@@ -1271,28 +1272,31 @@ d3.select('#container')
     .attr('id', 'y-axis')
 	.call(leftAxis);
 //
-// ...
+// code for create table omitted here...
 //
 d3.select('#container').on('click', function(){
 //
-// ...
+// click handler functionality omitted
 //
 });
 //
-// ...
+// zoomCallback code omitted here
 //
+var zoom = d3.zoom()
+    .on('zoom', zoomCallback);
 d3.select('#container').call(zoom);    
 ```
 
-And lastly, adjust css:
+And lastly, adjust css to replace `svg {` with `#container {`:
 
 ```css
-/* replace the rule for svg */
 #container {
-     overflow: visible;
-     margin-bottom: 50px;
- }
+    overflow: visible;
+    margin-bottom: 50px;
+}
 ```
+
+Now circles should be hidden once they move beyond the bounds of the inner `<svg>` element:
 
 ![](https://i.imgur.com/t6BKuiz.png)
 
