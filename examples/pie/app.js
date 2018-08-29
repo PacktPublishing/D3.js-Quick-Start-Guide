@@ -59,7 +59,7 @@ path.on('click', function(clickedDatum, clickedIndex){ //set up the click handle
     path.transition() //create the transition
         .duration(750) //add how long the transition takes
         .attrTween('d', function(d) { //tween the d attribute
-            var interpolate = d3.interpolate(this._current, d); //interpolate from what the d attribute was (this._current) and what it is now
+            var interpolate = d3.interpolate(this._current, d); //create an interpolater function from what the d attribute was (this._current) and what it is now
             this._current = interpolate(0); //save new value of data
             return function(t) { //re-run the arc function to redraw the path
                 return arc(interpolate(t));
