@@ -1,12 +1,12 @@
 svg {
-    overflow: visible;
-    margin-left: 20px; /* add this line */
+    overflow: visible; /* show axes that extend beyond svg */
+    margin-left: 20px; /* move bar to the right to see left axis */
 }
 rect {
-    stroke: white;
+    stroke: white; /* space between bars */
     stroke-width:1px;
 }
 #bottom-axis text {
-    transform:rotate(45deg);
-    text-anchor: start;
+    transform:rotate(45deg); /* rotate bottom axis text so it's visble */
+    text-anchor: start; /* point of rotation should be beginning of text, not middle */
 }
