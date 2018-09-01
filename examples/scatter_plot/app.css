@@ -1,26 +1,32 @@
 circle {
     r:5;
     fill: black;
+    /*  transitions to make growing and changing color look nice */
     transition: r 0.5s linear, fill 0.5s linear;
 }
 #container {
-    overflow: visible;
-    margin-bottom: 50px;
+    overflow: visible; /* make sure axes are visible  */
+    margin-bottom: 50px; /* space below graph so table doesn't overlap */
 }
 body {
+    /* move graph away from edge of screen */
     margin: 20px 40px;
 }
 table, th, td {
-   border: 1px solid black;
+    /* make table cell borders visible  */
+    border: 1px solid black;
 }
 th, td {
+    /*  make table cels look better */
     padding:10px;
     text-align: center;
 }
+/* hover state for circles */
 circle:hover {
     r:10;
     fill: blue;
 }
+/*  styles for circles when you click on them */
 circle:active {
     fill: red;
 }
