@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+        <link rel="stylesheet" href="app.css">
+    </head>
+    <body>
+        <!--  container for axes-->
+        <svg id="container">
+            <!--  inner svg for clipping circles-->
+            <svg>
+                <!--  group to contain circles for zooming/panning -->
+                <g id="points"></g>
+            </svg>
+        </svg>
+        <!--  table for displaying data -->
+        <table>
+            <thead>
+                <tr>
+                    <th>id</th>
+                    <th>date</th>
+                    <th>distance</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        <!--  put scripts at bottom to ensure DOM loads before scripts begin processing it -->
+        <script src="https://d3js.org/d3.v5.min.js"></script>
+        <script src="app.js" charset="utf-8"></script>
+    </body>
+</html>
