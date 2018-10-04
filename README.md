@@ -5,7 +5,7 @@ D3.js Quick Start Guide, published by Packt
 
 This is the code repository for [D3.js Quick Start Guide](https://www.packtpub.com/application-development/d3js-quick-start-guide?utm_source=github&utm_medium=repository&utm_campaign=9781789342383), published by Packt.
 
-**	Create amazing, interactive visualizations in the browser with JavaScript**
+**Create amazing, interactive visualizations in the browser with JavaScript**
 
 ## What is this book about?
 D3.js is a JavaScript library that allows you to create graphs and data visualizations in the browser with HTML, SVG, and CSS. This book will take you from the basics of D3.js, so that you can create your own interactive visualizations, to creating the most common graphs that you will encounter as a developer, scientist, statistician, or data scientist.
@@ -50,7 +50,7 @@ We also provide a PDF file that has color images of the screenshots/diagrams use
 * Learning D3.js 5 Mapping  [[Packt]](https://www.packtpub.com/web-development/learning-d3js-5-mapping-second-edition) [[Amazon]](https://www.amazon.com/dp/1787280179)
 
 
-## Get to Know the Author(s)
+## Get to Know the Author
 **Matthew Huntington**
 has worked as a developer for about 15 years now, and has a full understanding of all aspects of development (server side, client side, and mobile). He graduated magna cum laude from Vassar College with a degree in computer science in which he received departmental honors. He's worked for many clients in New York, including Nike, IBM, Pfizer, MTV, Chanel, Verizon, Goldman Sachs, Nestle, AARP, and BAM. He's worked with companies in pretty much all of the major industries applicable to development, and he has a deep understanding of the differences in the ways those industries work.
 
