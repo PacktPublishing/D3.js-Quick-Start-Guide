@@ -52,7 +52,7 @@ We also provide a PDF file that has color images of the screenshots/diagrams use
 
 ## Get to Know the Author(s)
 **Matthew Huntington**
-Matt Huntington has worked as a developer for about 15 years now, and has a full understanding of all aspects of development (server side, client side, and mobile). He graduated magna cum laude from Vassar College with a degree in computer science in which he received departmental honors. He's worked for many clients in New York, including Nike, IBM, Pfizer, MTV, Chanel, Verizon, Goldman Sachs, Nestle, AARP, and BAM. He's worked with companies in pretty much all of the major industries applicable to development, and he has a deep understanding of the differences in the ways those industries work.
+has worked as a developer for about 15 years now, and has a full understanding of all aspects of development (server side, client side, and mobile). He graduated magna cum laude from Vassar College with a degree in computer science in which he received departmental honors. He's worked for many clients in New York, including Nike, IBM, Pfizer, MTV, Chanel, Verizon, Goldman Sachs, Nestle, AARP, and BAM. He's worked with companies in pretty much all of the major industries applicable to development, and he has a deep understanding of the differences in the ways those industries work.
 
 As an instructor, Matt has been teaching full-time since 2015 at General Assembly and has lead workshops at many locations, including prestigious universities such as Columbia University and NYU.
 
