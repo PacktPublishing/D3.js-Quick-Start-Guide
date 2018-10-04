@@ -11,11 +11,11 @@ This is the code repository for [D3.js Quick Start Guide](https://www.packtpub.c
 D3.js is a JavaScript library that allows you to create graphs and data visualizations in the browser with HTML, SVG, and CSS. This book will take you from the basics of D3.js, so that you can create your own interactive visualizations, to creating the most common graphs that you will encounter as a developer, scientist, statistician, or data scientist.
 
 This book covers the following exciting features:
-*Build a scatter plot
-*Build a bar graph
-*Build a pie chart
-*Build a force-directed graph
-*Build a map
+* Build a scatter plot
+* Build a bar graph
+* Build a pie chart
+* Build a force-directed graph
+* Build a map
 
 If you feel this book is for you, get your [copy](https://www.amazon.com/dp/1789342384) today!
 
